@@ -1,0 +1,118 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+  <EntityContainerMapping StorageEntityContainer="libraryProject_digireadModelStoreContainer" CdmEntityContainer="libraryProject_digireadEntities">
+    <EntitySetMapping Name="Books">
+      <EntityTypeMapping TypeName="libraryProject_digireadModel.Books">
+        <MappingFragment StoreEntitySet="Books">
+          <ScalarProperty Name="BookID" ColumnName="BookID" />
+          <ScalarProperty Name="Title" ColumnName="Title" />
+          <ScalarProperty Name="MainAuthor" ColumnName="MainAuthor" />
+          <ScalarProperty Name="Publisher" ColumnName="Publisher" />
+          <ScalarProperty Name="PublishYear" ColumnName="PublishYear" />
+          <ScalarProperty Name="RentalPrice" ColumnName="RentalPrice" />
+          <ScalarProperty Name="PurchasePrice" ColumnName="PurchasePrice" />
+          <ScalarProperty Name="AgeRestriction" ColumnName="AgeRestriction" />
+          <ScalarProperty Name="Genre" ColumnName="Genre" />
+          <ScalarProperty Name="IsAvailable" ColumnName="IsAvailable" />
+          <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+          <ScalarProperty Name="IsForRent" ColumnName="IsForRent" />
+          <ScalarProperty Name="OriginalPrice" ColumnName="OriginalPrice" />
+          <ScalarProperty Name="DiscountEndDate" ColumnName="DiscountEndDate" />
+          <ScalarProperty Name="IsRented" ColumnName="IsRented" />
+          <ScalarProperty Name="IsEPUBAvailable" ColumnName="IsEPUBAvailable" />
+          <ScalarProperty Name="IsF2BAvailable" ColumnName="IsF2BAvailable" />
+          <ScalarProperty Name="IsMobiAvailable" ColumnName="IsMobiAvailable" />
+          <ScalarProperty Name="IsPDFAvailable" ColumnName="IsPDFAvailable" />
+          <ScalarProperty Name="BookImage" ColumnName="BookImage" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="PasswordResetTokens">
+      <EntityTypeMapping TypeName="libraryProject_digireadModel.PasswordResetTokens">
+        <MappingFragment StoreEntitySet="PasswordResetTokens">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Email" ColumnName="Email" />
+          <ScalarProperty Name="Token" ColumnName="Token" />
+          <ScalarProperty Name="CreatedAt" ColumnName="CreatedAt" />
+          <ScalarProperty Name="ExpiresAt" ColumnName="ExpiresAt" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Purchases">
+      <EntityTypeMapping TypeName="libraryProject_digireadModel.Purchases">
+        <MappingFragment StoreEntitySet="Purchases">
+          <ScalarProperty Name="PurchaseID" ColumnName="PurchaseID" />
+          <ScalarProperty Name="BookID" ColumnName="BookID" />
+          <ScalarProperty Name="UserID" ColumnName="UserID" />
+          <ScalarProperty Name="PurchaseDate" ColumnName="PurchaseDate" />
+          <ScalarProperty Name="PaymentStatus" ColumnName="PaymentStatus" />
+          <ScalarProperty Name="PaymentMethod" ColumnName="PaymentMethod" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Rentals">
+      <EntityTypeMapping TypeName="libraryProject_digireadModel.Rentals">
+        <MappingFragment StoreEntitySet="Rentals">
+          <ScalarProperty Name="RentalID" ColumnName="RentalID" />
+          <ScalarProperty Name="BookID" ColumnName="BookID" />
+          <ScalarProperty Name="UserID" ColumnName="UserID" />
+          <ScalarProperty Name="RentalDate" ColumnName="RentalDate" />
+          <ScalarProperty Name="ReturnDate" ColumnName="ReturnDate" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Reviews">
+      <EntityTypeMapping TypeName="libraryProject_digireadModel.Reviews">
+        <MappingFragment StoreEntitySet="Reviews">
+          <ScalarProperty Name="ReviewID" ColumnName="ReviewID" />
+          <ScalarProperty Name="BookID" ColumnName="BookID" />
+          <ScalarProperty Name="UserID" ColumnName="UserID" />
+          <ScalarProperty Name="RatingBook" ColumnName="RatingBook" />
+          <ScalarProperty Name="ReviewTextBook" ColumnName="ReviewTextBook" />
+          <ScalarProperty Name="ReviewDateBook" ColumnName="ReviewDateBook" />
+          <ScalarProperty Name="RatingWeb" ColumnName="RatingWeb" />
+          <ScalarProperty Name="ReviewTextWeb" ColumnName="ReviewTextWeb" />
+          <ScalarProperty Name="ReviewDateWeb" ColumnName="ReviewDateWeb" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="ShoppingCart">
+      <EntityTypeMapping TypeName="libraryProject_digireadModel.ShoppingCart">
+        <MappingFragment StoreEntitySet="ShoppingCart">
+          <ScalarProperty Name="CartID" ColumnName="CartID" />
+          <ScalarProperty Name="UserID" ColumnName="UserID" />
+          <ScalarProperty Name="BookID" ColumnName="BookID" />
+          <ScalarProperty Name="Price" ColumnName="Price" />
+          <ScalarProperty Name="DateAdded" ColumnName="DateAdded" />
+          <ScalarProperty Name="typeBook" ColumnName="typeBook" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Users">
+      <EntityTypeMapping TypeName="libraryProject_digireadModel.Users">
+        <MappingFragment StoreEntitySet="Users">
+          <ScalarProperty Name="UserID" ColumnName="UserID" />
+          <ScalarProperty Name="Username" ColumnName="Username" />
+          <ScalarProperty Name="Password" ColumnName="Password" />
+          <ScalarProperty Name="Email" ColumnName="Email" />
+          <ScalarProperty Name="RegistrationDate" ColumnName="RegistrationDate" />
+          <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+          <ScalarProperty Name="IsAdmin" ColumnName="IsAdmin" />
+          <ScalarProperty Name="PasswordReset" ColumnName="PasswordReset" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="WaitList">
+      <EntityTypeMapping TypeName="libraryProject_digireadModel.WaitList">
+        <MappingFragment StoreEntitySet="WaitList">
+          <ScalarProperty Name="WaitListID" ColumnName="WaitListID" />
+          <ScalarProperty Name="BookID" ColumnName="BookID" />
+          <ScalarProperty Name="UserID" ColumnName="UserID" />
+          <ScalarProperty Name="WaitPosition" ColumnName="WaitPosition" />
+          <ScalarProperty Name="AddedDate" ColumnName="AddedDate" />
+          <ScalarProperty Name="EmailNotificationSent" ColumnName="EmailNotificationSent" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+  </EntityContainerMapping>
+</Mapping>

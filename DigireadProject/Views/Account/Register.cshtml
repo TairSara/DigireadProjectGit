@@ -1,0 +1,82 @@
+﻿@model DigireadProject.Models.ViewModels.RegisterViewModel
+    @{
+    ViewBag.Title = "הרשמה";
+}
+
+<div class="container" dir="rtl">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card mt-4">
+                <div class="card-header">
+                    <h3 class="text-center">הרשמה לאתר</h3>
+                </div>
+                <div class="card-body">
+                    @if (TempData["ErrorMessage"] != null)
+                    {
+                        <div class="alert alert-danger">
+                            @TempData["ErrorMessage"]
+                        </div>
+                    }
+
+                    @using (Html.BeginForm("Register", "Account", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+                    {
+                        @Html.AntiForgeryToken()
+                        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                        <div class="form-group mb-3">
+                            @Html.LabelFor(m => m.Username, "שם משתמש", new { @class = "control-label" })
+                            <div>
+                                @Html.TextBoxFor(m => m.Username, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(m => m.Username, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <div class="form-group mb-3">
+                            @Html.LabelFor(m => m.Email, "אימייל", new { @class = "control-label" })
+                            <div>
+                                @Html.TextBoxFor(m => m.Email, new { @class = "form-control", type = "email" })
+                                @Html.ValidationMessageFor(m => m.Email, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <div class="form-group mb-3">
+                            @Html.LabelFor(m => m.Password, "סיסמה", new { @class = "control-label" })
+                            <div>
+                                @Html.PasswordFor(m => m.Password, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(m => m.Password, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <div class="form-group mb-3">
+                            @Html.LabelFor(m => m.ConfirmPassword, "אימות סיסמה", new { @class = "control-label" })
+                            <div>
+                                @Html.PasswordFor(m => m.ConfirmPassword, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(m => m.ConfirmPassword, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="d-grid">
+                                <button type="submit" class="btn btn-primary btn-block">הרשמה</button>
+                            </div>
+                        </div>
+                    }
+
+                    <div class="text-center mt-3">
+                        <p>כבר יש לך חשבון? @Html.ActionLink("התחבר כאן", "Login", "Account")</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script>
+        $(document).ready(function () {
+            // הוספת כוכבית לשדות חובה
+            $('label.control-label').append('<span class="text-danger"> *</span>');
+        });
+    </script>
+}
