@@ -18,17 +18,11 @@ namespace DigireadProject.Controllers
         public AccountController()
         {
             db = new libraryProject_digireadEntities();
-            // הוספת logging של Entity Framework
             db.Database.Log = message => Debug.WriteLine(message);
         }
 
-        // GET: Account/Register
         public ActionResult Register()
         {
-            if (User.Identity.IsAuthenticated)
-            {
-                return RedirectToAction("Index", "Home");
-            }
             return View();
         }
 
@@ -50,7 +44,6 @@ namespace DigireadProject.Controllers
                     return View(model);
                 }
 
-                // בדיקת שם משתמש קיים
                 var existingUsername = await db.Users
                     .FirstOrDefaultAsync(u => u.Username.ToLower() == model.Username.ToLower());
 
@@ -60,7 +53,6 @@ namespace DigireadProject.Controllers
                     return View(model);
                 }
 
-                // בדיקת אימייל קיים
                 var existingEmail = await db.Users
                     .FirstOrDefaultAsync(u => u.Email.ToLower() == model.Email.ToLower());
 
@@ -70,7 +62,6 @@ namespace DigireadProject.Controllers
                     return View(model);
                 }
 
-                // יצירת משתמש חדש
                 var newUser = new Users
                 {
                     Username = model.Username.Trim(),
@@ -84,10 +75,8 @@ namespace DigireadProject.Controllers
 
                 Debug.WriteLine($"Attempting to add new user: {newUser.Username}");
 
-                // הוספת המשתמש למסד הנתונים
                 db.Users.Add(newUser);
 
-                // שמירת השינויים
                 int result = await db.SaveChangesAsync();
                 Debug.WriteLine($"SaveChanges Result: {result}");
 
@@ -95,7 +84,7 @@ namespace DigireadProject.Controllers
                 {
                     Debug.WriteLine("User successfully added to database");
                     TempData["SuccessMessage"] = "ההרשמה בוצעה בהצלחה! אנא התחבר למערכת";
-                    return RedirectToAction("HomePage", "Home");
+                    return View();
                 }
                 else
                 {
@@ -112,13 +101,8 @@ namespace DigireadProject.Controllers
             }
         }
 
-        // GET: Account/Login
         public ActionResult Login()
         {
-            if (User.Identity.IsAuthenticated)
-            {
-                return RedirectToAction("Index", "Home");
-            }
             return View();
         }
 
@@ -126,66 +110,51 @@ namespace DigireadProject.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Login(LoginViewModel model)
         {
-            Debug.WriteLine("Starting Login Process");
-            Debug.WriteLine($"Login attempt for username: {model.Username}");
-
             try
             {
                 if (!ModelState.IsValid)
                 {
-                    foreach (var modelError in ModelState.Values.SelectMany(v => v.Errors))
-                    {
-                        Debug.WriteLine($"Validation Error: {modelError.ErrorMessage}");
-                    }
                     return View(model);
                 }
 
-                // חיפוש המשתמש לפי שם משתמש
                 var user = await db.Users
                     .FirstOrDefaultAsync(u => u.Username.ToLower() == model.Username.ToLower());
 
                 if (user == null)
                 {
-                    Debug.WriteLine("User not found");
                     ModelState.AddModelError("", "שם משתמש או סיסמה שגויים");
                     return View(model);
                 }
 
-                // בדיקה האם המשתמש פעיל
                 if ((bool)!user.IsActive)
                 {
-                    Debug.WriteLine("User account is not active");
                     ModelState.AddModelError("", "החשבון אינו פעיל. אנא פנה למנהל המערכת");
                     return View(model);
                 }
 
-                // אימות הסיסמה
                 string hashedPassword = HashPassword(model.Password);
                 if (user.Password != hashedPassword)
                 {
-                    Debug.WriteLine("Invalid password");
                     ModelState.AddModelError("", "שם משתמש או סיסמה שגויים");
                     return View(model);
                 }
 
-                // יצירת עוגייה מאובטחת
                 FormsAuthentication.SetAuthCookie(user.Username, model.RememberMe);
-
-                Debug.WriteLine("Login successful");
                 TempData["SuccessMessage"] = "התחברת בהצלחה!";
 
-                return RedirectToAction("HomePage", "Home");
+                if ((bool)user.IsAdmin)
+                {
+                    return RedirectToAction("Index", "UserManagement");
+                }
+
+                return RedirectToAction("HomePage", "Home",null);
             }
             catch (Exception ex)
             {
-                Debug.WriteLine($"Error during login: {ex.Message}");
-                Debug.WriteLine($"Stack Trace: {ex.StackTrace}");
                 ModelState.AddModelError("", "אירעה שגיאה בתהליך ההתחברות. אנא נסה שנית מאוחר יותר.");
                 return View(model);
             }
         }
-
-        // Logout Action
         public ActionResult Logout()
         {
             FormsAuthentication.SignOut();
@@ -209,6 +178,109 @@ namespace DigireadProject.Controllers
                 db.Dispose();
             }
             base.Dispose(disposing);
+        }
+
+        [Authorize]
+        public async Task<ActionResult> Profile()
+        {
+            var username = User.Identity.Name;
+            var user = await db.Users.FirstOrDefaultAsync(u => u.Username == username);
+
+            if (user == null) return RedirectToAction("Login");
+
+            var model = new UserProfileViewModel
+            {
+                Username = user.Username,
+                Email = user.Email,
+                RegistrationDate = user.RegistrationDate ?? DateTime.Now,
+                IsAdmin = user.IsAdmin ?? false
+            };
+
+            return View(model);
+        }
+
+        [HttpPost]
+        [Authorize]
+        [ValidateAntiForgeryToken]
+    
+        public async Task<ActionResult> UpdateProfile(UserProfileViewModel model)
+        {
+            if (!ModelState.IsValid)
+                return Json(new { success = false, errors = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage) });
+
+            var user = await db.Users.FirstOrDefaultAsync(u => u.Username == User.Identity.Name);
+            if (user == null) return Json(new { success = false, redirect = Url.Action("Login") });
+
+            var usernameExists = await db.Users
+                .AnyAsync(u => u.Username == model.Username && u.UserID != user.UserID);
+            var emailExists = await db.Users
+                .AnyAsync(u => u.Email == model.Email && u.UserID != user.UserID);
+
+            if (usernameExists)
+                return Json(new { success = false, error = "שם המשתמש כבר קיים במערכת" });
+            if (emailExists)
+                return Json(new { success = false, error = "כתובת האימייל כבר קיימת במערכת" });
+
+            user.Username = model.Username;
+            user.Email = model.Email;
+            await db.SaveChangesAsync();
+
+            FormsAuthentication.SetAuthCookie(model.Username, true);
+            return Json(new { success = true });
+        }
+        public ActionResult ForgotPassword()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> ForgotPassword(ForgotPasswordViewModel model)
+        {
+            if (!ModelState.IsValid) return View(model);
+
+            var user = await db.Users.FirstOrDefaultAsync(u => u.Email == model.Email);
+            if (user != null)
+            {
+                var token = Convert.ToBase64String(Guid.NewGuid().ToByteArray());
+                user.PasswordReset = token;
+                await db.SaveChangesAsync();
+
+                var resetLink = Url.Action("ResetPassword", "Account",
+                    new { token }, Request.Url.Scheme);
+
+                var emailService = new EmailService();
+                await emailService.SendPasswordResetEmailAsync(user.Email, resetLink);
+            }
+
+            TempData["SuccessMessage"] = "אם האימייל קיים במערכת, נשלח אליך קישור לאיפוס סיסמה";
+            return RedirectToAction("Login");
+        }
+
+        public async Task<ActionResult> ResetPassword(string token)
+        {
+            var user = await db.Users.FirstOrDefaultAsync(u => u.PasswordReset == token);
+            if (user == null) return RedirectToAction("Login");
+
+            var model = new ResetPasswordViewModel { Token = token };
+            return View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> ResetPassword(ResetPasswordViewModel model)
+        {
+            if (!ModelState.IsValid) return View(model);
+
+            var user = await db.Users.FirstOrDefaultAsync(u => u.PasswordReset == model.Token);
+            if (user == null) return RedirectToAction("Login");
+
+            user.Password = HashPassword(model.Password);
+            user.PasswordReset = null;
+            await db.SaveChangesAsync();
+
+            TempData["SuccessMessage"] = "הסיסמה אופסה בהצלחה";
+            return RedirectToAction("HomePage", "Home");
         }
     }
 }
