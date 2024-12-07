@@ -1,0 +1,229 @@
+﻿@model IEnumerable<DigireadProject.Models.ViewModels.UserManagementViewModel>
+@{
+    ViewBag.Title = "ניהול משתמשים";
+}
+
+<style>
+    .container.body-content {
+        max-width: 1200px;
+    }
+
+    .table {
+        text-align: center;
+        max-width: 1000px;
+        margin: 0 auto;
+    }
+
+    th {
+        text-align: center;
+        background-color: #f8f9fa;
+    }
+
+    .table-responsive {
+        margin: 0 20px;
+    }
+
+    .btn-sm {
+        padding: 0.25rem 0.5rem;
+        font-size: 0.875rem;
+    }
+
+    .filters-section {
+        background-color: #e8f5e9;
+        padding: 15px;
+        border-radius: 5px;
+        margin: 0 auto 20px auto;
+        max-width: 1000px;
+    }
+</style>
+
+<div class="container mt-4" dir="rtl">
+    <h2 class="text-center mb-4">ניהול משתמשים</h2>
+
+    <div class="filters-section">
+        <div class="row">
+            <div class="col-md-3 mb-2">
+                <input type="text" id="usernameFilter" class="form-control" placeholder="סינון לפי שם משתמש">
+            </div>
+            <div class="col-md-3 mb-2">
+                <input type="text" id="emailFilter" class="form-control" placeholder="סינון לפי אימייל">
+            </div>
+            <div class="col-md-3 mb-2">
+                <select id="statusFilter" class="form-control">
+                    <option value="">כל הסטטוסים</option>
+                    <option value="active">פעיל</option>
+                    <option value="inactive">לא פעיל</option>
+                </select>
+            </div>
+            <div class="col-md-3 mb-2">
+                <select id="roleFilter" class="form-control">
+                    <option value="">כל ההרשאות</option>
+                    <option value="admin">מנהל</option>
+                    <option value="user">משתמש רגיל</option>
+                </select>
+            </div>
+        </div>
+        <div class="row mt-2">
+            <div class="col">
+                <button class="btn btn-secondary btn-sm" onclick="clearFilters()">נקה סינון</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>שם משתמש</th>
+                    <th>אימייל</th>
+                    <th>תאריך הרשמה</th>
+                    <th>סטטוס</th>
+                    <th>הרשאות</th>
+                    <th>פעולות</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var user in Model)
+                {
+                    <tr id="user-@user.UserId">
+                        <td class="username-display">@user.Username</td>
+                        <td class="email-display">@user.Email</td>
+                        <td>@user.RegistrationDate.ToString("dd/MM/yyyy")</td>
+                        <td>
+                            <button class="btn @(user.IsActive ? "btn-success" : "btn-danger") btn-sm"
+                                    onclick="toggleStatus(@user.UserId)">
+                                @(user.IsActive ? "פעיל" : "לא פעיל")
+                            </button>
+                        </td>
+                        <td>
+                            @(user.IsAdmin ? "מנהל" : "משתמש רגיל")
+                        </td>
+                        <td>
+                            <button class="btn btn-warning btn-sm" onclick="editUser(@user.UserId)">
+                                עריכה
+                            </button>
+                            <button class="btn btn-danger btn-sm" onclick="deleteUser(@user.UserId)">
+                                מחיקה
+                            </button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">עריכת משתמש</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="editUserId" />
+                <div class="form-group">
+                    <label>שם משתמש</label>
+                    <input type="text" class="form-control" id="editUsername" />
+                </div>
+                <div class="form-group">
+                    <label>אימייל</label>
+                    <input type="email" class="form-control" id="editEmail" />
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">ביטול</button>
+                <button type="button" class="btn btn-primary" onclick="saveChanges()">שמור</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            function filterTable() {
+                var username = $('#usernameFilter').val().toLowerCase();
+                var email = $('#emailFilter').val().toLowerCase();
+                var status = $('#statusFilter').val();
+                var role = $('#roleFilter').val();
+
+                $('.table tbody tr').each(function () {
+                    var row = $(this);
+                    var showRow = true;
+
+                    if (username && !row.find('.username-display').text().toLowerCase().includes(username)) {
+                        showRow = false;
+                    }
+                    if (showRow && email && !row.find('.email-display').text().toLowerCase().includes(email)) {
+                        showRow = false;
+                    }
+                    if (showRow && status) {
+                        var isActive = row.find('.btn-success').length > 0;
+                        if ((status === 'active' && !isActive) || (status === 'inactive' && isActive)) {
+                            showRow = false;
+                        }
+                    }
+                    if (showRow && role) {
+                        var isAdmin = row.find('td:nth-child(5)').text().trim() === 'מנהל';
+                        if ((role === 'admin' && !isAdmin) || (role === 'user' && isAdmin)) {
+                            showRow = false;
+                        }
+                    }
+
+                    row.toggle(showRow);
+                });
+            }
+
+            $('#usernameFilter, #emailFilter').on('keyup', filterTable);
+            $('#statusFilter, #roleFilter').on('change', filterTable);
+        });
+
+        function clearFilters() {
+            $('#usernameFilter, #emailFilter').val('');
+            $('#statusFilter, #roleFilter').val('');
+            $('.table tbody tr').show();
+        }
+
+        function toggleStatus(userId) {
+            $.post('/UserManagement/ToggleStatus', { userId: userId }, function (response) {
+                if (response.success) location.reload();
+            });
+        }
+
+        function toggleAdmin(userId) {
+            $.post('/UserManagement/ToggleAdmin', { userId: userId }, function (response) {
+                if (response.success) location.reload();
+            });
+        }
+
+        function editUser(userId) {
+            var row = $(`#user-${userId}`);
+            $('#editUserId').val(userId);
+            $('#editUsername').val(row.find('.username-display').text());
+            $('#editEmail').val(row.find('.email-display').text());
+            $('#editModal').modal('show');
+        }
+
+        function saveChanges() {
+            var userId = $('#editUserId').val();
+            $.post('/UserManagement/UpdateUser', {
+                userId: userId,
+                username: $('#editUsername').val(),
+                email: $('#editEmail').val()
+            }, function (response) {
+                if (response.success) location.reload();
+            });
+        }
+
+        function deleteUser(userId) {
+            if (confirm('האם אתה בטוח שברצונך למחוק משתמש זה?')) {
+                $.post('/UserManagement/DeleteUser', { userId: userId }, function (response) {
+                    if (response.success) location.reload();
+                });
+            }
+        }
+    </script>
+}
