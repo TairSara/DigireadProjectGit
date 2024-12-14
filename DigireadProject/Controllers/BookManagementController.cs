@@ -287,6 +287,101 @@ namespace DigireadProject.Controllers
             return View(genres);
         }
 
+        public async Task<ActionResult> UserRentals(int? userId)
+        {
+            if (!(User.Identity.IsAuthenticated && await IsUserAdmin()))
+            {
+                return RedirectToAction("Login", "Account");
+            }
+
+            if (!userId.HasValue)
+            {
+                return RedirectToAction("ManageBooks");
+            }
+
+            var now = DateTime.Now;
+            var userRentals = await db.Rentals
+                .Where(r => r.UserID == userId.Value)
+                .Select(r => new UserRentalViewModel
+                {
+                    RentalID = r.RentalID,
+                    BookTitle = r.Books.Title,
+                    RentalDate = r.RentalDate ?? DateTime.Now,
+                    ReturnDate = r.ReturnDate,
+                    BookID = r.BookID ?? 0,
+                    Status = r.ReturnDate.HasValue ? "הוחזר" :
+                             (r.RentalDate.Value.AddDays(14) < now ? "פג תוקף" : "פעיל"),
+                    DaysOverdue = r.ReturnDate == null && r.RentalDate.Value.AddDays(14) < now
+                        ? (int)(now - r.RentalDate.Value.AddDays(14)).TotalDays
+                        : 0
+                })
+                .ToListAsync();
+
+            ViewBag.Username = await db.Users
+                .Where(u => u.UserID == userId.Value)
+                .Select(u => u.Username)
+                .FirstOrDefaultAsync();
+
+            return View(userRentals);
+        }
+        [HttpPost]
+        public async Task<ActionResult> CancelRental(int rentalId)
+        {
+            if (!(User.Identity.IsAuthenticated && await IsUserAdmin()))
+            {
+                return Json(new { success = false, message = "אין הרשאת מנהל" });
+            }
+
+            var rental = await db.Rentals.FindAsync(rentalId);
+            if (rental != null)
+            {
+                // אם ההשאלה טרם הוחזרה
+                if (rental.ReturnDate == null)
+                {
+                    // החזר את הספר לזמינות
+                    var book = await db.Books.FindAsync(rental.BookID);
+                    if (book != null)
+                    {
+                        book.IsAvailable = true;
+                    }
+
+                    // מחק את ההשאלה
+                    db.Rentals.Remove(rental);
+                    await db.SaveChangesAsync();
+
+                    return Json(new { success = true });
+                }
+            }
+            return Json(new { success = false, message = "לא ניתן לבטל השאלה זו" });
+        }
+
+        // שיטה להחזרת ספר
+        [HttpPost]
+        public async Task<ActionResult> ReturnBook(int rentalId)
+        {
+            if (!(User.Identity.IsAuthenticated && await IsUserAdmin()))
+            {
+                return Json(new { success = false, message = "אין הרשאת מנהל" });
+            }
+
+            var rental = await db.Rentals.FindAsync(rentalId);
+            if (rental != null && rental.ReturnDate == null)
+            {
+                // עדכן תאריך החזרה
+                rental.ReturnDate = DateTime.Now;
+
+                // החזר את הספר לזמינות
+                var book = await db.Books.FindAsync(rental.BookID);
+                if (book != null)
+                {
+                    book.IsAvailable = true;
+                }
+
+                await db.SaveChangesAsync();
+                return Json(new { success = true });
+            }
+            return Json(new { success = false, message = "לא ניתן להחזיר השאלה זו" });
+        }
     }
 
 }

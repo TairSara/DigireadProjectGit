@@ -1,206 +1,77 @@
 ﻿@model DigireadProject.Models.ViewModels.BookViewModel
 
 <div class="book-details">
-        <h2>@Model.Title</h2>
-        <img src="@Model.ImageSrc" alt="תמונה של @Model.Title" class="book-image" />
+    <h2>@Model.Title</h2>
+    <img src="@Model.ImageSrc" alt="תמונה של @Model.Title" class="book-image" />
 
-        <div class="book-info">
-            <p><strong>מחבר ראשי:</strong> @Model.MainAuthor</p>
-            <p><strong>הוצאה לאור:</strong> @Model.Publisher</p>
-            <p><strong>שנת פרסום:</strong> @Model.PublishYear</p>
-            <p><strong>מחיר רכישה:</strong> ₪@Model.PurchasePrice</p>
+    <div class="book-info">
+        <p><strong>מחבר ראשי:</strong> @Model.MainAuthor</p>
+        <p><strong>הוצאה לאור:</strong> @Model.Publisher</p>
+        <p><strong>שנת פרסום:</strong> @Model.PublishYear</p>
+        <p><strong>מחיר רכישה:</strong> ₪@Model.PurchasePrice</p>
+        @if (Model.IsForRent == true)
+        {
             <p><strong>מחיר השכרה:</strong> ₪@Model.RentalPrice</p>
-            <p><strong>תיאור:</strong> @Model.Description</p>
-            <p><strong>ז'אנר:</strong> @Model.Genre</p>
-        </div>
-
-        <div class="actions">
-            @if (User.Identity.IsAuthenticated)
-            {
-                <form method="post" action="@Url.Action("AddToCart", "Cart", new { bookId = @Model.BookID, isRental=false })">
-                    @Html.AntiForgeryToken()
-                    <button type="submit" class="btn btn-add-to-cart">
-                        <i class="fas fa-shopping-cart"></i> הוספה לרכישה
-                    </button>
-                </form>
-            }
-            else
-            {
-                <a href="@Url.Action("Login", "Account")" class="btn btn-primary">
-                    התחבר כדי לרכוש
-                </a>
-            }
-        </div>
-
-        <div id="successMessage" class="message success-message">הספר נוסף לעגלה בהצלחה!</div>
-        <div id="errorMessage" class="message error-message">אירעה שגיאה בהוספת הספר לעגלה</div>
+        }
+        <p><strong>תיאור:</strong> @Model.Description</p>
+        <p><strong>ז'אנר:</strong> @Model.Genre</p>
     </div>
 
-    <style>
-        .book-details {
-            padding: 20px;
-            margin: 20px auto;
-            max-width: 800px;
-            border: 1px solid #ddd;
-            border-radius: 10px;
-            background-color: #f9f9f9;
-            text-align: center;
-            direction: rtl;
+    <div class="actions">
+        @if (User.Identity.IsAuthenticated)
+        {
+            <button onclick="showPurchaseOptions()" class="btn btn-add-to-cart">
+                <i class="fas fa-shopping-cart"></i> הוסף לסל
+            </button>
         }
-
-            .book-details img {
-                width: 300px;
-                height: 400px;
-                object-fit: contain;
-                border: 1px solid #ccc;
-                border-radius: 5px;
-                margin: 20px auto;
-                display: block;
-            }
-
-            .book-details h2 {
-                font-size: 24px;
-                font-weight: bold;
-                text-align: center;
-                color: #333;
-                margin-bottom: 20px;
-            }
-
-        .book-info {
-            text-align: right;
-            margin: 20px 0;
+        else
+        {
+            <a href="@Url.Action("Login", "Account")" class="btn btn-primary">
+                התחבר כדי לרכוש
+            </a>
         }
+    </div>
 
-            .book-info p {
-                font-size: 16px;
-                line-height: 1.6;
-                margin: 10px 0;
-                padding: 5px 0;
-                border-bottom: 1px solid #eee;
-            }
-
-            .book-info strong {
-                color: #555;
-                margin-left: 10px;
-            }
-
-        .actions {
-            margin-top: 30px;
-            display: flex;
-            gap: 15px;
-            justify-content: center;
-        }
-
-        .purchase-form, .rental-form {
-            display: inline-block;
-        }
-
-        .btn {
-            padding: 12px 25px;
-            border-radius: 5px;
-            font-size: 16px;
-            font-weight: 500;
-            text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            transition: all 0.3s ease;
-            cursor: pointer;
-        }
-
-            .btn i {
-                margin-left: 8px;
-            }
-
-        .btn-add-to-cart {
-            background-color: #28a745;
-            color: white;
-            border: none;
-        }
-
-            .btn-add-to-cart:hover {
-                background-color: #218838;
-                transform: translateY(-2px);
-            }
-
-        .btn-primary {
-            background-color: #007bff;
-            color: white;
-            border: none;
-        }
-
-            .btn-primary:hover {
-                background-color: #0056b3;
-                transform: translateY(-2px);
-            }
-
-        .message {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            padding: 15px 20px;
-            border-radius: 5px;
-            display: none;
-            z-index: 1000;
-        }
-
-        .success-message {
-            background-color: #d4edda;
-            color: #155724;
-            border: 1px solid #c3e6cb;
-        }
-
-        .error-message {
-            background-color: #f8d7da;
-            color: #721c24;
-            border: 1px solid #f5c6cb;
-        }
-    </style>
-
-    <script>
-        function showMessage(isSuccess) {
-            const successMsg = document.getElementById('successMessage');
-            const errorMsg = document.getElementById('errorMessage');
-
-            const messageToShow = isSuccess ? successMsg : errorMsg;
-            messageToShow.style.display = 'block';
-
-            setTimeout(() => {
-                messageToShow.style.display = 'none';
-            }, 3000);
-        }
-
-        function addToCart(form, isRental) {
-            var formData = new FormData(form);
-
-            fetch('/Cart/AddToCart', {
-                method: 'POST',
-                body: formData
-            })
-                .then(response => {
-                    if (response.ok) {
-                        showMessage(true);
-                    } else {
-                        showMessage(false);
-                    }
-                })
-                .catch(error => {
-                    showMessage(false);
-                });
-        }
-    </script>
-    @if (TempData["Success"] != null)
-    {
-        <div class="alert alert-success" role="alert">
-            @TempData["Success"]
+    <!-- דיאלוג בחירת סוג הרכישה -->
+    <div id="purchaseDialog" class="modal">
+        <div class="modal-content">
+            <h3>בחר אפשרות רכישה</h3>
+            <div class="purchase-options">
+                <form method="post" action="@Url.Action("AddToCart", "ShoppingCart")">
+                    @Html.AntiForgeryToken()
+                    @Html.Hidden("bookId", Model.BookID)
+                    @Html.Hidden("isRental", false)
+                    <button type="submit" class="btn btn-primary purchase-btn" onclick="return handleSubmit(this.form, false)">
+                        <i class="fas fa-shopping-cart"></i>
+                        רכישה - ₪@Model.PurchasePrice
+                    </button>
+                </form>
+                @if (Model.IsForRent == true)
+                {
+                    <form method="post" action="@Url.Action("AddToCart", "ShoppingCart")">
+                        @Html.AntiForgeryToken()
+                        @Html.Hidden("bookId", Model.BookID)
+                        @Html.Hidden("isRental", true)
+                        <button type="submit" class="btn btn-primary rental-btn" onclick="return handleSubmit(this.form, true)">
+                            <i class="fas fa-clock"></i>
+                            השכרה - ₪@Model.RentalPrice
+                        </button>
+                    </form>
+                }
+            </div>
+            <button onclick="closePurchaseDialog()" class="btn btn-secondary">ביטול</button>
         </div>
-    }
+    </div>
 
-    @if (TempData["Error"] != null)
-    {
-        <div class="alert alert-danger" role="alert">
-            @TempData["Error"]
-        </div>
-    }
+    <div id="successMessage" class="message success-message">
+        <i class="fas fa-check-circle"></i>
+        <span class="message-text">נוסף בהצלחה לסל</span>
+    </div>
+
+    <div id="errorMessage" class="message error-message">
+        <i class="fas fa-exclamation-circle"></i>
+        <span class="message-text">אירעה שגיאה בהוספת הספר לעגלה</span>
+    </div>
 </div>
 
 <style>
@@ -215,51 +86,47 @@
         direction: rtl;
     }
 
-        .book-details img {
-            width: 300px;
-            height: 400px;
-            object-fit: contain;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            margin: 20px auto;
-            display: block;
-        }
+    .book-details img {
+        width: 300px;
+        height: 400px;
+        object-fit: contain;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        margin: 20px auto;
+        display: block;
+    }
 
-        .book-details h2 {
-            font-size: 24px;
-            font-weight: bold;
-            text-align: center;
-            color: #333;
-            margin-bottom: 20px;
-        }
+    .book-details h2 {
+        font-size: 24px;
+        font-weight: bold;
+        text-align: center;
+        color: #333;
+        margin-bottom: 20px;
+    }
 
     .book-info {
         text-align: right;
         margin: 20px 0;
     }
 
-        .book-info p {
-            font-size: 16px;
-            line-height: 1.6;
-            margin: 10px 0;
-            padding: 5px 0;
-            border-bottom: 1px solid #eee;
-        }
+    .book-info p {
+        font-size: 16px;
+        line-height: 1.6;
+        margin: 10px 0;
+        padding: 5px 0;
+        border-bottom: 1px solid #eee;
+    }
 
-        .book-info strong {
-            color: #555;
-            margin-left: 10px;
-        }
+    .book-info strong {
+        color: #555;
+        margin-left: 10px;
+    }
 
     .actions {
         margin-top: 30px;
         display: flex;
         gap: 15px;
         justify-content: center;
-    }
-
-    .purchase-form, .rental-form {
-        display: inline-block;
     }
 
     .btn {
@@ -274,9 +141,9 @@
         cursor: pointer;
     }
 
-        .btn i {
-            margin-left: 8px;
-        }
+    .btn i {
+        margin-left: 8px;
+    }
 
     .btn-add-to-cart {
         background-color: #28a745;
@@ -284,10 +151,10 @@
         border: none;
     }
 
-        .btn-add-to-cart:hover {
-            background-color: #218838;
-            transform: translateY(-2px);
-        }
+    .btn-add-to-cart:hover {
+        background-color: #218838;
+        transform: translateY(-2px);
+    }
 
     .btn-primary {
         background-color: #007bff;
@@ -295,27 +162,153 @@
         border: none;
     }
 
-        .btn-primary:hover {
-            background-color: #0056b3;
-            transform: translateY(-2px);
-        }
-
-    .alert {
-        padding: 15px;
-        margin: 20px 0;
-        border-radius: 5px;
-        font-weight: bold;
+    .btn-primary:hover {
+        background-color: #0056b3;
+        transform: translateY(-2px);
     }
 
-    .alert-success {
+    .btn-secondary {
+        background-color: #6c757d;
+        color: white;
+        border: none;
+        margin-top: 10px;
+    }
+
+    .btn-secondary:hover {
+        background-color: #5a6268;
+    }
+
+    .purchase-btn {
+        background-color: #28a745;
+    }
+
+    .purchase-btn:hover {
+        background-color: #218838;
+    }
+
+    .rental-btn {
+        background-color: #17a2b8;
+    }
+
+    .rental-btn:hover {
+        background-color: #138496;
+    }
+
+    .modal {
+        display: none;
+        position: fixed;
+        z-index: 1000;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0,0,0,0.5);
+    }
+
+    .modal-content {
+        background-color: #fefefe;
+        margin: 15% auto;
+        padding: 20px;
+        border: 1px solid #888;
+        width: 80%;
+        max-width: 500px;
+        border-radius: 10px;
+        text-align: center;
+        direction: rtl;
+    }
+
+    .purchase-options {
+        display: flex;
+        justify-content: center;
+        gap: 20px;
+        margin: 20px 0;
+    }
+
+    .message {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        padding: 15px 20px;
+        border-radius: 5px;
+        display: none;
+        z-index: 1000;
+        direction: rtl;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .success-message {
         background-color: #d4edda;
         color: #155724;
         border: 1px solid #c3e6cb;
     }
 
-    .alert-danger {
+    .error-message {
         background-color: #f8d7da;
         color: #721c24;
         border: 1px solid #f5c6cb;
     }
+
+    .message i {
+        font-size: 1.2em;
+    }
+
+    .message-text {
+        font-weight: 500;
+    }
 </style>
+
+<script>
+    function showPurchaseOptions() {
+        document.getElementById('purchaseDialog').style.display = 'block';
+    }
+
+    function closePurchaseDialog() {
+        document.getElementById('purchaseDialog').style.display = 'none';
+    }
+
+    function handleSubmit(form, isRental) {
+        var formData = new FormData(form);
+
+        fetch(form.action, {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'RequestVerificationToken': form.querySelector('[name="__RequestVerificationToken"]').value
+            }
+        })
+        .then(response => {
+            if (response.ok) {
+                showMessage(true);
+                closePurchaseDialog();
+            } else {
+                showMessage(false);
+            }
+        })
+        .catch(error => {
+            showMessage(false);
+        });
+
+        return false;
+    }
+
+    function showMessage(isSuccess) {
+        const successMsg = document.getElementById('successMessage');
+        const errorMsg = document.getElementById('errorMessage');
+
+        const messageToShow = isSuccess ? successMsg : errorMsg;
+        messageToShow.style.display = 'flex';
+
+        setTimeout(() => {
+            messageToShow.style.display = 'none';
+        }, 3000);
+    }
+
+    window.onclick = function(event) {
+        var modal = document.getElementById('purchaseDialog');
+        if (event.target == modal) {
+            closePurchaseDialog();
+        }
+    }
+</script>

@@ -1,0 +1,453 @@
+﻿@model IEnumerable<DigireadProject.ShoppingCart>
+
+@{
+    ViewBag.Title = "עגלת קניות";
+}
+
+@Html.AntiForgeryToken()
+
+<div class="cart-container">
+    <div class="cart-header">
+        <h2><i class="fas fa-shopping-cart"></i> עגלת קניות</h2>
+        <span class="items-count">@Model.Count() פריטים</span>
+    </div>
+
+    <div class="cart-content">
+        <div class="cart-items">
+            @foreach (var item in Model)
+            {
+                <div class="cart-item" id="cart-row-@item.CartID">
+                    <div class="item-image">
+                        @if (!string.IsNullOrEmpty(item.Books.ImageSrc))
+                        {
+                            <img src="@Url.Content(item.Books.ImageSrc)"
+                                 alt="@item.Books.Title"
+                                 class="book-thumbnail" />
+                        }
+                        else
+                        {
+                            <img src="@Url.Content("~/Content/Images/default-book.jpg")"
+                                 alt="תמונה לא זמינה"
+                                 class="book-thumbnail" />
+                        }
+                    </div>
+                    <div class="item-details">
+                        <h3 class="item-title">@item.Books.Title</h3>
+                        <div class="item-type">@(item.IsRental.GetValueOrDefault() ? "השכרה" : "קנייה")</div>
+                        <div class="item-quantity">כמות: @item.Quantity</div>
+                    </div>
+                    <div class="item-price">
+                        <div class="price">@item.Price.Value.ToString("C")</div>
+                        <div class="total">סה"כ: @((item.Price * item.Quantity).Value.ToString("C"))</div>
+                    </div>
+                    <button type="button" onclick="removeFromCart(@item.CartID)" class="remove-btn">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
+            }
+        </div>
+
+        <div class="cart-summary">
+            <div class="summary-header">
+                <h3>סיכום הזמנה</h3>
+            </div>
+            <div class="summary-content">
+                <div class="summary-row">
+                    <span>סה"כ פריטים</span>
+                    <span>@Model.Count()</span>
+                </div>
+                <div class="summary-row total">
+                    <span>סה"כ לתשלום</span>
+                    <span>@Model.Sum(x => x.Price * x.Quantity).Value.ToString("C")</span>
+                </div>
+                @if (Model.Any())
+                {
+                    <a href="@Url.Action("Checkout", "Order")" class="checkout-btn">
+                        <i class="fas fa-lock"></i>
+                        המשך לתשלום מאובטח
+                    </a>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal for delete confirmation -->
+<div class="modal fade" id="confirmDeleteModal" tabindex="-1" role="dialog" aria-labelledby="confirmDeleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmDeleteModalLabel">אישור מחיקה</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                האם אתה בטוח שברצונך להסיר ספר זה מהסל?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">ביטול</button>
+                <button type="button" class="btn btn-danger" id="confirmDelete">מחק</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="successMessage" class="message success-message">
+    <i class="fas fa-check-circle"></i>
+    <span class="message-text">הפעולה בוצעה בהצלחה!</span>
+</div>
+
+<div id="errorMessage" class="message error-message">
+    <i class="fas fa-exclamation-circle"></i>
+    <span class="message-text">אירעה שגיאה בביצוע הפעולה</span>
+</div>
+
+@section Scripts {
+    <script>
+        let currentCartId = null;
+
+        $(document).ready(function() {
+            $('#confirmDelete').click(function() {
+                if (currentCartId === null) return;
+
+                var token = $('input[name="__RequestVerificationToken"]').val();
+
+                $.ajax({
+                    url: '@Url.Action("RemoveFromCart", "ShoppingCart")',
+                    type: 'POST',
+                    headers: {
+                        'RequestVerificationToken': token
+                    },
+                    data: {
+                        cartId: currentCartId,
+                        __RequestVerificationToken: token
+                    },
+                    success: function (response) {
+                        if (response.success) {
+                            $(`#cart-row-${currentCartId}`).fadeOut(300, function() {
+                                $(this).remove();
+                                updateTotalAmount();
+                                updateItemCount();
+                                if ($('.cart-items').children().length === 0) {
+                                    location.reload();
+                                }
+                            });
+                            showMessage(true);
+                        } else {
+                            console.error('Failed to remove item:', response.message);
+                            showMessage(false);
+                        }
+                        $('#confirmDeleteModal').modal('hide');
+                        currentCartId = null;
+                    },
+                    error: function (xhr, status, error) {
+                        console.error('Error:', error);
+                        showMessage(false);
+                        $('#confirmDeleteModal').modal('hide');
+                        currentCartId = null;
+                    }
+                });
+            });
+        });
+
+        function removeFromCart(cartId) {
+            currentCartId = cartId;
+            $('#confirmDeleteModal').modal('show');
+        }
+
+        function updateTotalAmount() {
+            var total = 0;
+            $('.cart-item').each(function() {
+                var priceText = $(this).find('.total').text();
+                var price = parseFloat(priceText.replace('סה"כ: ₪', '').replace(',', ''));
+                if (!isNaN(price)) {
+                    total += price;
+                }
+            });
+            $('.summary-row.total span:last-child').text('₪' + total.toFixed(2));
+        }
+
+        function updateItemCount() {
+            var itemCount = $('.cart-item').length;
+            $('.items-count').text(itemCount + ' פריטים');
+            $('.summary-row:not(.total) span:last-child').text(itemCount);
+        }
+
+        function showMessage(isSuccess) {
+            const successMsg = document.getElementById('successMessage');
+            const errorMsg = document.getElementById('errorMessage');
+
+            const messageToShow = isSuccess ? successMsg : errorMsg;
+            messageToShow.style.display = 'flex';
+
+            setTimeout(() => {
+                messageToShow.style.display = 'none';
+            }, 3000);
+        }
+    </script>
+
+    <style>
+        .cart-container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+            direction: rtl;
+        }
+
+        .cart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+            .cart-header h2 {
+                margin: 0;
+                font-size: 1.8rem;
+                display: flex;
+                align-items: center;
+                gap: 0.5rem;
+            }
+
+        .items-count {
+            color: #666;
+            font-size: 1.1rem;
+        }
+
+        .cart-content {
+            display: grid;
+            grid-template-columns: 1fr 350px;
+            gap: 2rem;
+        }
+
+        @@media screen and (max-width: 968px) {
+            .cart-content {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .cart-items {
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .cart-item {
+            display: grid;
+            grid-template-columns: auto 1fr auto auto;
+            gap: 1.5rem;
+            padding: 1.5rem;
+            border-bottom: 1px solid #e0e0e0;
+            align-items: center;
+        }
+
+        @@media screen and (max-width: 768px) {
+            .cart-item {
+                grid-template-columns: auto 1fr;
+                grid-template-areas:
+                    "image details"
+                    "price price"
+                    "remove remove";
+            }
+
+            .item-image {
+                grid-area: image;
+            }
+
+            .item-details {
+                grid-area: details;
+            }
+
+            .item-price {
+                grid-area: price;
+                text-align: right;
+                margin-top: 1rem;
+            }
+
+            .remove-btn {
+                grid-area: remove;
+                width: 100%;
+                margin-top: 1rem;
+            }
+        }
+
+        .cart-item:last-child {
+            border-bottom: none;
+        }
+
+        .item-image {
+            width: 100px;
+        }
+
+        .book-thumbnail {
+            width: 100px;
+            height: 140px;
+            object-fit: cover;
+            border-radius: 4px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            transition: transform 0.2s;
+        }
+
+            .book-thumbnail:hover {
+                transform: scale(1.05);
+            }
+
+        .item-details {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .item-title {
+            margin: 0;
+            font-size: 1.2rem;
+            color: #333;
+        }
+
+        .item-type {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .item-quantity {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .item-price {
+            text-align: left;
+        }
+
+        .price {
+            font-size: 1.2rem;
+            color: #333;
+            font-weight: bold;
+        }
+
+        .total {
+            color: #666;
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+        }
+
+        .remove-btn {
+            background: none;
+            border: none;
+            color: #dc3545;
+            cursor: pointer;
+            padding: 0.5rem;
+            transition: color 0.2s;
+        }
+
+            .remove-btn:hover {
+                color: #c82333;
+            }
+
+        .cart-summary {
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            align-self: start;
+            position: sticky;
+            top: 2rem;
+        }
+
+        .summary-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+            .summary-header h3 {
+                margin: 0;
+                font-size: 1.4rem;
+            }
+
+        .summary-content {
+            padding: 1.5rem;
+        }
+
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+            color: #666;
+        }
+
+            .summary-row.total {
+                color: #333;
+                font-size: 1.2rem;
+                font-weight: bold;
+                border-top: 1px solid #e0e0e0;
+                padding-top: 1rem;
+                margin-top: 1rem;
+            }
+
+        .checkout-btn {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 0.5rem;
+            width: 100%;
+            padding: 1rem;
+            background-color: #28a745;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+            margin-top: 1.5rem;
+            transition: background-color 0.2s;
+        }
+
+            .checkout-btn:hover {
+                background-color: #218838;
+                color: white;
+                text-decoration: none;
+            }
+
+        .modal {
+            direction: rtl;
+        }
+
+        .modal-content {
+            border-radius: 8px;
+            box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+        }
+
+        .modal-header {
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .modal-footer {
+            justify-content: flex-start;
+            border-top: 1px solid #e0e0e0;
+        }
+
+        .message {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 1rem 1.5rem;
+            border-radius: 4px;
+            display: none;
+            z-index: 1000;
+            direction: rtl;
+            align-items: center;
+            gap: 0.5rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .success-message {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .error-message {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+    </style>
+}
