@@ -144,7 +144,7 @@ namespace DigireadProject.Controllers
 
                 if ((bool)user.IsAdmin)
                 {
-                    return RedirectToAction("Index", "UserManagement");
+                    return RedirectToAction("Dashboard", "Admin");
                 }
 
                 return RedirectToAction("HomePage", "Home",null);

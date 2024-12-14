@@ -21,7 +21,7 @@ namespace DigireadProject
         public Nullable<bool> PaymentStatus { get; set; }
         public string PaymentMethod { get; set; }
     
-        public virtual Books Books { get; set; }
         public virtual Users Users { get; set; }
+        public virtual Books Books { get; set; }
     }
 }

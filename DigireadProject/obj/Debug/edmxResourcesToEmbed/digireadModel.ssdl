@@ -23,7 +23,9 @@
     <Property Name="IsF2BAvailable" Type="bit" />
     <Property Name="IsMobiAvailable" Type="bit" />
     <Property Name="IsPDFAvailable" Type="bit" />
-    <Property Name="BookImage" Type="varbinary(max)" />
+    <Property Name="ImageSrc" Type="nvarchar(max)" />
+    <Property Name="StockQuantity" Type="int" />
+    <Property Name="Description" Type="text" />
   </EntityType>
   <EntityType Name="PasswordResetTokens">
     <Key>
@@ -80,6 +82,8 @@
     <Property Name="Price" Type="decimal" Precision="10" Scale="2" />
     <Property Name="DateAdded" Type="datetime" />
     <Property Name="typeBook" Type="bit" />
+    <Property Name="Quantity" Type="int" />
+    <Property Name="IsRental" Type="bit" />
   </EntityType>
   <EntityType Name="Users">
     <Key>
@@ -104,6 +108,24 @@
     <Property Name="WaitPosition" Type="int" />
     <Property Name="AddedDate" Type="datetime" />
     <Property Name="EmailNotificationSent" Type="bit" />
+  </EntityType>
+  <!--Errors Found During Generation:
+warning 6002: The table/view 'libraryProject_digiread.sys.database_firewall_rules' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+  <EntityType Name="database_firewall_rules">
+    <Key>
+      <PropertyRef Name="id" />
+      <PropertyRef Name="name" />
+      <PropertyRef Name="start_ip_address" />
+      <PropertyRef Name="end_ip_address" />
+      <PropertyRef Name="create_date" />
+      <PropertyRef Name="modify_date" />
+    </Key>
+    <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="name" Type="nvarchar" MaxLength="128" Nullable="false" />
+    <Property Name="start_ip_address" Type="varchar" MaxLength="45" Nullable="false" />
+    <Property Name="end_ip_address" Type="varchar" MaxLength="45" Nullable="false" />
+    <Property Name="create_date" Type="datetime" Nullable="false" />
+    <Property Name="modify_date" Type="datetime" Nullable="false" />
   </EntityType>
   <Association Name="FK__Purchases__BookI__7F2BE32F">
     <End Role="Books" Type="Self.Books" Multiplicity="0..1" />
@@ -234,6 +256,16 @@
     <EntitySet Name="ShoppingCart" EntityType="Self.ShoppingCart" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Users" EntityType="Self.Users" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="WaitList" EntityType="Self.WaitList" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="database_firewall_rules" EntityType="Self.database_firewall_rules" store:Type="Views" store:Schema="sys">
+      <DefiningQuery>SELECT 
+    [database_firewall_rules].[id] AS [id], 
+    [database_firewall_rules].[name] AS [name], 
+    [database_firewall_rules].[start_ip_address] AS [start_ip_address], 
+    [database_firewall_rules].[end_ip_address] AS [end_ip_address], 
+    [database_firewall_rules].[create_date] AS [create_date], 
+    [database_firewall_rules].[modify_date] AS [modify_date]
+    FROM [sys].[database_firewall_rules] AS [database_firewall_rules]</DefiningQuery>
+    </EntitySet>
     <AssociationSet Name="FK__Purchases__BookI__7F2BE32F" Association="Self.FK__Purchases__BookI__7F2BE32F">
       <End Role="Books" EntitySet="Books" />
       <End Role="Purchases" EntitySet="Purchases" />
