@@ -1,0 +1,82 @@
+﻿@model IEnumerable<DigireadProject.Models.ViewModels.UserRentalViewModel>
+
+<div class="container">
+    <h2>השאלות של @ViewBag.Username</h2>
+
+    @if (!Model.Any())
+    {
+        <div class="alert alert-info">
+            אין השאלות פעילות למשתמש זה
+        </div>
+    }
+    else
+    {
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>מזהה השאלה</th>
+                    <th>שם ספר</th>
+                    <th>תאריך השאלה</th>
+                    <th>תאריך החזרה</th>
+                    <th>סטטוס</th>
+                    <th>פעולות</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var rental in Model)
+                {
+                    <tr>
+                        <td>@rental.RentalID</td>
+                        <td>@rental.BookTitle</td>
+                        <td>@rental.RentalDate.ToString("dd/MM/yyyy")</td>
+                        <td>@(rental.ReturnDate.HasValue ? rental.ReturnDate.Value.ToString("dd/MM/yyyy") : "לא הוחזר")</td>
+                        <td>@rental.Status</td>
+                        <td>
+                            @if (rental.ReturnDate == null)
+                            {
+                                <button class="btn btn-warning return-book" data-rental-id="@rental.RentalID">החזר ספר</button>
+                                <button class="btn btn-danger cancel-rental" data-rental-id="@rental.RentalID">בטל השאלה</button>
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+</div>
+
+<script>
+    $(document).ready(function() {
+        $('.return-book').on('click', function() {
+            var rentalId = $(this).data('rental-id');
+            $.ajax({
+                url: '@Url.Action("ReturnBook", "BookManagement")',
+                type: 'POST',
+                data: { rentalId: rentalId },
+                success: function(result) {
+                    if (result.success) {
+                        location.reload();
+                    } else {
+                        alert(result.message);
+                    }
+                }
+            });
+        });
+
+        $('.cancel-rental').on('click', function() {
+            var rentalId = $(this).data('rental-id');
+            $.ajax({
+                url: '@Url.Action("CancelRental", "BookManagement")',
+                type: 'POST',
+                data: { rentalId: rentalId },
+                success: function(result) {
+                    if (result.success) {
+                        location.reload();
+                    } else {
+                        alert(result.message);
+                    }
+                }
+            });
+        });
+    });
+</script>

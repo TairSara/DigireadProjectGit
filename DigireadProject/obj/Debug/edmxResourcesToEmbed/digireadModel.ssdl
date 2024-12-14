@@ -57,6 +57,8 @@
     <Property Name="UserID" Type="int" />
     <Property Name="RentalDate" Type="datetime" />
     <Property Name="ReturnDate" Type="datetime" />
+    <Property Name="ImageSrc" Type="nvarchar(max)" />
+    <Property Name="DaysOverdue" Type="int" />
   </EntityType>
   <EntityType Name="Reviews">
     <Key>
@@ -84,6 +86,7 @@
     <Property Name="typeBook" Type="bit" />
     <Property Name="Quantity" Type="int" />
     <Property Name="IsRental" Type="bit" />
+    <Property Name="ImageSrc" Type="nvarchar" MaxLength="255" />
   </EntityType>
   <EntityType Name="Users">
     <Key>

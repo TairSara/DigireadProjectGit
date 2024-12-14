@@ -22,6 +22,7 @@ namespace DigireadProject
         public Nullable<bool> typeBook { get; set; }
         public Nullable<int> Quantity { get; set; }
         public Nullable<bool> IsRental { get; set; }
+        public string ImageSrc { get; set; }
     
         public virtual Users Users { get; set; }
         public virtual Books Books { get; set; }
