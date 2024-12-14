@@ -196,8 +196,13 @@
       <DependentUpon>digireadModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\AdminController.cs" />
+    <Compile Include="Controllers\BookManagementController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\UserManagementController.cs" />
+    <Compile Include="database_firewall_rules.cs">
+      <DependentUpon>digireadModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="digireadModel.Context.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -217,7 +222,9 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\Services\EmailService.cs" />
+    <Compile Include="Models\ViewModels\BookViewModel.cs" />
     <Compile Include="Models\ViewModels\ForgotPasswordViewModel.cs" />
+    <Compile Include="Models\ViewModels\GalleryViewModel.cs" />
     <Compile Include="Models\ViewModels\LoginViewModel.cs" />
     <Compile Include="Models\ViewModels\RegisterViewModel.cs" />
     <Compile Include="Models\ViewModels\ResetPasswordViewModel.cs" />
@@ -252,6 +259,17 @@
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\logo.png" />
+    <Content Include="Content\ביוגרפיה.gif" />
+    <Content Include="Content\היסטוריה.gif" />
+    <Content Include="Content\ילדים.gif" />
+    <Content Include="Content\מדע בדיוני.gif" />
+    <Content Include="Content\מדע.gif" />
+    <Content Include="Content\מתח ומסתורין.gif" />
+    <Content Include="Content\נוער.gif" />
+    <Content Include="Content\פילוסופיה.gif" />
+    <Content Include="Content\פנטזיה.gif" />
+    <Content Include="Content\רומן.gif" />
+    <Content Include="Content\שירה.gif" />
     <Content Include="digireadModel.Context.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>digireadModel.Context.cs</LastGenOutput>
@@ -305,6 +323,13 @@
     <Content Include="Views\Account\Profile.cshtml" />
     <Content Include="Views\Account\ForgotPassword.cshtml" />
     <Content Include="Views\Account\ResetPassword.cshtml" />
+    <Content Include="Views\BookManagement\ManageBooks.cshtml" />
+    <Content Include="Views\Admin\Dashboard.cshtml" />
+    <Content Include="Views\BookManagement\AddBook.cshtml" />
+    <Content Include="Views\BookManagement\EditBook.cshtml" />
+    <Content Include="Views\BookManagement\Gallery.cshtml" />
+    <Content Include="Views\BookManagement\BookDetails.cshtml" />
+    <Content Include="Views\BookManagement\MainGallery.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

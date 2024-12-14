@@ -24,7 +24,7 @@ namespace DigireadProject
         public string ReviewTextWeb { get; set; }
         public Nullable<System.DateTime> ReviewDateWeb { get; set; }
     
-        public virtual Books Books { get; set; }
         public virtual Users Users { get; set; }
+        public virtual Books Books { get; set; }
     }
 }

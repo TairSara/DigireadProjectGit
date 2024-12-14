@@ -20,7 +20,7 @@ namespace DigireadProject
         public Nullable<System.DateTime> RentalDate { get; set; }
         public Nullable<System.DateTime> ReturnDate { get; set; }
     
-        public virtual Books Books { get; set; }
         public virtual Users Users { get; set; }
+        public virtual Books Books { get; set; }
     }
 }

@@ -1,0 +1,321 @@
+﻿@model DigireadProject.Models.ViewModels.BookViewModel
+
+<div class="book-details">
+        <h2>@Model.Title</h2>
+        <img src="@Model.ImageSrc" alt="תמונה של @Model.Title" class="book-image" />
+
+        <div class="book-info">
+            <p><strong>מחבר ראשי:</strong> @Model.MainAuthor</p>
+            <p><strong>הוצאה לאור:</strong> @Model.Publisher</p>
+            <p><strong>שנת פרסום:</strong> @Model.PublishYear</p>
+            <p><strong>מחיר רכישה:</strong> ₪@Model.PurchasePrice</p>
+            <p><strong>מחיר השכרה:</strong> ₪@Model.RentalPrice</p>
+            <p><strong>תיאור:</strong> @Model.Description</p>
+            <p><strong>ז'אנר:</strong> @Model.Genre</p>
+        </div>
+
+        <div class="actions">
+            @if (User.Identity.IsAuthenticated)
+            {
+                <form method="post" action="@Url.Action("AddToCart", "Cart", new { bookId = @Model.BookID, isRental=false })">
+                    @Html.AntiForgeryToken()
+                    <button type="submit" class="btn btn-add-to-cart">
+                        <i class="fas fa-shopping-cart"></i> הוספה לרכישה
+                    </button>
+                </form>
+            }
+            else
+            {
+                <a href="@Url.Action("Login", "Account")" class="btn btn-primary">
+                    התחבר כדי לרכוש
+                </a>
+            }
+        </div>
+
+        <div id="successMessage" class="message success-message">הספר נוסף לעגלה בהצלחה!</div>
+        <div id="errorMessage" class="message error-message">אירעה שגיאה בהוספת הספר לעגלה</div>
+    </div>
+
+    <style>
+        .book-details {
+            padding: 20px;
+            margin: 20px auto;
+            max-width: 800px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            background-color: #f9f9f9;
+            text-align: center;
+            direction: rtl;
+        }
+
+            .book-details img {
+                width: 300px;
+                height: 400px;
+                object-fit: contain;
+                border: 1px solid #ccc;
+                border-radius: 5px;
+                margin: 20px auto;
+                display: block;
+            }
+
+            .book-details h2 {
+                font-size: 24px;
+                font-weight: bold;
+                text-align: center;
+                color: #333;
+                margin-bottom: 20px;
+            }
+
+        .book-info {
+            text-align: right;
+            margin: 20px 0;
+        }
+
+            .book-info p {
+                font-size: 16px;
+                line-height: 1.6;
+                margin: 10px 0;
+                padding: 5px 0;
+                border-bottom: 1px solid #eee;
+            }
+
+            .book-info strong {
+                color: #555;
+                margin-left: 10px;
+            }
+
+        .actions {
+            margin-top: 30px;
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+        }
+
+        .purchase-form, .rental-form {
+            display: inline-block;
+        }
+
+        .btn {
+            padding: 12px 25px;
+            border-radius: 5px;
+            font-size: 16px;
+            font-weight: 500;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+            .btn i {
+                margin-left: 8px;
+            }
+
+        .btn-add-to-cart {
+            background-color: #28a745;
+            color: white;
+            border: none;
+        }
+
+            .btn-add-to-cart:hover {
+                background-color: #218838;
+                transform: translateY(-2px);
+            }
+
+        .btn-primary {
+            background-color: #007bff;
+            color: white;
+            border: none;
+        }
+
+            .btn-primary:hover {
+                background-color: #0056b3;
+                transform: translateY(-2px);
+            }
+
+        .message {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 20px;
+            border-radius: 5px;
+            display: none;
+            z-index: 1000;
+        }
+
+        .success-message {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .error-message {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+    </style>
+
+    <script>
+        function showMessage(isSuccess) {
+            const successMsg = document.getElementById('successMessage');
+            const errorMsg = document.getElementById('errorMessage');
+
+            const messageToShow = isSuccess ? successMsg : errorMsg;
+            messageToShow.style.display = 'block';
+
+            setTimeout(() => {
+                messageToShow.style.display = 'none';
+            }, 3000);
+        }
+
+        function addToCart(form, isRental) {
+            var formData = new FormData(form);
+
+            fetch('/Cart/AddToCart', {
+                method: 'POST',
+                body: formData
+            })
+                .then(response => {
+                    if (response.ok) {
+                        showMessage(true);
+                    } else {
+                        showMessage(false);
+                    }
+                })
+                .catch(error => {
+                    showMessage(false);
+                });
+        }
+    </script>
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success" role="alert">
+            @TempData["Success"]
+        </div>
+    }
+
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger" role="alert">
+            @TempData["Error"]
+        </div>
+    }
+</div>
+
+<style>
+    .book-details {
+        padding: 20px;
+        margin: 20px auto;
+        max-width: 800px;
+        border: 1px solid #ddd;
+        border-radius: 10px;
+        background-color: #f9f9f9;
+        text-align: center;
+        direction: rtl;
+    }
+
+        .book-details img {
+            width: 300px;
+            height: 400px;
+            object-fit: contain;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin: 20px auto;
+            display: block;
+        }
+
+        .book-details h2 {
+            font-size: 24px;
+            font-weight: bold;
+            text-align: center;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+    .book-info {
+        text-align: right;
+        margin: 20px 0;
+    }
+
+        .book-info p {
+            font-size: 16px;
+            line-height: 1.6;
+            margin: 10px 0;
+            padding: 5px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .book-info strong {
+            color: #555;
+            margin-left: 10px;
+        }
+
+    .actions {
+        margin-top: 30px;
+        display: flex;
+        gap: 15px;
+        justify-content: center;
+    }
+
+    .purchase-form, .rental-form {
+        display: inline-block;
+    }
+
+    .btn {
+        padding: 12px 25px;
+        border-radius: 5px;
+        font-size: 16px;
+        font-weight: 500;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        transition: all 0.3s ease;
+        cursor: pointer;
+    }
+
+        .btn i {
+            margin-left: 8px;
+        }
+
+    .btn-add-to-cart {
+        background-color: #28a745;
+        color: white;
+        border: none;
+    }
+
+        .btn-add-to-cart:hover {
+            background-color: #218838;
+            transform: translateY(-2px);
+        }
+
+    .btn-primary {
+        background-color: #007bff;
+        color: white;
+        border: none;
+    }
+
+        .btn-primary:hover {
+            background-color: #0056b3;
+            transform: translateY(-2px);
+        }
+
+    .alert {
+        padding: 15px;
+        margin: 20px 0;
+        border-radius: 5px;
+        font-weight: bold;
+    }
+
+    .alert-success {
+        background-color: #d4edda;
+        color: #155724;
+        border: 1px solid #c3e6cb;
+    }
+
+    .alert-danger {
+        background-color: #f8d7da;
+        color: #721c24;
+        border: 1px solid #f5c6cb;
+    }
+</style>

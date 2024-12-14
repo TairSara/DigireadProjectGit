@@ -20,8 +20,10 @@ namespace DigireadProject
         public Nullable<decimal> Price { get; set; }
         public Nullable<System.DateTime> DateAdded { get; set; }
         public Nullable<bool> typeBook { get; set; }
+        public Nullable<int> Quantity { get; set; }
+        public Nullable<bool> IsRental { get; set; }
     
-        public virtual Books Books { get; set; }
         public virtual Users Users { get; set; }
+        public virtual Books Books { get; set; }
     }
 }
