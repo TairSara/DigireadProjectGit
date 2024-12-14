@@ -1,0 +1,319 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="libraryProject_digireadModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityType Name="PasswordResetTokens">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Email" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="Token" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="CreatedAt" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="ExpiresAt" Type="DateTime" Nullable="false" Precision="3" />
+  </EntityType>
+  <EntityType Name="Purchases">
+    <Key>
+      <PropertyRef Name="PurchaseID" />
+    </Key>
+    <Property Name="PurchaseID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="BookID" Type="Int32" />
+    <Property Name="UserID" Type="Int32" />
+    <Property Name="PurchaseDate" Type="DateTime" Precision="3" />
+    <Property Name="PaymentStatus" Type="Boolean" />
+    <Property Name="PaymentMethod" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="Users" Relationship="Self.FK__Purchases__UserI__00200768" FromRole="Purchases" ToRole="Users" />
+    <NavigationProperty Name="Books" Relationship="libraryProject_digireadModel.FK__Purchases__BookI__7F2BE32F" FromRole="Purchases" ToRole="Books" />
+  </EntityType>
+  <EntityType Name="Rentals">
+    <Key>
+      <PropertyRef Name="RentalID" />
+    </Key>
+    <Property Name="RentalID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="BookID" Type="Int32" />
+    <Property Name="UserID" Type="Int32" />
+    <Property Name="RentalDate" Type="DateTime" Precision="3" />
+    <Property Name="ReturnDate" Type="DateTime" Precision="3" />
+    <NavigationProperty Name="Users" Relationship="Self.FK__Rentals__UserID__02084FDA" FromRole="Rentals" ToRole="Users" />
+    <NavigationProperty Name="Books" Relationship="libraryProject_digireadModel.FK__Rentals__BookID__01142BA1" FromRole="Rentals" ToRole="Books" />
+  </EntityType>
+  <EntityType Name="Reviews">
+    <Key>
+      <PropertyRef Name="ReviewID" />
+    </Key>
+    <Property Name="ReviewID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="BookID" Type="Int32" />
+    <Property Name="UserID" Type="Int32" />
+    <Property Name="RatingBook" Type="Int32" />
+    <Property Name="ReviewTextBook" Type="String" MaxLength="1000" FixedLength="false" Unicode="true" />
+    <Property Name="ReviewDateBook" Type="DateTime" Precision="3" />
+    <Property Name="RatingWeb" Type="Int32" />
+    <Property Name="ReviewTextWeb" Type="String" MaxLength="1000" FixedLength="false" Unicode="true" />
+    <Property Name="ReviewDateWeb" Type="DateTime" Precision="3" />
+    <NavigationProperty Name="Users" Relationship="Self.FK__Reviews__UserID__03F0984C" FromRole="Reviews" ToRole="Users" />
+    <NavigationProperty Name="Books" Relationship="libraryProject_digireadModel.FK__Reviews__BookID__02FC7413" FromRole="Reviews" ToRole="Books" />
+  </EntityType>
+  <EntityType Name="ShoppingCart">
+    <Key>
+      <PropertyRef Name="CartID" />
+    </Key>
+    <Property Name="CartID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="UserID" Type="Int32" />
+    <Property Name="BookID" Type="Int32" />
+    <Property Name="Price" Type="Decimal" Precision="10" Scale="2" />
+    <Property Name="DateAdded" Type="DateTime" Precision="3" />
+    <Property Name="typeBook" Type="Boolean" />
+    <NavigationProperty Name="Users" Relationship="Self.FK__ShoppingC__UserI__04E4BC85" FromRole="ShoppingCart" ToRole="Users" />
+    <NavigationProperty Name="Books" Relationship="libraryProject_digireadModel.FK__ShoppingC__BookI__05D8E0BE" FromRole="ShoppingCart" ToRole="Books" />
+    <Property Name="Quantity" Type="Int32" />
+    <Property Name="IsRental" Type="Boolean" />
+  </EntityType>
+  <EntityType Name="Users">
+    <Key>
+      <PropertyRef Name="UserID" />
+    </Key>
+    <Property Name="UserID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Username" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="Password" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="Email" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="RegistrationDate" Type="DateTime" Precision="3" />
+    <Property Name="IsActive" Type="Boolean" />
+    <Property Name="IsAdmin" Type="Boolean" />
+    <Property Name="PasswordReset" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <NavigationProperty Name="Purchases" Relationship="Self.FK__Purchases__UserI__00200768" FromRole="Users" ToRole="Purchases" />
+    <NavigationProperty Name="Rentals" Relationship="Self.FK__Rentals__UserID__02084FDA" FromRole="Users" ToRole="Rentals" />
+    <NavigationProperty Name="Reviews" Relationship="Self.FK__Reviews__UserID__03F0984C" FromRole="Users" ToRole="Reviews" />
+    <NavigationProperty Name="ShoppingCart" Relationship="Self.FK__ShoppingC__UserI__04E4BC85" FromRole="Users" ToRole="ShoppingCart" />
+    <NavigationProperty Name="WaitList" Relationship="Self.FK__WaitList__UserID__07C12930" FromRole="Users" ToRole="WaitList" />
+  </EntityType>
+  <EntityType Name="WaitList">
+    <Key>
+      <PropertyRef Name="WaitListID" />
+    </Key>
+    <Property Name="WaitListID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="BookID" Type="Int32" />
+    <Property Name="UserID" Type="Int32" />
+    <Property Name="WaitPosition" Type="Int32" />
+    <Property Name="AddedDate" Type="DateTime" Precision="3" />
+    <Property Name="EmailNotificationSent" Type="Boolean" />
+    <NavigationProperty Name="Users" Relationship="Self.FK__WaitList__UserID__07C12930" FromRole="WaitList" ToRole="Users" />
+    <NavigationProperty Name="Books" Relationship="libraryProject_digireadModel.FK__WaitList__BookID__06CD04F7" FromRole="WaitList" ToRole="Books" />
+  </EntityType>
+  <Association Name="FK__Purchases__UserI__00200768">
+    <End Role="Users" Type="Self.Users" Multiplicity="0..1" />
+    <End Role="Purchases" Type="Self.Purchases" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Users">
+        <PropertyRef Name="UserID" />
+      </Principal>
+      <Dependent Role="Purchases">
+        <PropertyRef Name="UserID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__Rentals__UserID__02084FDA">
+    <End Role="Users" Type="Self.Users" Multiplicity="0..1" />
+    <End Role="Rentals" Type="Self.Rentals" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Users">
+        <PropertyRef Name="UserID" />
+      </Principal>
+      <Dependent Role="Rentals">
+        <PropertyRef Name="UserID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__Reviews__UserID__03F0984C">
+    <End Role="Users" Type="Self.Users" Multiplicity="0..1" />
+    <End Role="Reviews" Type="Self.Reviews" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Users">
+        <PropertyRef Name="UserID" />
+      </Principal>
+      <Dependent Role="Reviews">
+        <PropertyRef Name="UserID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__ShoppingC__UserI__04E4BC85">
+    <End Role="Users" Type="Self.Users" Multiplicity="0..1" />
+    <End Role="ShoppingCart" Type="Self.ShoppingCart" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Users">
+        <PropertyRef Name="UserID" />
+      </Principal>
+      <Dependent Role="ShoppingCart">
+        <PropertyRef Name="UserID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__WaitList__UserID__07C12930">
+    <End Role="Users" Type="Self.Users" Multiplicity="0..1" />
+    <End Role="WaitList" Type="Self.WaitList" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Users">
+        <PropertyRef Name="UserID" />
+      </Principal>
+      <Dependent Role="WaitList">
+        <PropertyRef Name="UserID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="libraryProject_digireadEntities" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="PasswordResetTokens" EntityType="Self.PasswordResetTokens" />
+    <EntitySet Name="Purchases" EntityType="Self.Purchases" />
+    <EntitySet Name="Rentals" EntityType="Self.Rentals" />
+    <EntitySet Name="Reviews" EntityType="Self.Reviews" />
+    <EntitySet Name="ShoppingCart" EntityType="Self.ShoppingCart" />
+    <EntitySet Name="Users" EntityType="Self.Users" />
+    <EntitySet Name="WaitList" EntityType="Self.WaitList" />
+    <AssociationSet Name="FK__Purchases__UserI__00200768" Association="Self.FK__Purchases__UserI__00200768">
+      <End Role="Users" EntitySet="Users" />
+      <End Role="Purchases" EntitySet="Purchases" />
+    </AssociationSet>
+    <AssociationSet Name="FK__Rentals__UserID__02084FDA" Association="Self.FK__Rentals__UserID__02084FDA">
+      <End Role="Users" EntitySet="Users" />
+      <End Role="Rentals" EntitySet="Rentals" />
+    </AssociationSet>
+    <AssociationSet Name="FK__Reviews__UserID__03F0984C" Association="Self.FK__Reviews__UserID__03F0984C">
+      <End Role="Users" EntitySet="Users" />
+      <End Role="Reviews" EntitySet="Reviews" />
+    </AssociationSet>
+    <AssociationSet Name="FK__ShoppingC__UserI__04E4BC85" Association="Self.FK__ShoppingC__UserI__04E4BC85">
+      <End Role="Users" EntitySet="Users" />
+      <End Role="ShoppingCart" EntitySet="ShoppingCart" />
+    </AssociationSet>
+    <AssociationSet Name="FK__WaitList__UserID__07C12930" Association="Self.FK__WaitList__UserID__07C12930">
+      <End Role="Users" EntitySet="Users" />
+      <End Role="WaitList" EntitySet="WaitList" />
+    </AssociationSet>
+    <EntitySet Name="database_firewall_rules" EntityType="libraryProject_digireadModel.database_firewall_rules" />
+    <EntitySet Name="Books" EntityType="libraryProject_digireadModel.Books" />
+    <AssociationSet Name="FK__Purchases__BookI__7F2BE32F" Association="libraryProject_digireadModel.FK__Purchases__BookI__7F2BE32F">
+      <End Role="Books" EntitySet="Books" />
+      <End Role="Purchases" EntitySet="Purchases" />
+    </AssociationSet>
+    <AssociationSet Name="FK__Rentals__BookID__01142BA1" Association="libraryProject_digireadModel.FK__Rentals__BookID__01142BA1">
+      <End Role="Books" EntitySet="Books" />
+      <End Role="Rentals" EntitySet="Rentals" />
+    </AssociationSet>
+    <AssociationSet Name="FK__Reviews__BookID__02FC7413" Association="libraryProject_digireadModel.FK__Reviews__BookID__02FC7413">
+      <End Role="Books" EntitySet="Books" />
+      <End Role="Reviews" EntitySet="Reviews" />
+    </AssociationSet>
+    <AssociationSet Name="FK__ShoppingC__BookI__05D8E0BE" Association="libraryProject_digireadModel.FK__ShoppingC__BookI__05D8E0BE">
+      <End Role="Books" EntitySet="Books" />
+      <End Role="ShoppingCart" EntitySet="ShoppingCart" />
+    </AssociationSet>
+    <AssociationSet Name="FK__WaitList__BookID__06CD04F7" Association="libraryProject_digireadModel.FK__WaitList__BookID__06CD04F7">
+      <End Role="Books" EntitySet="Books" />
+      <End Role="WaitList" EntitySet="WaitList" />
+    </AssociationSet>
+  </EntityContainer>
+  <EntityType Name="database_firewall_rules">
+    <Key>
+      <PropertyRef Name="id" />
+      <PropertyRef Name="name" />
+      <PropertyRef Name="start_ip_address" />
+      <PropertyRef Name="end_ip_address" />
+      <PropertyRef Name="create_date" />
+      <PropertyRef Name="modify_date" />
+    </Key>
+    <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="name" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
+    <Property Name="start_ip_address" Type="String" Nullable="false" MaxLength="45" FixedLength="false" Unicode="false" />
+    <Property Name="end_ip_address" Type="String" Nullable="false" MaxLength="45" FixedLength="false" Unicode="false" />
+    <Property Name="create_date" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="modify_date" Type="DateTime" Nullable="false" Precision="3" />
+  </EntityType>
+  <EntityType Name="Books">
+    <Key>
+      <PropertyRef Name="BookID" />
+    </Key>
+    <Property Name="BookID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Title" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+    <Property Name="MainAuthor" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+    <Property Name="Publisher" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+    <Property Name="PublishYear" Type="Int32" Nullable="false" />
+    <Property Name="RentalPrice" Type="Decimal" Precision="10" Scale="2" />
+    <Property Name="PurchasePrice" Type="Decimal" Precision="10" Scale="2" />
+    <Property Name="AgeRestriction" Type="Int32" />
+    <Property Name="Genre" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+    <Property Name="IsAvailable" Type="Boolean" />
+    <Property Name="CreatedDate" Type="DateTime" Precision="3" />
+    <Property Name="IsForRent" Type="Boolean" />
+    <Property Name="OriginalPrice" Type="Decimal" Precision="10" Scale="2" />
+    <Property Name="DiscountEndDate" Type="DateTime" Precision="3" />
+    <Property Name="IsRented" Type="Boolean" />
+    <Property Name="IsEPUBAvailable" Type="Boolean" />
+    <Property Name="IsF2BAvailable" Type="Boolean" />
+    <Property Name="IsMobiAvailable" Type="Boolean" />
+    <Property Name="IsPDFAvailable" Type="Boolean" />
+    <Property Name="ImageSrc" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="StockQuantity" Type="Int32" />
+    <Property Name="Description" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <NavigationProperty Name="Purchases" Relationship="libraryProject_digireadModel.FK__Purchases__BookI__7F2BE32F" FromRole="Books" ToRole="Purchases" />
+    <NavigationProperty Name="Rentals" Relationship="libraryProject_digireadModel.FK__Rentals__BookID__01142BA1" FromRole="Books" ToRole="Rentals" />
+    <NavigationProperty Name="Reviews" Relationship="libraryProject_digireadModel.FK__Reviews__BookID__02FC7413" FromRole="Books" ToRole="Reviews" />
+    <NavigationProperty Name="ShoppingCart" Relationship="libraryProject_digireadModel.FK__ShoppingC__BookI__05D8E0BE" FromRole="Books" ToRole="ShoppingCart" />
+    <NavigationProperty Name="WaitList" Relationship="libraryProject_digireadModel.FK__WaitList__BookID__06CD04F7" FromRole="Books" ToRole="WaitList" />
+  </EntityType>
+  <Association Name="FK__Purchases__BookI__7F2BE32F">
+    <End Type="libraryProject_digireadModel.Books" Role="Books" Multiplicity="0..1" />
+    <End Type="libraryProject_digireadModel.Purchases" Role="Purchases" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Books">
+        <PropertyRef Name="BookID" />
+      </Principal>
+      <Dependent Role="Purchases">
+        <PropertyRef Name="BookID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__Rentals__BookID__01142BA1">
+    <End Type="libraryProject_digireadModel.Books" Role="Books" Multiplicity="0..1" />
+    <End Type="libraryProject_digireadModel.Rentals" Role="Rentals" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Books">
+        <PropertyRef Name="BookID" />
+      </Principal>
+      <Dependent Role="Rentals">
+        <PropertyRef Name="BookID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__Reviews__BookID__02FC7413">
+    <End Type="libraryProject_digireadModel.Books" Role="Books" Multiplicity="0..1" />
+    <End Type="libraryProject_digireadModel.Reviews" Role="Reviews" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Books">
+        <PropertyRef Name="BookID" />
+      </Principal>
+      <Dependent Role="Reviews">
+        <PropertyRef Name="BookID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__ShoppingC__BookI__05D8E0BE">
+    <End Type="libraryProject_digireadModel.Books" Role="Books" Multiplicity="0..1" />
+    <End Type="libraryProject_digireadModel.ShoppingCart" Role="ShoppingCart" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Books">
+        <PropertyRef Name="BookID" />
+      </Principal>
+      <Dependent Role="ShoppingCart">
+        <PropertyRef Name="BookID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__WaitList__BookID__06CD04F7">
+    <End Type="libraryProject_digireadModel.Books" Role="Books" Multiplicity="0..1" />
+    <End Type="libraryProject_digireadModel.WaitList" Role="WaitList" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Books">
+        <PropertyRef Name="BookID" />
+      </Principal>
+      <Dependent Role="WaitList">
+        <PropertyRef Name="BookID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+</Schema>

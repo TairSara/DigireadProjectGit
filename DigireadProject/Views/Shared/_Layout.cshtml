@@ -1,0 +1,179 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - Digital Books</title>
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
+    <style>
+        body {
+            background-color: #ffffff;
+            font-family: Calibri, sans-serif;
+            color: #333;
+        }
+
+        .navbar-custom {
+            background: #ffffff;
+            border-bottom: 1px solid #e0e0e0;
+            border-radius: 0;
+            direction: left;
+            padding-right: 0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .navbar-header {
+            display: flex;
+            flex-direction: row-reverse;
+            align-items: center;
+            width: 100%;
+            margin-left: -70px;
+        }
+
+        .navbar-brand .logo {
+            position: relative;
+            left: 160px;
+            height: 80px;
+            max-width: 120px;
+            margin-top: -15px;
+            object-fit: contain;
+            cursor: pointer;
+        }
+
+        .navbar-custom .navbar-nav > li > a {
+            color: #333;
+            text-align: center;
+            font-weight: bold;
+            text-transform: uppercase;
+            position: relative;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-decoration: none;
+        }
+
+        .navbar-custom .navbar-nav {
+            float: right;
+        }
+
+        .navbar-nav li {
+            margin-left: 20px;
+            margin-right: 20px;
+        }
+
+            .navbar-nav li a i {
+                font-size: 17px;
+                margin-top: -35px;
+            }
+
+        .navbar-custom .navbar-nav > li > a:hover {
+            background-color: #f5f5f5;
+            color: #000;
+        }
+
+            .navbar-custom .navbar-nav > li > a:hover i {
+                color: #000;
+            }
+
+        .navbar-custom .navbar-nav > li > a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: 0;
+            left: 90%;
+            background-color: #333;
+            transition: width 0.3s ease;
+        }
+
+        .navbar-custom .navbar-nav > li > a:hover::after {
+            width: 100%;
+            left: 0;
+        }
+
+        .container.body-content {
+            max-width: 900px; 
+            margin: 50px auto;
+            padding: 40px; 
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+
+        footer {
+            text-align: center;
+            padding: 20px;
+            background-color: #ffffff;
+            margin-top: 30px;
+            border-top: 1px solid #e0e0e0;
+        }
+    </style>
+</head>
+<body>
+    <div class="navbar navbar-custom navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="@Url.Action("HomePage", "Home")">
+                    <img src="~/Content/logo.png" alt="Digital Books Logo" class="logo" />
+                </a>
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+            </div>
+            <div class="navbar-collapse collapse">
+                <ul class="nav navbar-nav">
+                    <li>
+                        <a href="@Url.Action("HomePage", "Home")">
+                            <i class="fas fa-home"></i> דף הבית
+                        </a>
+                    </li>
+                    <li>
+                        <a href="@Url.Action("Login", "Account")">
+                            <i class="fas fa-sign-in-alt"></i> התחברות
+                        </a>
+                    </li>
+                    <li>
+                        <a href="@Url.Action("Register", "Account")">
+                            <i class="fas fa-user-plus"></i> הרשמה
+                        </a>
+                    </li>
+                    <li>
+                        <a href="@Url.Action("Logout", "Account")">
+                            <i class="fas fa-sign-out-alt"></i> התנתקות
+                        </a>
+                    </li>
+                    <li>
+                        <a href="@Url.Action("Profile", "Account")">
+                            <i class="fas fa-user-circle"></i> פרופיל אישי
+                        </a>
+                    </li>
+                    <li>
+                        <a href="@Url.Action("MainGallery", "BookManagement")">
+                            <i class="fas fa-book"></i> גלריית ספרים
+                        </a>
+                    </li>
+                    <li>
+                        <a href="@Url.Action("Cart", "Cart")">
+                            <i class="fas fa-cart-plus"></i> עגלה
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="container body-content">
+        @RenderBody()
+        <hr />
+        <footer>
+            <p>&copy; @DateTime.Now.Year - Digital Books</p>
+        </footer>
+    </div>
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @RenderSection("scripts", required: false)
+</body>
+</html>

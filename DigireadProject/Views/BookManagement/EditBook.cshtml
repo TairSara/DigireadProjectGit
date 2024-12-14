@@ -1,0 +1,257 @@
+﻿@model DigireadProject.Models.ViewModels.BookViewModel
+@{
+    ViewBag.Title = "עריכת ספר";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    var genreList = new[]
+    {
+        new { Text = "רומן ", Value = "רומן" },
+        new { Text = "מתח ומסתורין", Value = "מתח ומסתורין" },
+        new { Text = "מדע בדיוני ", Value = "מדע בדיוני" },
+        new { Text = "פנטזיה ", Value = "פנטזיה" },
+        new { Text = "ילדים ", Value = "ילדים" },
+        new { Text = "נוער ", Value = "נוער" },
+        new { Text = "ביוגרפיה ", Value = "ביוגרפיה" },
+        new { Text = "היסטוריה ", Value = "היסטוריה" },
+        new { Text = "מדע ", Value = "מדע" },
+        new { Text = "פילוסופיה ", Value = "פילוסופיה" },
+        new { Text = "שירה ", Value = "שירה" }
+    };
+}
+
+<div class="container mt-4" dir="rtl">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="text-center">עריכת ספר: @Model.Title</h3>
+                </div>
+                <div class="card-body">
+                    @using (Html.BeginForm("EditBook", "BookManagement", FormMethod.Post, new { id = "editBookForm" }))
+                    {
+                        @Html.AntiForgeryToken()
+                        @Html.HiddenFor(m => m.BookID)
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                @Html.LabelFor(m => m.Title, new { @class = "form-label" })
+                                @Html.TextBoxFor(m => m.Title, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(m => m.Title, "", new { @class = "text-danger" })
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                @Html.LabelFor(m => m.MainAuthor, new { @class = "form-label" })
+                                @Html.TextBoxFor(m => m.MainAuthor, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(m => m.MainAuthor, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                @Html.LabelFor(m => m.Publisher, new { @class = "form-label" })
+                                @Html.TextBoxFor(m => m.Publisher, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(m => m.Publisher, "", new { @class = "text-danger" })
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                @Html.LabelFor(m => m.PublishYear, new { @class = "form-label" })
+                                @Html.TextBoxFor(m => m.PublishYear, new { @class = "form-control", type = "number" })
+                                @Html.ValidationMessageFor(m => m.PublishYear, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                @Html.LabelFor(m => m.Genre, new { @class = "form-label" })
+                                @Html.DropDownListFor(m => m.Genre,
+                                    new SelectList(genreList, "Value", "Text"),
+                                    "בחר ז'אנר - Select Genre",
+                                    new { @class = "form-select" })
+                                @Html.ValidationMessageFor(m => m.Genre, "", new { @class = "text-danger" })
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                @Html.LabelFor(m => m.AgeRestriction, new { @class = "form-label" })
+                                @Html.TextBoxFor(m => m.AgeRestriction, new { @class = "form-control", type = "number" })
+                                @Html.ValidationMessageFor(m => m.AgeRestriction, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                @Html.LabelFor(m => m.PurchasePrice, new { @class = "form-label" })
+                                @Html.TextBoxFor(m => m.PurchasePrice, new { @class = "form-control", type = "number", step = "0.01" })
+                                @Html.ValidationMessageFor(m => m.PurchasePrice, "", new { @class = "text-danger" })
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                @Html.LabelFor(m => m.RentalPrice, new { @class = "form-label" })
+                                @Html.TextBoxFor(m => m.RentalPrice, new { @class = "form-control", type = "number", step = "0.01" })
+                                @Html.ValidationMessageFor(m => m.RentalPrice, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                @Html.LabelFor(m => m.OriginalPrice, new { @class = "form-label" })
+                                @Html.TextBoxFor(m => m.OriginalPrice, new { @class = "form-control", type = "number", step = "0.01" })
+                                @Html.ValidationMessageFor(m => m.OriginalPrice, "", new { @class = "text-danger" })
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                @Html.LabelFor(m => m.DiscountEndDate, new { @class = "form-label" })
+                                @Html.TextBoxFor(m => m.DiscountEndDate, new { @class = "form-control", type = "date" })
+                                @Html.ValidationMessageFor(m => m.DiscountEndDate, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                @Html.LabelFor(m => m.StockQuantity, new { @class = "form-label" })
+                                @Html.TextBoxFor(m => m.StockQuantity, new { @class = "form-control", type = "number" })
+                                @Html.ValidationMessageFor(m => m.StockQuantity, "", new { @class = "text-danger" })
+                            </div>
+                            <div class="col-md-6">
+                                @Html.LabelFor(m => m.ImageSrc, "כתובת תמונה (URL)", new { @class = "form-label" })
+                                @Html.TextBoxFor(m => m.ImageSrc, new { @class = "form-control", type = "url", placeholder = "https://example.com/image.jpg" })
+                                @Html.ValidationMessageFor(m => m.ImageSrc, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-md-3">
+                                <div class="form-check">
+                                    <input type="checkbox" class="form-check-input" name="IsAvailable" id="IsAvailable" @(Model.IsAvailable == true ? "checked" : "") />
+                                    @Html.LabelFor(m => m.IsAvailable, new { @class = "form-check-label" })
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-check">
+                                    <input type="checkbox" class="form-check-input" name="IsForRent" id="IsForRent" @(Model.IsForRent == true ? "checked" : "") />
+                                    @Html.LabelFor(m => m.IsForRent, new { @class = "form-check-label" })
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-12">
+                                <label class="form-label">פורמטים זמינים:</label>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-check">
+                                    <input type="checkbox" class="form-check-input" name="IsEPUBAvailable" id="IsEPUBAvailable" @(Model.IsEPUBAvailable == true ? "checked" : "") />
+                                    @Html.LabelFor(m => m.IsEPUBAvailable, new { @class = "form-check-label" })
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-check">
+                                    <input type="checkbox" class="form-check-input" name="IsF2BAvailable" id="IsF2BAvailable" @(Model.IsF2BAvailable == true ? "checked" : "") />
+                                    @Html.LabelFor(m => m.IsF2BAvailable, new { @class = "form-check-label" })
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-check">
+                                    <input type="checkbox" class="form-check-input" name="IsMobiAvailable" id="IsMobiAvailable" @(Model.IsMobiAvailable == true ? "checked" : "") />
+                                    @Html.LabelFor(m => m.IsMobiAvailable, new { @class = "form-check-label" })
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-check">
+                                    <input type="checkbox" class="form-check-input" name="IsPDFAvailable" id="IsPDFAvailable" @(Model.IsPDFAvailable == true ? "checked" : "") />
+                                    @Html.LabelFor(m => m.IsPDFAvailable, new { @class = "form-check-label" })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12 mb-3">
+                                @Html.LabelFor(m => m.Description, "תקציר", new { @class = "form-label" })
+                                @Html.TextAreaFor(m => m.Description, new { @class = "form-control", rows = 3 })
+                                @Html.ValidationMessageFor(m => m.Description, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                        <div class="text-center">
+                            <button type="submit" class="btn btn-primary">שמור שינויים</button>
+                            <a href="@Url.Action("ManageBooks", "BookManagement")" class="btn btn-secondary me-2">חזרה לרשימה</a>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script>
+        $(document).ready(function () {
+            // Image preview handler
+            $('#ImageSrc').on('change', function() {
+                var imgUrl = $(this).val();
+                if (imgUrl) {
+                    var img = $('<img>', {
+                        src: imgUrl,
+                        alt: 'תצוגה מקדימה של התמונה',
+                        class: 'img-thumbnail mt-2',
+                        style: 'max-width: 200px'
+                    });
+
+                    img.on('error', function() {
+                        alert('לא ניתן לטעון את התמונה מה-URL שהוזן');
+                        $(this).remove();
+                    });
+
+                    var previewDiv = $('#imagePreview');
+                    if (previewDiv.length === 0) {
+                        previewDiv = $('<div>', { id: 'imagePreview' }).insertAfter('#currentImage');
+                    }
+                    previewDiv.html(img);
+                }
+            });
+
+            // Form submission handler
+            $('#editBookForm').on('submit', function (e) {
+                e.preventDefault();
+
+                var formData = {
+                    BookID: $('#BookID').val(),
+                    Title: $('#Title').val(),
+                    MainAuthor: $('#MainAuthor').val(),
+                    Publisher: $('#Publisher').val(),
+                    PublishYear: $('#PublishYear').val(),
+                    RentalPrice: $('#RentalPrice').val(),
+                    PurchasePrice: $('#PurchasePrice').val(),
+                    AgeRestriction: $('#AgeRestriction').val(),
+                    Genre: $('#Genre').val(),
+                    OriginalPrice: $('#OriginalPrice').val(),
+                    DiscountEndDate: $('#DiscountEndDate').val(),
+                    StockQuantity: $('#StockQuantity').val(),
+                    ImageSrc: $('#ImageSrc').val(),
+                    Description: $('#Description').val(), // הוספתי את התיאור לטופס
+
+                    // Boolean fields
+                    IsAvailable: $('#IsAvailable').is(':checked'),
+                    IsForRent: $('#IsForRent').is(':checked'),
+                    IsEPUBAvailable: $('#IsEPUBAvailable').is(':checked'),
+                    IsF2BAvailable: $('#IsF2BAvailable').is(':checked'),
+                    IsMobiAvailable: $('#IsMobiAvailable').is(':checked'),
+                    IsPDFAvailable: $('#IsPDFAvailable').is(':checked')
+                };
+
+                // Add anti-forgery token
+                formData["__RequestVerificationToken"] = $('input[name="__RequestVerificationToken"]').val();
+
+                $.ajax({
+                    url: $(this).attr('action'),
+                    type: 'POST',
+                    data: formData,
+                    success: function (response) {
+                        if (response.success) {
+                            alert('הספר עודכן בהצלחה!');
+                            window.location.href = '@Url.Action("ManageBooks", "BookManagement")';
+                        } else {
+                            alert(response.message || 'אירעה שגיאה בעדכון הספר');
+                        }
+                    },
+                    error: function () {
+                        alert('אירעה שגיאה בשליחת הטופס');
+                    }
+                });
+            });
+        });
+    </script>
+}

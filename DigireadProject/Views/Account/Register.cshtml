@@ -1,0 +1,189 @@
+﻿@model DigireadProject.Models.ViewModels.RegisterViewModel
+@{
+    ViewBag.Title = "הרשמה";
+}
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+<h2 class="text-center">הרשמה</h2>
+
+@using (Html.BeginForm("Register", "Account", FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+    <div class="form-horizontal">
+        <hr />
+        @if (TempData["ErrorMessage"] != null)
+        {
+            <div class="alert alert-danger">
+                @TempData["ErrorMessage"]
+            </div>
+        }
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+        <div class="form-group text-center">
+            <div class="col-md-6 col-md-offset-3 position-relative">
+                @Html.LabelFor(m => m.Username, "שם משתמש", new { @class = "control-label text-right" })
+                @Html.TextBoxFor(m => m.Username, new { @class = "form-control", id = "usernameField" })
+                <span id="username-validation" class="validation-icon"></span>
+                @Html.ValidationMessageFor(m => m.Username, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group text-center">
+            <div class="col-md-6 col-md-offset-3 position-relative">
+                @Html.LabelFor(m => m.Email, "אימייל", new { @class = "control-label text-right" })
+                @Html.TextBoxFor(m => m.Email, new { @class = "form-control", id = "emailField", placeholder = "example@gmail.com" })
+                <span id="email-validation" class="validation-icon"></span>
+                @Html.ValidationMessageFor(m => m.Email, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group text-center">
+            <div class="col-md-6 col-md-offset-3 position-relative">
+                @Html.LabelFor(m => m.Password, "סיסמה", new { @class = "control-label text-right" })
+                @Html.PasswordFor(m => m.Password, new { @class = "form-control", id = "passwordField", placeholder = "••••••" })
+                <div id="password-requirements" class="text-left mt-2">
+                    <small>
+                        <span id="length-req" class="requirement"><i class="fas fa-times text-danger"></i> לפחות 6 תווים</span><br>
+                        <span id="uppercase-req" class="requirement"><i class="fas fa-times text-danger"></i> אות גדולה אחת לפחות</span><br>
+                        <span id="lowercase-req" class="requirement"><i class="fas fa-times text-danger"></i> אות קטנה אחת לפחות</span><br>
+                        <span id="number-req" class="requirement"><i class="fas fa-times text-danger"></i> מספר אחד לפחות</span><br>
+                        <span id="special-req" class="requirement"><i class="fas fa-times text-danger"></i> תו מיוחד אחד לפחות</span>
+                    </small>
+                </div>
+                <span id="password-validation" class="validation-icon"></span>
+                @Html.ValidationMessageFor(m => m.Password, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group text-center">
+            <div class="col-md-6 col-md-offset-3 position-relative">
+                @Html.LabelFor(m => m.ConfirmPassword, "אימות סיסמה", new { @class = "control-label text-right" })
+                @Html.PasswordFor(m => m.ConfirmPassword, new { @class = "form-control", id = "rePasswordField", placeholder = "••••••" })
+                <span id="repassword-validation" class="validation-icon"></span>
+                @Html.ValidationMessageFor(m => m.ConfirmPassword, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group text-center">
+            <div class="col-md-6 col-md-offset-3">
+                <button type="submit" class="btn btn-primary">הרשמה</button>
+            </div>
+        </div>
+
+        <div class="form-group text-center">
+            <div class="col-md-6 col-md-offset-3">
+                <a href="@Url.Action("Login", "Account")" class="btn btn-link" style="color:#006400;">
+                    משתמש קיים? <span style="color:#32CD32;">התחברות</span>
+                </a>
+            </div>
+        </div>
+    </div>
+}
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+
+    <script>
+        document.getElementById("passwordField").addEventListener("input", function () {
+            var password = this.value;
+
+            var lengthReq = password.length >= 6;
+            var uppercaseReq = /[A-Z]/.test(password);
+            var lowercaseReq = /[a-z]/.test(password);
+            var numberReq = /[0-9]/.test(password);
+            var specialReq = /[!@@#$%^&*(),.?":{}|<>]/.test(password);
+
+            document.getElementById("length-req").innerHTML =
+                lengthReq ? '<i class="fas fa-check text-success"></i> לפחות 6 תווים' :
+                    '<i class="fas fa-times text-danger"></i> לפחות 6 תווים';
+
+            document.getElementById("uppercase-req").innerHTML =
+                uppercaseReq ? '<i class="fas fa-check text-success"></i> אות גדולה אחת לפחות' :
+                    '<i class="fas fa-times text-danger"></i> אות גדולה אחת לפחות';
+
+            document.getElementById("lowercase-req").innerHTML =
+                lowercaseReq ? '<i class="fas fa-check text-success"></i> אות קטנה אחת לפחות' :
+                    '<i class="fas fa-times text-danger"></i> אות קטנה אחת לפחות';
+
+            document.getElementById("number-req").innerHTML =
+                numberReq ? '<i class="fas fa-check text-success"></i> מספר אחד לפחות' :
+                    '<i class="fas fa-times text-danger"></i> מספר אחד לפחות';
+
+            document.getElementById("special-req").innerHTML =
+                specialReq ? '<i class="fas fa-check text-success"></i> תו מיוחד אחד לפחות' :
+                    '<i class="fas fa-times text-danger"></i> תו מיוחד אחד לפחות';
+
+            var passwordValidationIcon = document.getElementById("password-validation");
+
+            if (lengthReq && uppercaseReq && lowercaseReq && numberReq && specialReq) {
+                passwordValidationIcon.innerHTML = '<i class="fas fa-check text-success"></i>';
+            } else {
+                passwordValidationIcon.innerHTML = '<i class="fas fa-times text-danger"></i>';
+            }
+        });
+
+        document.getElementById("rePasswordField").addEventListener("input", function () {
+            var password = document.getElementById("passwordField").value;
+            var rePassword = this.value;
+            var validationIcon = document.getElementById("repassword-validation");
+
+            if (password === rePassword && password !== "") {
+                validationIcon.innerHTML = '<i class="fas fa-check text-success"></i>';
+            } else {
+                validationIcon.innerHTML = '<i class="fas fa-times text-danger"></i>';
+            }
+        });
+
+        // הוספת וולידציה בעת שליחת הטופס
+        document.querySelector('form').addEventListener('submit', function (e) {
+            var password = document.getElementById("passwordField").value;
+
+            var lengthReq = password.length >= 6;
+            var uppercaseReq = /[A-Z]/.test(password);
+            var lowercaseReq = /[a-z]/.test(password);
+            var numberReq = /[0-9]/.test(password);
+            var specialReq = /[!@@#$%^&*(),.?":{}|<>]/.test(password);
+
+            if (!(lengthReq && uppercaseReq && lowercaseReq && numberReq && specialReq)) {
+                e.preventDefault();
+                alert('אנא ודא שהסיסמה עומדת בכל הדרישות');
+                return;
+            }
+
+            if (password !== document.getElementById("rePasswordField").value) {
+                e.preventDefault();
+                alert('הסיסמאות אינן תואמות');
+                return;
+            }
+        });
+    </script>
+}
+
+<style>
+    #password-requirements {
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        direction: rtl;
+    }
+
+    .requirement {
+        text-align: right;
+        direction: rtl;
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+    }
+
+        .requirement i {
+            margin-left: 10px;
+        }
+
+    .validation-icon {
+        position: absolute;
+        left: 15px;
+        top: 35px;
+    }
+</style>
