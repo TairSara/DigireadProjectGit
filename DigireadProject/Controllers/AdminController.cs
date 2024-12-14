@@ -28,7 +28,9 @@ namespace DigireadProject.Controllers
             {
                 // סך כל המשתמשים
                 ViewBag.TotalUsers = await db.Users.CountAsync();
-
+                // ספירת השאלות הפעילות
+                ViewBag.TotalRentals = await db.Rentals
+                    .CountAsync(r => r.ReturnDate == null);
                 // סך כל הספרים
                 ViewBag.TotalBooks = await db.Books.CountAsync();
 

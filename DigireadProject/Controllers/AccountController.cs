@@ -202,15 +202,15 @@ namespace DigireadProject.Controllers
         [HttpPost]
         [Authorize]
         [ValidateAntiForgeryToken]
-    
-        public async Task<ActionResult> UpdateProfile(UserProfileViewModel model)
-        {
-            if (!ModelState.IsValid)
-                return Json(new { success = false, errors = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage) });
 
+    
+        public async Task<ActionResult> UpdateProfile(UserProfileViewModel model,
+    string CurrentPassword, string NewPassword, string ConfirmNewPassword)
+        {
             var user = await db.Users.FirstOrDefaultAsync(u => u.Username == User.Identity.Name);
             if (user == null) return Json(new { success = false, redirect = Url.Action("Login") });
 
+            // Validate username and email uniqueness
             var usernameExists = await db.Users
                 .AnyAsync(u => u.Username == model.Username && u.UserID != user.UserID);
             var emailExists = await db.Users
@@ -221,11 +221,31 @@ namespace DigireadProject.Controllers
             if (emailExists)
                 return Json(new { success = false, error = "כתובת האימייל כבר קיימת במערכת" });
 
+            // Update basic profile details
             user.Username = model.Username;
             user.Email = model.Email;
+
+            // Handle password change if requested
+            if (!string.IsNullOrEmpty(CurrentPassword) &&
+                !string.IsNullOrEmpty(NewPassword) &&
+                !string.IsNullOrEmpty(ConfirmNewPassword))
+            {
+                // Verify current password
+                if (user.Password != HashPassword(CurrentPassword))
+                    return Json(new { success = false, error = "הסיסמה הנוכחית שגויה" });
+
+                if (NewPassword != ConfirmNewPassword)
+                    return Json(new { success = false, error = "הסיסמאות החדשות אינן תואמות" });
+
+                // Update password
+                user.Password = HashPassword(NewPassword);
+            }
+
             await db.SaveChangesAsync();
 
+            // Update authentication cookie with new username
             FormsAuthentication.SetAuthCookie(model.Username, true);
+
             return Json(new { success = true });
         }
         public ActionResult ForgotPassword()

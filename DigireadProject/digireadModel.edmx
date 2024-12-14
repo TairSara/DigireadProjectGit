@@ -62,6 +62,8 @@
           <Property Name="UserID" Type="int" />
           <Property Name="RentalDate" Type="datetime" />
           <Property Name="ReturnDate" Type="datetime" />
+          <Property Name="ImageSrc" Type="nvarchar(max)" />
+          <Property Name="DaysOverdue" Type="int" />
         </EntityType>
         <EntityType Name="Reviews">
           <Key>
@@ -89,6 +91,7 @@
           <Property Name="typeBook" Type="bit" />
           <Property Name="Quantity" Type="int" />
           <Property Name="IsRental" Type="bit" />
+          <Property Name="ImageSrc" Type="nvarchar" MaxLength="255" />
         </EntityType>
         <EntityType Name="Users">
           <Key>
@@ -350,6 +353,8 @@ warning 6002: The table/view 'libraryProject_digiread.sys.database_firewall_rule
           <Property Name="ReturnDate" Type="DateTime" Precision="3" />
           <NavigationProperty Name="Users" Relationship="Self.FK__Rentals__UserID__02084FDA" FromRole="Rentals" ToRole="Users" />
           <NavigationProperty Name="Books" Relationship="libraryProject_digireadModel.FK__Rentals__BookID__01142BA1" FromRole="Rentals" ToRole="Books" />
+          <Property Name="ImageSrc" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="DaysOverdue" Type="Int32" />
         </EntityType>
         <EntityType Name="Reviews">
           <Key>
@@ -381,6 +386,7 @@ warning 6002: The table/view 'libraryProject_digiread.sys.database_firewall_rule
           <NavigationProperty Name="Books" Relationship="libraryProject_digireadModel.FK__ShoppingC__BookI__05D8E0BE" FromRole="ShoppingCart" ToRole="Books" />
           <Property Name="Quantity" Type="Int32" />
           <Property Name="IsRental" Type="Boolean" />
+          <Property Name="ImageSrc" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="Users">
           <Key>
@@ -664,6 +670,8 @@ warning 6002: The table/view 'libraryProject_digiread.sys.database_firewall_rule
           <EntitySetMapping Name="Rentals">
             <EntityTypeMapping TypeName="libraryProject_digireadModel.Rentals">
               <MappingFragment StoreEntitySet="Rentals">
+                <ScalarProperty Name="DaysOverdue" ColumnName="DaysOverdue" />
+                <ScalarProperty Name="ImageSrc" ColumnName="ImageSrc" />
                 <ScalarProperty Name="RentalID" ColumnName="RentalID" />
                 <ScalarProperty Name="BookID" ColumnName="BookID" />
                 <ScalarProperty Name="UserID" ColumnName="UserID" />
@@ -690,6 +698,7 @@ warning 6002: The table/view 'libraryProject_digiread.sys.database_firewall_rule
           <EntitySetMapping Name="ShoppingCart">
             <EntityTypeMapping TypeName="libraryProject_digireadModel.ShoppingCart">
               <MappingFragment StoreEntitySet="ShoppingCart">
+                <ScalarProperty Name="ImageSrc" ColumnName="ImageSrc" />
                 <ScalarProperty Name="IsRental" ColumnName="IsRental" />
                 <ScalarProperty Name="Quantity" ColumnName="Quantity" />
                 <ScalarProperty Name="CartID" ColumnName="CartID" />

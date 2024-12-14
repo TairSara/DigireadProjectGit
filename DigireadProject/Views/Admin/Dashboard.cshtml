@@ -145,6 +145,13 @@
             <div class="stat-value">@ViewBag.TotalBooks</div>
             <div class="stat-label">ספרים במערכת</div>
         </a>
+        <a href="@Url.Action("UserRentals", "BookManagement")" class="dashboard-card">
+            <i class="fas fa-exchange-alt card-icon"></i>
+            <h2 class="card-title">ניהול השאלות</h2>
+            <p class="card-description">ניהול השאלות ספרים, מעקב והחזרות</p>
+            <div class="stat-value">@ViewBag.TotalRentals</div>
+            <div class="stat-label">השאלות פעילות</div>
+        </a>
 
     </div>
 

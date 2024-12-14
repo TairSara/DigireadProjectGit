@@ -27,6 +27,8 @@
     <EntitySetMapping Name="Rentals">
       <EntityTypeMapping TypeName="libraryProject_digireadModel.Rentals">
         <MappingFragment StoreEntitySet="Rentals">
+          <ScalarProperty Name="DaysOverdue" ColumnName="DaysOverdue" />
+          <ScalarProperty Name="ImageSrc" ColumnName="ImageSrc" />
           <ScalarProperty Name="RentalID" ColumnName="RentalID" />
           <ScalarProperty Name="BookID" ColumnName="BookID" />
           <ScalarProperty Name="UserID" ColumnName="UserID" />
@@ -53,6 +55,7 @@
     <EntitySetMapping Name="ShoppingCart">
       <EntityTypeMapping TypeName="libraryProject_digireadModel.ShoppingCart">
         <MappingFragment StoreEntitySet="ShoppingCart">
+          <ScalarProperty Name="ImageSrc" ColumnName="ImageSrc" />
           <ScalarProperty Name="IsRental" ColumnName="IsRental" />
           <ScalarProperty Name="Quantity" ColumnName="Quantity" />
           <ScalarProperty Name="CartID" ColumnName="CartID" />
