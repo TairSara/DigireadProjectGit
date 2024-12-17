@@ -1,0 +1,23 @@
+﻿.container.body-content {
+    max-width: 1200px;
+}
+
+.table {
+    text-align: center;
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+th {
+    text-align: center;
+    background-color: #f8f9fa;
+}
+
+.table-responsive {
+    margin: 0 20px;
+}
+
+.btn-sm {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.875rem;
+}

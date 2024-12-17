@@ -1,0 +1,113 @@
+﻿.container.body-content {
+    max-width: 1200px !important;
+}
+
+.carousel-container {
+    position: relative;
+    width: 100%;
+    max-width: 1000px;
+    margin: 50px;
+    padding: 0 60px;
+}
+
+.genres-grid {
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 100px;
+    overflow-x: hidden;
+    scroll-behavior: smooth;
+    padding: 20px 10px;
+    margin: 0 auto;
+    justify-content: flex-start;
+    -webkit-overflow-scrolling: touch;
+}
+
+.genre-container {
+    flex: 0 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100px;
+    text-decoration: none;
+    margin: 0 5px;
+}
+
+.genre-title {
+    color: #333;
+    font-size: 14px;
+    font-weight: bold;
+    margin-bottom: 6px;
+    text-align: center;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
+}
+
+.genre-card {
+    position: relative;
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    overflow: hidden;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+    .genre-card:hover {
+        transform: scale(1.05);
+    }
+
+.genre-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.genre-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(255, 218, 185, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    border-radius: 50%;
+}
+
+.genre-card:hover .genre-overlay {
+    opacity: 1;
+}
+
+.carousel-button {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 35px;
+    height: 35px;
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    z-index: 2;
+}
+
+.carousel-button-left {
+    left: 10px;
+}
+
+.carousel-button-right {
+    right: 10px;
+}
+
+.carousel-button:hover {
+    background-color: #f0f0f0;
+}
