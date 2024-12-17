@@ -3,6 +3,10 @@
     ViewBag.Title = "פרטי משתמש";
 }
 
+<link rel="stylesheet" href="~/Content/Books/css/book-management.css">
+<link rel="stylesheet" href="~/Content/Account/css/profile.css">
+<script src="~/Content/Account/js/profile.js"></script>
+
 <div class="container">
     <h2 class="text-center mb-4">פרטי משתמש</h2>
 
@@ -61,32 +65,3 @@
         </div>
     }
 </div>
-
-@section Scripts {
-    @Scripts.Render("~/bundles/jqueryval")
-    <script>
-        $(document).ready(function() {
-            $("#profileForm").on("submit", function(e) {
-                e.preventDefault();
-                $.ajax({
-                    url: this.action,
-                    method: this.method,
-                    data: $(this).serialize(),
-                    success: function(response) {
-                        if (response.success) {
-                            // הודעת הצלחה וניווט לדף הבית
-                            alert("הפרטים עודכנו בהצלחה!");
-                            window.location.href = "@Url.Action("HomePage", "Home")";
-                        } else {
-                            // הצגת הודעת שגיאה
-                            alert(response.error || "אירעה שגיאה בעדכון הפרטים");
-                        }
-                    },
-                    error: function() {
-                        alert("אירעה שגיאה בתקשורת עם השרת");
-                    }
-                });
-            });
-        });
-    </script>
-}

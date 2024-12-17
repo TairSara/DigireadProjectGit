@@ -2,89 +2,24 @@
     ViewBag.Title = "דף הבית";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
+<link rel="stylesheet" href="~/Content/Home/css/file-explorer.css">
+<link rel="stylesheet" href="~/Content/Home/js/file-explorer.js">
+
 <!DOCTYPE html>
 <html dir="rtl" lang="he">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <style>
-        body {
-            font-family: system-ui, -apple-system, sans-serif;
-            margin: 0;
-            padding: 0;
-        }
-
-        main {
-            padding-top: 20px; /* להוריד את המרווח בין התוכן לראש הדף */
-        }
-
-        .welcome-section {
-            text-align: center;
-            margin: 0; /* לא להוסיף מרווח למעלה */
-            padding: 0 2em;
-        }
-
-            .welcome-section h1 {
-                font-size: 4em;
-                color: #2c3e50;
-                font-weight: bold;
-                text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.2);
-                margin: 0;
-            }
-
-            .welcome-section h2 {
-                font-size: 2em;
-                color: #34495e;
-                font-weight: normal;
-                margin-top: 0.5em;
-            }
-
-        .featured-books {
-            text-align: center;
-            margin-top: 1.5em; /* להוריד את המרווח בין התמונה לכותרת */
-        }
-
-        .library-poster {
-            width: 80%;
-            max-width: 1000px;
-            margin: 0 auto;
-            display: block;
-        }
-
-        /* עיצוב החץ */
-        .arrow {
-            display: inline-block;
-            margin-top: -10px; /* הפחתת המרווח כדי למקם את החץ קרוב יותר לגיף */
-            font-size: 3em;
-            color: #34495e;
-            cursor: pointer; /* מראה שהחץ לחיץ */
-        }
-
-        /* חלק המידע השני בדף */
-        #more-info {
-            margin-top: 1000px; /* שים לב שהחלק השני יהיה נמוך יותר */
-            text-align: center;
-        }
-    </style>
+    <title>DigiRead</title>
 </head>
 <body>
     <main>
         <section class="welcome-section">
             <h1>DigiRead</h1>
             <h2>חווית קריאה דיגיטלית</h2>
-            <br />
             <img src="~/Content/Illustrative-Colorful-Library--unscreen.gif" alt="תמונת ספרייה" class="library-poster" />
-            <!-- הוספת חץ למטה -->
-            <a href="#more-info">
-                <div id="arrow" class="arrow">&#8595;</div>
-            </a>
-        </section>
-
-        <!-- החלק השני של הדף -->
-        <section id="more-info">
-            <h2>עוד על DigiRead</h2>
-            <p>כאן יופיע תוכן נוסף על DigiRead...</p>
         </section>
     </main>
+    <script src="scripts.js"></script>
 </body>
 </html>

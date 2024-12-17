@@ -1,171 +1,9 @@
-﻿
-@model DigireadProject.Models.ViewModels.GalleryViewModel
+﻿@model DigireadProject.Models.ViewModels.GalleryViewModel
+
+<link rel="stylesheet" href="~/Content/Books/css/gallery.css">
 
 <div class="container text-center">
     <h2 class="mb-4">גלריית ספרים</h2>
-    <style>
-        .card {
-            transition: transform 0.2s ease-in-out, box-shadow 0.3s ease;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-            width: 220px;
-            height: 350px;
-            position: relative;
-            margin: 15px;
-        }
-
-            .card:hover {
-                transform: translateY(-5px) scale(1.1);
-                box-shadow: 0 8px 16px rgba(0,0,0,0.2);
-            }
-
-        .card-img-container {
-            width: 220px;
-            height: 220px;
-            overflow: hidden;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            position: relative;
-            background-color: #f8f9fa;
-        }
-
-        .card-img-top {
-            width: 100%;
-            height: 100%;
-            object-fit: contain;
-            padding: 5px;
-        }
-
-        .card-body {
-            padding: 12px;
-            height: 130px;
-            overflow: auto;
-        }
-
-        .original-price {
-            text-decoration: line-through;
-            color: #666;
-            position: relative;
-        }
-
-            .original-price::after {
-                content: '';
-                position: absolute;
-                left: 0;
-                right: 0;
-                top: 50%;
-                border-top: 2px solid #ff0000;
-                transform: rotate(-10deg);
-            }
-
-        .out-of-stock {
-            opacity: 0.8;
-        }
-
-            .out-of-stock img {
-                filter: grayscale(30%);
-            }
-
-        .container.text-center {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            max-width: 810px;
-            margin: 5px auto;
-        }
-
-        .row {
-            display: flex;
-            justify-content: center;
-            flex-wrap: wrap;
-            gap: 20px;
-            margin-bottom: 70px;
-        }
-
-        .col-md-3 {
-            flex: 0 0 220px;
-            max-width: 220px;
-            margin: 15px;
-            display: flex;
-            justify-content: center;
-        }
-
-   
-
-        .age-restricted-badge {
-            position: absolute;
-            top: 10px;
-            left: 10px;
-            background-color: #ff0000; 
-            color: white;
-            padding: 5px 10px;
-            border-radius: 50%;
-            font-size: 12px;
-            font-weight: bold;
-            z-index: 1;
-        }
-
-        .sale-badge {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            background-color: #28a745; 
-            color: white;
-            padding: 5px 10px;
-            border-radius: 5px;
-            font-weight: bold;
-            z-index: 1;
-        }
-
-
-        .search-filter-section {
-            background-color: #f8f9fa;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            margin-bottom: 30px;
-            width: 100%;
-            max-width: 800px;
-            text-align: center;
-        }
-
-        .filters-section {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 15px;
-            padding: 10px 0;
-        }
-
-        .genres-nav {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 10px;
-            margin-top: 15px;
-        }
-
-        .genre-button {
-            padding: 8px 16px;
-            border: none;
-            border-radius: 20px;
-            background-color: #e9ecef;
-            color: #495057;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-
-            .genre-button:hover {
-                background-color: #007bff;
-                color: white;
-            }
-
-            .genre-button.active {
-                background-color: #007bff;
-                color: white;
-            }
-    </style>
 
     <div class="search-filter-section">
         <input type="text"
@@ -202,133 +40,60 @@
             }
         </div>
 
-    <!-- רשת הספרים -->
-    <div class="row justify-content-center" id="booksContainer">
-        @foreach (var book in Model.Books)
-        {
-<div class="col-md-3 mb-4 book-item"
-     data-title="@book.Title"
-     data-author="@book.MainAuthor"
-     data-publisher="@book.Publisher"
-     data-price="@book.PurchasePrice"
-     data-original-price="@book.OriginalPrice"
-     data-year="@book.PublishYear"
-     data-genre="@book.Genre">
-    <a href="BookDetails/@book.BookID" class="text-decoration-none">
-        <div class="card h-100 @(book.StockQuantity <= 0 ? "out-of-stock" : "")">
-            @if (book.OriginalPrice > book.PurchasePrice)
+        <!-- רשת הספרים -->
+        <div class="row justify-content-center" id="booksContainer">
+            @foreach (var book in Model.Books)
             {
-<span class="sale-badge">מבצע</span>}
+                <div class="col-md-3 mb-4 book-item"
+                     data-title="@book.Title"
+                     data-author="@book.MainAuthor"
+                     data-publisher="@book.Publisher"
+                     data-price="@book.PurchasePrice"
+                     data-original-price="@book.OriginalPrice"
+                     data-year="@book.PublishYear"
+                     data-genre="@book.Genre">
+                    <a href="BookDetails/@book.BookID" class="text-decoration-none">
+                        <div class="card h-100 @(book.StockQuantity <= 0 ? "out-of-stock" : "")">
+                            @if (book.OriginalPrice > book.PurchasePrice)
+                            {
+                                <span class="sale-badge">מבצע</span>
+                            }
 
-            @if (!string.IsNullOrEmpty(book.ImageSrc))
-            {
-<div class="card-img-container">
-    <img src="@book.ImageSrc" class="card-img-top" alt="@book.Title">
-</div>}
+                            @if (!string.IsNullOrEmpty(book.ImageSrc))
+                            {
+                                <div class="card-img-container">
+                                    <img src="@book.ImageSrc" class="card-img-top" alt="@book.Title">
+                                </div>
+                            }
 
-            @if (book.AgeRestriction > 0)
-            {
-        <span class="age-restricted-badge">@book.AgeRestriction +</span>}
+                            @if (book.AgeRestriction > 0)
+                            {
+                                <span class="age-restricted-badge">@book.AgeRestriction +</span>
+                            }
 
-            <div class="card-body">
-                <h5 class="card-title">@book.Title</h5>
-                <p class="card-text">
-                    <strong>מחבר:</strong> @book.MainAuthor<br />
-                    <strong>שנת הוצאה:</strong> @book.PublishYear<br />
-                    <strong>מחיר:</strong>
-                    @if (book.OriginalPrice > 0 && book.PurchasePrice > 0 && book.PurchasePrice < book.OriginalPrice)
-                    {
-    <del class="original-price">₪@book.OriginalPrice</del>
-                        <span class="text-danger ms-2">₪@book.PurchasePrice</span> }
-                                        else
-                                        {
-                        <span>₪@book.PurchasePrice</span>}
-                </p>
-            </div>
+                            <div class="card-body">
+                                <h5 class="card-title">@book.Title</h5>
+                                <p class="card-text">
+                                    <strong>מחבר:</strong> @book.MainAuthor<br />
+                                    <strong>שנת הוצאה:</strong> @book.PublishYear<br />
+                                    <strong>מחיר:</strong>
+                                    @if (book.OriginalPrice > 0 && book.PurchasePrice > 0 && book.PurchasePrice < book.OriginalPrice)
+                                    {
+                                        <del class="original-price">₪@book.OriginalPrice</del>
+                                        <span class="text-danger ms-2">₪@book.PurchasePrice</span>
+                                    }
+                                    else
+                                    {
+                                        <span>₪@book.PurchasePrice</span>
+                                    }
+                                </p>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            }
         </div>
-    </a>
-</div>}
     </div>
+
+    <script src="~/Content/Books/js/gallery.js"></script>
 </div>
-
-<script>
-    function filterBooks() {
-        const searchInput = document.getElementById('searchInput').value.toLowerCase();
-        const saleOnly = document.getElementById('saleOnly').checked;
-        const books = document.querySelectorAll('.book-item');
-
-        books.forEach(book => {
-            const title = book.getAttribute('data-title').toLowerCase();
-            const author = book.getAttribute('data-author').toLowerCase();
-            const publisher = book.getAttribute('data-publisher').toLowerCase();
-            const price = parseFloat(book.getAttribute('data-price'));
-            const originalPrice = parseFloat(book.getAttribute('data-original-price'));
-
-            const matchesSearch = title.includes(searchInput) ||
-                author.includes(searchInput) ||
-                publisher.includes(searchInput);
-
-            const matchesSale = !saleOnly || (originalPrice > price);
-
-            book.style.display = (matchesSearch && matchesSale) ? '' : 'none';
-        });
-    }
-
-    function filterByGenre(genre) {
-        const books = document.querySelectorAll('.book-item');
-        const buttons = document.querySelectorAll('.genre-button');
-
-        // עדכון הכפתור הפעיל
-        buttons.forEach(button => {
-            if (button.textContent === genre || (button.textContent === 'הכל' && genre === 'all')) {
-                button.classList.add('active');
-            } else {
-                button.classList.remove('active');
-            }
-        });
-
-        books.forEach(book => {
-            const bookGenre = book.getAttribute('data-genre');
-            book.style.display = (genre === 'all' || bookGenre === genre) ? '' : 'none';
-        });
-    }
-
-    function sortBooks() {
-        const select = document.getElementById('sortSelect');
-        const value = select.value;
-
-        if (!value) {
-            return; // אם לא נבחרה קטגוריה, לא עושים כלום
-        }
-
-        const books = Array.from(document.querySelectorAll('.book-item'));
-        const container = document.getElementById('booksContainer');
-
-        books.sort((a, b) => {
-            switch (value) {
-                case 'priceAsc':
-                    return parseFloat(a.getAttribute('data-price')) - parseFloat(b.getAttribute('data-price'));
-                case 'priceDesc':
-                    return parseFloat(b.getAttribute('data-price')) - parseFloat(a.getAttribute('data-price'));
-                case 'popularity':
-                    return parseFloat(b.getAttribute('data-popularity')) - parseFloat(a.getAttribute('data-popularity'));
-                case 'year':
-                    return parseInt(b.getAttribute('data-year')) - parseInt(a.getAttribute('data-year'));
-                default:
-                    const aValue = a.getAttribute('data-' + value).toLowerCase();
-                    const bValue = b.getAttribute('data-' + value).toLowerCase();
-                    return aValue.localeCompare(bValue);
-            }
-        });
-
-        books.forEach(book => container.appendChild(book));
-    }
-
-    // אתחול מצב ההתחלה
-    document.addEventListener('DOMContentLoaded', function () {
-        const allButton = document.querySelector('.genre-button');
-        if (allButton) {
-            allButton.classList.add('active');
-        }
-    });
-</script>

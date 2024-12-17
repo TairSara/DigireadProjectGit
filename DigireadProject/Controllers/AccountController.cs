@@ -203,54 +203,41 @@ namespace DigireadProject.Controllers
         [Authorize]
         [ValidateAntiForgeryToken]
 
-    
         public async Task<ActionResult> UpdateProfile(UserProfileViewModel model,
     string CurrentPassword, string NewPassword, string ConfirmNewPassword)
         {
             var user = await db.Users.FirstOrDefaultAsync(u => u.Username == User.Identity.Name);
-            if (user == null) return Json(new { success = false, redirect = Url.Action("Login") });
+            if (user == null)
+                return Json(new { success = false, message = "לא נמצאה הרשאת משתמש. אנא התחבר מחדש." });
 
-            // Validate username and email uniqueness
-            var usernameExists = await db.Users
-                .AnyAsync(u => u.Username == model.Username && u.UserID != user.UserID);
-            var emailExists = await db.Users
-                .AnyAsync(u => u.Email == model.Email && u.UserID != user.UserID);
+            var usernameExists = await db.Users.AnyAsync(u => u.Username == model.Username && u.UserID != user.UserID);
+            var emailExists = await db.Users.AnyAsync(u => u.Email == model.Email && u.UserID != user.UserID);
 
             if (usernameExists)
-                return Json(new { success = false, error = "שם המשתמש כבר קיים במערכת" });
+                return Json(new { success = false, message = "שם המשתמש כבר קיים במערכת." });
             if (emailExists)
-                return Json(new { success = false, error = "כתובת האימייל כבר קיימת במערכת" });
+                return Json(new { success = false, message = "כתובת האימייל כבר קיימת במערכת." });
 
-            // Update basic profile details
             user.Username = model.Username;
             user.Email = model.Email;
 
-            // Handle password change if requested
             if (!string.IsNullOrEmpty(CurrentPassword) &&
                 !string.IsNullOrEmpty(NewPassword) &&
                 !string.IsNullOrEmpty(ConfirmNewPassword))
             {
-                // Verify current password
                 if (user.Password != HashPassword(CurrentPassword))
-                    return Json(new { success = false, error = "הסיסמה הנוכחית שגויה" });
+                    return Json(new { success = false, message = "הסיסמה הנוכחית שגויה." });
 
                 if (NewPassword != ConfirmNewPassword)
-                    return Json(new { success = false, error = "הסיסמאות החדשות אינן תואמות" });
+                    return Json(new { success = false, message = "הסיסמאות החדשות אינן תואמות." });
 
-                // Update password
                 user.Password = HashPassword(NewPassword);
             }
 
             await db.SaveChangesAsync();
 
-            // Update authentication cookie with new username
             FormsAuthentication.SetAuthCookie(model.Username, true);
-
-            return Json(new { success = true });
-        }
-        public ActionResult ForgotPassword()
-        {
-            return View();
+            return Json(new { success = true, message = "הפרופיל עודכן בהצלחה." });
         }
 
         [HttpPost]

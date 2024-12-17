@@ -5,7 +5,7 @@
 
     var genreList = new[]
     {
-   new { Text = "רומן ", Value = "רומן" },
+        new { Text = "רומן ", Value = "רומן" },
         new { Text = "מתח ומסתורין", Value = "מתח ומסתורין" },
         new { Text = "מדע בדיוני ", Value = "מדע בדיוני" },
         new { Text = "פנטזיה ", Value = "פנטזיה" },
@@ -19,6 +19,10 @@
     };
 }
 
+@section Styles {
+    <link href="~/Content/Books/css/book-management.css" rel="stylesheet" />
+}
+
 <div class="container mt-4" dir="rtl">
     <div class="row justify-content-center">
         <div class="col-md-8">
@@ -30,6 +34,8 @@
                     @using (Html.BeginForm("AddBook", "BookManagement", FormMethod.Post, new { id = "addBookForm" }))
                     {
                         @Html.AntiForgeryToken()
+
+                        <!-- Book Details Section -->
                         <div class="row">
                             <div class="col-md-6 mb-3">
                                 @Html.LabelFor(m => m.Title, new { @class = "form-label" })
@@ -183,58 +189,5 @@
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
-    <script>
-        $(document).ready(function () {
-            $('#addBookForm').submit(function (e) {
-                e.preventDefault();
-
-                var formData = new FormData(this);
-
-                $.ajax({
-                    url: '@Url.Action("AddBook", "BookManagement")',
-                    type: 'POST',
-                    data: formData,
-                    processData: false,
-                    contentType: false,
-                    success: function (response) {
-                        if (response.success) {
-                            alert('הספר נוסף בהצלחה');
-                            window.location.href = '@Url.Action("ManageBooks", "BookManagement")';
-                        } else {
-                            alert('שגיאה: ' + response.message);
-                        }
-                    },
-                    error: function () {
-                        alert('אירעה שגיאה בשמירת הספר');
-                    }
-                });
-            });
-
-            // תצוגה מקדימה של התמונה כאשר מזינים URL
-            $('#ImageSrc').on('change', function() {
-                var imgUrl = $(this).val();
-                if (imgUrl) {
-                    var img = $('<img>', {
-                        src: imgUrl,
-                        alt: 'תצוגה מקדימה של התמונה',
-                        class: 'img-thumbnail mt-2',
-                        style: 'max-width: 200px'
-                    });
-
-                    // בדיקה אם התמונה נטענה בהצלחה
-                    img.on('error', function() {
-                        alert('לא ניתן לטעון את התמונה מה-URL שהוזן');
-                        $(this).remove();
-                    });
-
-                    // הוספת התמונה לתצוגה מקדימה
-                    var previewDiv = $('#imagePreview');
-                    if (previewDiv.length === 0) {
-                        previewDiv = $('<div>', { id = 'imagePreview' }).insertAfter('#ImageSrc');
-                    }
-                    previewDiv.html(img);
-                }
-            });
-        });
-    </script>
+    <script src="~/Content/Books/js/book-management.js"></script>
 }
