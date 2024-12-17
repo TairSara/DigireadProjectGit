@@ -256,10 +256,27 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\Account\js\profile.js" />
+    <Content Include="Content\Account\js\register-validation.js" />
+    <Content Include="Content\Account\js\reset-password-validation.js" />
+    <Content Include="Content\Admin\css\admin-dashboard.css" />
+    <Content Include="Content\Admin\js\admin.js" />
+    <Content Include="Content\Books\css\book-details.css" />
+    <Content Include="Content\Books\css\book-management.css" />
+    <Content Include="Content\Books\css\gallery.css" />
+    <Content Include="Content\Books\css\GenreCarousel.css" />
+    <Content Include="Content\Books\css\library-management.css" />
+    <Content Include="Content\Books\js\book-details.js" />
+    <Content Include="Content\Books\js\book-management.js" />
+    <Content Include="Content\Books\js\gallery.js" />
+    <Content Include="Content\Books\js\GenreCarousel.js" />
+    <Content Include="Content\Books\js\library-management.js" />
     <Content Include="Content\bootstrap-theme.css" />
     <Content Include="Content\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\Home\css\file-explorer.css" />
+    <Content Include="Content\Home\js\file-explorer.js" />
     <Content Include="Content\Illustrative-Colorful-Library--unscreen.gif" />
     <Content Include="Content\logo.png" />
     <Content Include="Content\ביוגרפיה.gif" />
@@ -308,6 +325,7 @@
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
     <Content Include="Scripts\modernizr-2.8.3.js" />
+    <Content Include="Content\Account\css\account.css" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
@@ -334,10 +352,10 @@
     <Content Include="Views\BookManagement\BookDetails.cshtml" />
     <Content Include="Views\BookManagement\MainGallery.cshtml" />
     <Content Include="Views\ShoppingCart\Cart.cshtml" />
-    <Content Include="Views\BookManagement\UserRentals.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Views\Shared\css\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />

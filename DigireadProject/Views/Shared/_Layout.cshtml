@@ -1,5 +1,5 @@
 ﻿<!DOCTYPE html>
-<html>
+<html dir="rtl">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,6 +7,7 @@
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
+    @RenderSection("Styles", required: false)
     <style>
         /* Background Elements */
         .background-wrapper {
@@ -15,127 +16,94 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: linear-gradient(135deg, #a855f7, #7dd3fc);
+            background: linear-gradient(135deg, #E6F3FF, #F0F8FF);
             z-index: -2;
             overflow: hidden;
         }
 
-        .circle {
-            position: absolute;
-            border-radius: 50%;
-            background: linear-gradient(45deg, rgba(168, 85, 247, 0.4), rgba(125, 211, 252, 0.4));
-            filter: blur(60px);
-            z-index: -1;
-        }
-
-        .circle-1 {
-            width: 600px;
-            height: 600px;
-            top: -200px;
-            right: -100px;
-            transform: rotate(-15deg);
-        }
-
-        .circle-2 {
-            width: 500px;
-            height: 500px;
-            bottom: -150px;
-            left: -100px;
-            transform: rotate(30deg);
-            background: linear-gradient(45deg, rgba(125, 211, 252, 0.4), rgba(168, 85, 247, 0.4));
-        }
-
-        .circle-3 {
-            width: 300px;
-            height: 300px;
-            top: 40%;
-            right: 25%;
-            transform: rotate(15deg);
-            background: linear-gradient(45deg, rgba(255, 255, 255, 0.2), rgba(168, 85, 247, 0.3));
-        }
-
-        /* Sidebar Styles */
-        .sidebar {
-            height: 100%;
-            width: 0;
+        .floating-book {
             position: fixed;
-            top: 0;
-            right: 0;
-            background: linear-gradient(to bottom, #8B5CF6, #3B82F6);
-            overflow-x: hidden;
-            transition: 0.3s;
-            padding-top: 60px;
-            z-index: 1000;
-            box-shadow: -2px 0 5px rgba(0,0,0,0.2);
+            color: rgba(70, 130, 180, 0.1);
+            z-index: -1;
+            animation: float 20s linear infinite;
+            pointer-events: none;
         }
 
-            .sidebar a {
-                padding: 15px 25px;
-                text-decoration: none;
-                font-size: 18px;
-                color: white;
-                display: flex;
-                align-items: center;
-                transition: 0.3s;
-                white-space: nowrap;
-                direction: rtl;
-            }
-
-                .sidebar a i {
-                    margin-left: 10px;
-                    font-size: 20px;
-                    color: #FFDAB9;
-                    transition: 0.3s;
-                }
-
-                .sidebar a:hover {
-                    background-color: rgba(255, 255, 255, 0.1);
-                }
-
-                    .sidebar a:hover i {
-                        color: white;
-                    }
-
-            .sidebar .close-btn {
-                position: absolute;
-                top: 15px;
-                left: 25px;
-                font-size: 30px;
-                cursor: pointer;
-                color: white;
-            }
-
-        /* Overlay */
-        .overlay {
+        /* Navbar Styles */
+        .navbar {
             position: fixed;
             top: 0;
             left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
-            z-index: 999;
-            display: none;
-            transition: 0.3s;
+            right: 0;
+            background: rgba(100, 150, 200, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 15px 30px;
+            z-index: 1000;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.2);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
 
-        /* Toggle Button */
-        .menu-toggle {
-            position: fixed;
-            top: 15px;
-            right: 15px;
-            background: linear-gradient(to right, #8B5CF6, #3B82F6);
-            color: white;
-            border: none;
+        .nav-links {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .nav-link {
+            text-decoration: none;
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 12px;
             border-radius: 5px;
-            padding: 10px 15px;
-            cursor: pointer;
-            z-index: 998;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-            transition: 0.3s;
+            transition: all 0.3s ease;
         }
 
-            .menu-toggle:hover {
-                transform: scale(1.05);
+            .nav-link:hover {
+                background: rgba(255, 255, 255, 0.2);
+                transform: translateY(-2px);
+            }
+
+            .nav-link i {
+                font-size: 18px;
+                color: #ffffff;
+            }
+
+            .nav-link:hover i {
+                color: #ffffff;
+            }
+
+        /* Mobile Menu */
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            color: #ffffff;
+            font-size: 24px;
+            cursor: pointer;
+            padding: 5px;
+        }
+
+        /* Mobile Navigation */
+        .mobile-nav {
+            display: none;
+            position: fixed;
+            top: 70px;
+            left: 0;
+            right: 0;
+            background: rgba(100, 150, 200, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 20px;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.2);
+            z-index: 999;
+        }
+
+            .mobile-nav .nav-link {
+                padding: 15px;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.1);
             }
 
         /* Main Content */
@@ -143,6 +111,7 @@
             max-width: 900px;
             margin: 50px auto;
             padding: 40px;
+            padding-top: 100px;
             position: relative;
             z-index: 1;
         }
@@ -150,23 +119,23 @@
         /* Homepage specific styles */
         .welcome-section {
             text-align: center;
-            color: white;
+            color: #2B5F9E;
             padding: 100px 0;
         }
 
             .welcome-section h1 {
                 font-size: 3.5rem;
                 margin-bottom: 1rem;
-                text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+                text-shadow: 1px 1px 2px rgba(43, 95, 158, 0.2);
             }
 
             .welcome-section p {
                 font-size: 1.8rem;
-                text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+                text-shadow: 1px 1px 2px rgba(43, 95, 158, 0.2);
             }
 
         .featured-books {
-            color: white;
+            color: #2B5F9E;
             text-align: center;
             padding: 50px 0;
         }
@@ -174,7 +143,7 @@
             .featured-books h2 {
                 font-size: 2.5rem;
                 margin-bottom: 2rem;
-                text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+                text-shadow: 1px 1px 2px rgba(43, 95, 158, 0.2);
             }
 
         /* Footer */
@@ -184,57 +153,91 @@
             background: transparent;
             margin-top: 30px;
             border-radius: 10px;
-            color: white;
+            color: #2B5F9E;
         }
 
         /* Non-homepage container styles */
         .container.body-content:not(.home-page) {
-            background: rgba(255, 255, 255, 0.9);
+            background: rgba(255, 255, 255, 0.85);
             border-radius: 15px;
-            box-shadow: 0 8px 32px rgba(139, 92, 246, 0.1);
+            box-shadow: 0 8px 32px rgba(176, 216, 255, 0.2);
             backdrop-filter: blur(10px);
         }
+
+      
     </style>
 </head>
 <body>
-    <!-- Background Elements -->
-    <div class="background-wrapper">
-        <div class="circle circle-1"></div>
-        <div class="circle circle-2"></div>
-        <div class="circle circle-3"></div>
-    </div>
+    <div class="background-wrapper"></div>
+    <div id="background-books"></div>
 
-    <!-- Menu Toggle Button -->
-    <button class="menu-toggle" onclick="toggleNav()">
-        <i class="fas fa-bars"></i>
-    </button>
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="nav-links">
+            <a href="@Url.Action("HomePage", "Home")" class="nav-link">
+                <i class="fas fa-home"></i>
+                <span>דף הבית</span>
+            </a>
+            <a href="@Url.Action("Login", "Account")" class="nav-link">
+                <i class="fas fa-sign-in-alt"></i>
+                <span>התחברות</span>
+            </a>
+            <a href="@Url.Action("Register", "Account")" class="nav-link">
+                <i class="fas fa-user-plus"></i>
+                <span>הרשמה</span>
+            </a>
+            <a href="@Url.Action("Profile", "Account")" class="nav-link">
+                <i class="fas fa-user-circle"></i>
+                <span>פרופיל אישי</span>
+            </a>
+            <a href="@Url.Action("MainGallery", "BookManagement")" class="nav-link">
+                <i class="fas fa-book"></i>
+                <span>גלריית ספרים</span>
+            </a>
+            <a href="@Url.Action("Cart", "ShoppingCart")" class="nav-link">
+                <i class="fas fa-cart-plus"></i>
+                <span>עגלה</span>
+            </a>
+            <a href="@Url.Action("Logout", "Account")" class="nav-link">
+                <i class="fas fa-sign-out-alt"></i>
+                <span>התנתקות</span>
+            </a>
+        </div>
 
-    <!-- Overlay -->
-    <div class="overlay" id="overlay" onclick="toggleNav()"></div>
+        <button class="mobile-menu-btn" onclick="toggleMobileMenu()">
+            <i class="fas fa-bars"></i>
+        </button>
+    </nav>
 
-    <!-- Sidebar -->
-    <div id="mySidebar" class="sidebar">
-        <span class="close-btn" onclick="toggleNav()">&times;</span>
-        <a href="@Url.Action("HomePage", "Home")">
-            <i class="fas fa-home"></i> דף הבית
+    <!-- Mobile Navigation -->
+    <div class="mobile-nav">
+        <a href="@Url.Action("HomePage", "Home")" class="nav-link">
+            <i class="fas fa-home"></i>
+            <span>דף הבית</span>
         </a>
-        <a href="@Url.Action("Login", "Account")">
-            <i class="fas fa-sign-in-alt"></i> התחברות
+        <a href="@Url.Action("Login", "Account")" class="nav-link">
+            <i class="fas fa-sign-in-alt"></i>
+            <span>התחברות</span>
         </a>
-        <a href="@Url.Action("Register", "Account")">
-            <i class="fas fa-user-plus"></i> הרשמה
+        <a href="@Url.Action("Register", "Account")" class="nav-link">
+            <i class="fas fa-user-plus"></i>
+            <span>הרשמה</span>
         </a>
-        <a href="@Url.Action("Logout", "Account")">
-            <i class="fas fa-sign-out-alt"></i> התנתקות
+        <a href="@Url.Action("Profile", "Account")" class="nav-link">
+            <i class="fas fa-user-circle"></i>
+            <span>פרופיל אישי</span>
         </a>
-        <a href="@Url.Action("Profile", "Account")">
-            <i class="fas fa-user-circle"></i> פרופיל אישי
+        <a href="@Url.Action("MainGallery", "BookManagement")" class="nav-link">
+            <i class="fas fa-book"></i>
+            <span>גלריית ספרים</span>
         </a>
-        <a href="@Url.Action("MainGallery", "BookManagement")">
-            <i class="fas fa-book"></i> גלריית ספרים
+        <a href="@Url.Action("Cart", "ShoppingCart")" class="nav-link">
+            <i class="fas fa-cart-plus"></i>
+            <span>עגלה</span>
         </a>
-        <a href="@Url.Action("Cart", "ShoppingCart")">
-            <i class="fas fa-cart-plus"></i> עגלה
+        <a href="@Url.Action("Logout", "Account")" class="nav-link">
+            <i class="fas fa-sign-out-alt"></i>
+            <span>התנתקות</span>
         </a>
     </div>
 
@@ -251,17 +254,47 @@
     @RenderSection("scripts", required: false)
 
     <script>
-        function toggleNav() {
-            var sidebar = document.getElementById("mySidebar");
-            var overlay = document.getElementById("overlay");
+        function createFloatingBook() {
+            const book = document.createElement('i');
+            book.className = 'fas fa-book floating-book';
 
-            if (sidebar.style.width === "250px") {
-                sidebar.style.width = "0";
-                overlay.style.display = "none";
-            } else {
-                sidebar.style.width = "250px";
-                overlay.style.display = "block";
-            }
+            const startX = Math.random() * window.innerWidth;
+            const startY = Math.random() * window.innerHeight;
+
+            const moveX = (Math.random() - 0.5) * 300;
+            const moveY = (Math.random() - 0.5) * 300;
+            const rotate = (Math.random() - 0.5) * 180;
+
+            const size = 20 + Math.random() * 30;
+
+            book.style.cssText = `
+                        left: ${startX}px;
+                        top: ${startY}px;
+                        font-size: ${size}px;
+                        --moveX: ${moveX}px;
+                        --moveY: ${moveY}px;
+                        --rotate: ${rotate}deg;
+                        animation-duration: ${15 + Math.random() * 10}s;
+                    `;
+
+            document.getElementById('background-books').appendChild(book);
+
+            book.addEventListener('animationend', () => {
+                book.remove();
+            });
+        }
+
+        setInterval(createFloatingBook, 2000);
+
+        // Create initial books
+        for (let i = 0; i < 10; i++) {
+            createFloatingBook();
+        }
+
+        // Mobile menu toggle
+        function toggleMobileMenu() {
+            const mobileNav = document.querySelector('.mobile-nav');
+            mobileNav.classList.toggle('active');
         }
     </script>
 </body>
