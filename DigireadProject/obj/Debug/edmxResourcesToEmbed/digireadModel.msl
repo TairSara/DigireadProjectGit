@@ -1,32 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
   <EntityContainerMapping StorageEntityContainer="libraryProject_digireadModelStoreContainer" CdmEntityContainer="libraryProject_digireadEntities">
-    <EntitySetMapping Name="Books">
-      <EntityTypeMapping TypeName="libraryProject_digireadModel.Books">
-        <MappingFragment StoreEntitySet="Books">
-          <ScalarProperty Name="BookID" ColumnName="BookID" />
-          <ScalarProperty Name="Title" ColumnName="Title" />
-          <ScalarProperty Name="MainAuthor" ColumnName="MainAuthor" />
-          <ScalarProperty Name="Publisher" ColumnName="Publisher" />
-          <ScalarProperty Name="PublishYear" ColumnName="PublishYear" />
-          <ScalarProperty Name="RentalPrice" ColumnName="RentalPrice" />
-          <ScalarProperty Name="PurchasePrice" ColumnName="PurchasePrice" />
-          <ScalarProperty Name="AgeRestriction" ColumnName="AgeRestriction" />
-          <ScalarProperty Name="Genre" ColumnName="Genre" />
-          <ScalarProperty Name="IsAvailable" ColumnName="IsAvailable" />
-          <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
-          <ScalarProperty Name="IsForRent" ColumnName="IsForRent" />
-          <ScalarProperty Name="OriginalPrice" ColumnName="OriginalPrice" />
-          <ScalarProperty Name="DiscountEndDate" ColumnName="DiscountEndDate" />
-          <ScalarProperty Name="IsRented" ColumnName="IsRented" />
-          <ScalarProperty Name="IsEPUBAvailable" ColumnName="IsEPUBAvailable" />
-          <ScalarProperty Name="IsF2BAvailable" ColumnName="IsF2BAvailable" />
-          <ScalarProperty Name="IsMobiAvailable" ColumnName="IsMobiAvailable" />
-          <ScalarProperty Name="IsPDFAvailable" ColumnName="IsPDFAvailable" />
-          <ScalarProperty Name="BookImage" ColumnName="BookImage" />
-        </MappingFragment>
-      </EntityTypeMapping>
-    </EntitySetMapping>
     <EntitySetMapping Name="PasswordResetTokens">
       <EntityTypeMapping TypeName="libraryProject_digireadModel.PasswordResetTokens">
         <MappingFragment StoreEntitySet="PasswordResetTokens">
@@ -53,6 +27,8 @@
     <EntitySetMapping Name="Rentals">
       <EntityTypeMapping TypeName="libraryProject_digireadModel.Rentals">
         <MappingFragment StoreEntitySet="Rentals">
+          <ScalarProperty Name="DaysOverdue" ColumnName="DaysOverdue" />
+          <ScalarProperty Name="ImageSrc" ColumnName="ImageSrc" />
           <ScalarProperty Name="RentalID" ColumnName="RentalID" />
           <ScalarProperty Name="BookID" ColumnName="BookID" />
           <ScalarProperty Name="UserID" ColumnName="UserID" />
@@ -79,6 +55,9 @@
     <EntitySetMapping Name="ShoppingCart">
       <EntityTypeMapping TypeName="libraryProject_digireadModel.ShoppingCart">
         <MappingFragment StoreEntitySet="ShoppingCart">
+          <ScalarProperty Name="ImageSrc" ColumnName="ImageSrc" />
+          <ScalarProperty Name="IsRental" ColumnName="IsRental" />
+          <ScalarProperty Name="Quantity" ColumnName="Quantity" />
           <ScalarProperty Name="CartID" ColumnName="CartID" />
           <ScalarProperty Name="UserID" ColumnName="UserID" />
           <ScalarProperty Name="BookID" ColumnName="BookID" />
@@ -111,6 +90,46 @@
           <ScalarProperty Name="WaitPosition" ColumnName="WaitPosition" />
           <ScalarProperty Name="AddedDate" ColumnName="AddedDate" />
           <ScalarProperty Name="EmailNotificationSent" ColumnName="EmailNotificationSent" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="database_firewall_rules">
+      <EntityTypeMapping TypeName="libraryProject_digireadModel.database_firewall_rules">
+        <MappingFragment StoreEntitySet="database_firewall_rules">
+          <ScalarProperty Name="modify_date" ColumnName="modify_date" />
+          <ScalarProperty Name="create_date" ColumnName="create_date" />
+          <ScalarProperty Name="end_ip_address" ColumnName="end_ip_address" />
+          <ScalarProperty Name="start_ip_address" ColumnName="start_ip_address" />
+          <ScalarProperty Name="name" ColumnName="name" />
+          <ScalarProperty Name="id" ColumnName="id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Books">
+      <EntityTypeMapping TypeName="libraryProject_digireadModel.Books">
+        <MappingFragment StoreEntitySet="Books">
+          <ScalarProperty Name="Description" ColumnName="Description" />
+          <ScalarProperty Name="StockQuantity" ColumnName="StockQuantity" />
+          <ScalarProperty Name="ImageSrc" ColumnName="ImageSrc" />
+          <ScalarProperty Name="IsPDFAvailable" ColumnName="IsPDFAvailable" />
+          <ScalarProperty Name="IsMobiAvailable" ColumnName="IsMobiAvailable" />
+          <ScalarProperty Name="IsF2BAvailable" ColumnName="IsF2BAvailable" />
+          <ScalarProperty Name="IsEPUBAvailable" ColumnName="IsEPUBAvailable" />
+          <ScalarProperty Name="IsRented" ColumnName="IsRented" />
+          <ScalarProperty Name="DiscountEndDate" ColumnName="DiscountEndDate" />
+          <ScalarProperty Name="OriginalPrice" ColumnName="OriginalPrice" />
+          <ScalarProperty Name="IsForRent" ColumnName="IsForRent" />
+          <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+          <ScalarProperty Name="IsAvailable" ColumnName="IsAvailable" />
+          <ScalarProperty Name="Genre" ColumnName="Genre" />
+          <ScalarProperty Name="AgeRestriction" ColumnName="AgeRestriction" />
+          <ScalarProperty Name="PurchasePrice" ColumnName="PurchasePrice" />
+          <ScalarProperty Name="RentalPrice" ColumnName="RentalPrice" />
+          <ScalarProperty Name="PublishYear" ColumnName="PublishYear" />
+          <ScalarProperty Name="Publisher" ColumnName="Publisher" />
+          <ScalarProperty Name="MainAuthor" ColumnName="MainAuthor" />
+          <ScalarProperty Name="Title" ColumnName="Title" />
+          <ScalarProperty Name="BookID" ColumnName="BookID" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>

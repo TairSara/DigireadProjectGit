@@ -1,0 +1,56 @@
+﻿@{
+    ViewBag.Title = "לוח בקרה למנהל";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<link rel="stylesheet" href="~/Content/Admin/css/admin-dashboard.css">
+<link rel="stylesheet" href="~/Content/Admin/js/admin.js">
+
+
+<div class="dashboard-container" dir="rtl">
+    <div class="dashboard-header">
+        <h1 class="welcome-message">ברוך הבא, @User.Identity.Name</h1>
+        <p class="last-login">כניסה אחרונה: @DateTime.Now.ToString("dd/MM/yyyy HH:mm")</p>
+    </div>
+
+    <div class="dashboard-cards">
+        <a href="@Url.Action("Index", "UserManagement")" class="dashboard-card">
+            <i class="fas fa-users card-icon"></i>
+            <h2 class="card-title">ניהול משתמשים</h2>
+            <p class="card-description">ניהול משתמשי המערכת, הרשאות וסטטוסים</p>
+            <div class="stat-value">@ViewBag.TotalUsers</div>
+            <div class="stat-label">משתמשים רשומים</div>
+        </a>
+
+        <a href="@Url.Action("ManageBooks", "BookManagement")" class="dashboard-card">
+            <i class="fas fa-book card-icon"></i>
+            <h2 class="card-title">ניהול ספרייה</h2>
+            <p class="card-description">ניהול מלאי הספרים, הוספה ועריכת פריטים</p>
+            <div class="stat-value">@ViewBag.TotalBooks</div>
+            <div class="stat-label">ספרים במערכת</div>
+        </a>
+
+        <a href="@Url.Action("UserRentals", "BookManagement")" class="dashboard-card">
+            <i class="fas fa-exchange-alt card-icon"></i>
+            <h2 class="card-title">ניהול השאלות</h2>
+            <p class="card-description">ניהול השאלות ספרים, מעקב והחזרות</p>
+            <div class="stat-value">@ViewBag.TotalRentals</div>
+            <div class="stat-label">השאלות פעילות</div>
+        </a>
+    </div>
+
+    <div class="stats-grid">
+        <div class="stat-card">
+            <div class="stat-value">@ViewBag.ActiveUsers</div>
+            <div class="stat-label">משתמשים פעילים</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-value">@ViewBag.AdminUsers</div>
+            <div class="stat-label">מנהלי מערכת</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-value">@ViewBag.NewUsersToday</div>
+            <div class="stat-label">משתמשים חדשים היום</div>
+        </div>
+    </div>
+</div>

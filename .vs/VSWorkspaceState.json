@@ -1,7 +1,16 @@
 {
   "ExpandedNodes": [
     "",
-    "\\DigireadProject"
+    "\\DigireadProject",
+    "\\DigireadProject\\Models",
+    "\\DigireadProject\\Models\\Services",
+    "\\DigireadProject\\Views",
+    "\\DigireadProject\\Views\\Account",
+    "\\DigireadProject\\Views\\Account\\css",
+    "\\DigireadProject\\Views\\Admin",
+    "\\DigireadProject\\Views\\BookManagement",
+    "\\DigireadProject\\Views\\Home",
+    "\\DigireadProject\\Views\\UserManagement"
   ],
   "SelectedNode": "\\DigireadProject.sln",
   "PreviewInSolutionExplorer": false

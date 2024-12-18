@@ -1,0 +1,199 @@
+﻿/* Book Form Styles */
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+.card {
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    border-radius: 8px;
+    border: none;
+    margin: 0 auto;
+}
+
+.card-header {
+    background-color: #f8f9fa;
+    border-bottom: 1px solid rgba(0,0,0,0.125);
+    padding: 1rem;
+    text-align: center;
+}
+
+    .card-header h3 {
+        margin: 0;
+        color: #2c3e50;
+    }
+
+.card-body {
+    padding: 1.5rem;
+}
+
+/* Form Controls */
+.form-group {
+    text-align: center;
+    margin-bottom: 1rem;
+}
+
+.form-label {
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+    display: block;
+    text-align: center;
+}
+
+.form-control, .form-select {
+    border-radius: 4px;
+    border: 1px solid #ced4da;
+    padding: 0.375rem 0.75rem;
+    width: 100%;
+    max-width: 400px;
+    margin: 0 auto;
+}
+
+    .form-control:focus, .form-select:focus {
+        border-color: #80bdff;
+        box-shadow: 0 0 0 0.2rem rgba(0,123,255,0.25);
+    }
+
+/* Checkbox Styling */
+.form-check {
+    padding-right: 1.75rem;
+    padding-left: 0;
+    text-align: center;
+    display: inline-block;
+    margin: 0 auto;
+}
+
+.form-check-input {
+    float: right;
+    margin-right: -1.75rem;
+}
+
+.form-check-label {
+    display: block;
+    text-align: right;
+}
+
+/* Image Preview */
+#imagePreview {
+    margin-top: 1rem;
+    text-align: center;
+}
+
+.img-thumbnail {
+    border-radius: 4px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    max-width: 200px;
+    margin: 0 auto;
+}
+
+/* Buttons */
+.text-center {
+    text-align: center;
+}
+
+.btn-group {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-top: 2rem;
+}
+
+.btn-primary {
+    background-color: #007bff;
+    border-color: #007bff;
+    padding: 0.5rem 1.5rem;
+    margin-right: 0.5rem;
+}
+
+    .btn-primary:hover {
+        background-color: #0069d9;
+        border-color: #0062cc;
+    }
+
+.btn-secondary {
+    background-color: #6c757d;
+    border-color: #6c757d;
+    padding: 0.5rem 1.5rem;
+}
+
+    .btn-secondary:hover {
+        background-color: #5a6268;
+        border-color: #545b62;
+    }
+
+/* Validation Messages */
+.text-danger {
+    font-size: 0.875rem;
+    margin-top: 0.25rem;
+    display: block;
+    text-align: center;
+}
+
+/* Form Row Layout */
+.row {
+    display: flex;
+    flex-wrap: wrap;
+    margin: -0.5rem;
+    justify-content: center;
+}
+
+.col-md-6, .col-md-12, .col-md-3 {
+    padding: 0.5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.col-md-6 {
+    flex: 0 0 50%;
+    max-width: 50%;
+}
+
+.col-md-3 {
+    flex: 0 0 25%;
+    max-width: 25%;
+}
+
+.col-md-12 {
+    flex: 0 0 100%;
+    max-width: 100%;
+}
+
+/* Description Textarea */
+textarea.form-control {
+    min-height: 100px;
+    resize: vertical;
+    text-align: right;
+}
+
+/* Format Section */
+.formats-section {
+    text-align: center;
+    margin: 1.5rem 0;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    .container {
+        padding: 1rem;
+    }
+
+    .card-body {
+        padding: 1rem;
+    }
+
+    .btn {
+        width: 100%;
+        margin-bottom: 0.5rem;
+    }
+
+    .col-md-6, .col-md-3 {
+        flex: 0 0 100%;
+        max-width: 100%;
+    }
+
+    .form-control, .form-select {
+        max-width: 100%;
+    }
+}

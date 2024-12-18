@@ -1,0 +1,73 @@
+﻿@model DigireadProject.Models.ViewModels.BookViewModel
+@section Styles {
+    <link href="~/Content/Books/css/book-details.css" rel="stylesheet" />
+}
+
+<div class="book-details">
+    <h2>@Model.Title</h2>
+    <img src="@Model.ImageSrc" alt="תמונה של @Model.Title" class="book-image" />
+
+    <div class="book-info">
+        <p><strong>מחבר ראשי:</strong> @Model.MainAuthor</p>
+        <p><strong>הוצאה לאור:</strong> @Model.Publisher</p>
+        <p><strong>שנת פרסום:</strong> @Model.PublishYear</p>
+        <p><strong>מחיר רכישה:</strong> ₪@Model.PurchasePrice</p>
+        @if (Model.IsForRent == true)
+        {
+            <p><strong>מחיר השכרה:</strong> ₪@Model.RentalPrice</p>
+        }
+        <p><strong>תיאור:</strong> @Model.Description</p>
+        <p><strong>ז'אנר:</strong> @Model.Genre</p>
+    </div>
+
+    <div class="actions">
+        @if (User.Identity.IsAuthenticated)
+        {
+            <button onclick="bookManager.showPurchaseOptions()" class="btn btn-add-to-cart">
+                <i class="fas fa-shopping-cart"></i> הוסף לסל
+            </button>
+        }
+        else
+        {
+            <a href="@Url.Action("Login", "Account")" class="btn btn-primary">
+                התחבר כדי לרכוש
+            </a>
+        }
+    </div>
+
+    <!-- Purchase Dialog -->
+    <div id="purchaseDialog" class="modal">
+        <div class="modal-content">
+            <h3>בחר אפשרות רכישה</h3>
+            <div class="purchase-options">
+                <form method="post" action="@Url.Action("AddToCart", "ShoppingCart")">
+                    @Html.AntiForgeryToken()
+                    @Html.Hidden("bookId", Model.BookID)
+                    @Html.Hidden("isRental", false)
+                    <button type="submit" class="btn btn-primary purchase-btn">
+                        <i class="fas fa-shopping-cart"></i>
+                        רכישה - ₪@Model.PurchasePrice
+                    </button>
+                </form>
+
+                @if (Model.IsForRent == true)
+                {
+                    <form method="post" action="@Url.Action("AddToCart", "ShoppingCart")">
+                        @Html.AntiForgeryToken()
+                        @Html.Hidden("bookId", Model.BookID)
+                        @Html.Hidden("isRental", true)
+                        <button type="submit" class="btn btn-primary rental-btn">
+                            <i class="fas fa-clock"></i>
+                            השכרה - ₪@Model.RentalPrice
+                        </button>
+                    </form>
+                }
+            </div>
+            <button onclick="bookManager.closePurchaseDialog()" class="btn btn-secondary">ביטול</button>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/Content/Books/js/book-details.js"></script>
+}

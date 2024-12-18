@@ -25,7 +25,6 @@ namespace DigireadProject
             throw new UnintentionalCodeFirstException();
         }
     
-        public virtual DbSet<Books> Books { get; set; }
         public virtual DbSet<PasswordResetTokens> PasswordResetTokens { get; set; }
         public virtual DbSet<Purchases> Purchases { get; set; }
         public virtual DbSet<Rentals> Rentals { get; set; }
@@ -33,5 +32,7 @@ namespace DigireadProject
         public virtual DbSet<ShoppingCart> ShoppingCart { get; set; }
         public virtual DbSet<Users> Users { get; set; }
         public virtual DbSet<WaitList> WaitList { get; set; }
+        public virtual DbSet<database_firewall_rules> database_firewall_rules { get; set; }
+        public virtual DbSet<Books> Books { get; set; }
     }
 }

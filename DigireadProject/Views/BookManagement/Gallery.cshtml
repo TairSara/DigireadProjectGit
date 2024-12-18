@@ -1,0 +1,99 @@
+﻿@model DigireadProject.Models.ViewModels.GalleryViewModel
+
+<link rel="stylesheet" href="~/Content/Books/css/gallery.css">
+
+<div class="container text-center">
+    <h2 class="mb-4">גלריית ספרים</h2>
+
+    <div class="search-filter-section">
+        <input type="text"
+               id="searchInput"
+               class="search-input"
+               placeholder="חפש לפי כותרת, מחבר, או מוציא לאור"
+               oninput="filterBooks()">
+
+        <div class="filters-section">
+            <select id="sortSelect" class="sort-select" onchange="sortBooks()">
+                <option value="">בחר קטגוריה לסידור</option>
+                <option value="title">כותרת</option>
+                <option value="priceAsc">מחיר - מהנמוך לגבוה</option>
+                <option value="priceDesc">מחיר - מהגבוה לנמוך</option>
+                <option value="popularity">פופולריות</option>
+                <option value="year">שנת הוצאה לאור</option>
+                <option value="author">מחבר</option>
+            </select>
+
+            <div class="checkbox-wrapper">
+                <input type="checkbox" id="saleOnly" onchange="filterBooks()">
+                <label for="saleOnly">הצג רק ספרים במבצע</label>
+            </div>
+        </div>
+
+        <div class="genres-nav">
+            <a href="@Url.Action("Gallery", "BookManagement")" class="genre-button @(Model.SelectedGenre == null ? "active" : "")">הכל</a>
+            @foreach (var genre in Model.Genres)
+            {
+                <a href="@Url.Action("GenreBooks", "BookManagement", new { genre = genre })"
+                   class="genre-button @(Model.SelectedGenre == genre ? "active" : "")">
+                    @genre
+                </a>
+            }
+        </div>
+
+        <!-- רשת הספרים -->
+        <div class="row justify-content-center" id="booksContainer">
+            @foreach (var book in Model.Books)
+            {
+                <div class="col-md-3 mb-4 book-item"
+                     data-title="@book.Title"
+                     data-author="@book.MainAuthor"
+                     data-publisher="@book.Publisher"
+                     data-price="@book.PurchasePrice"
+                     data-original-price="@book.OriginalPrice"
+                     data-year="@book.PublishYear"
+                     data-genre="@book.Genre">
+                    <a href="BookDetails/@book.BookID" class="text-decoration-none">
+                        <div class="card h-100 @(book.StockQuantity <= 0 ? "out-of-stock" : "")">
+                            @if (book.OriginalPrice > book.PurchasePrice)
+                            {
+                                <span class="sale-badge">מבצע</span>
+                            }
+
+                            @if (!string.IsNullOrEmpty(book.ImageSrc))
+                            {
+                                <div class="card-img-container">
+                                    <img src="@book.ImageSrc" class="card-img-top" alt="@book.Title">
+                                </div>
+                            }
+
+                            @if (book.AgeRestriction > 0)
+                            {
+                                <span class="age-restricted-badge">@book.AgeRestriction +</span>
+                            }
+
+                            <div class="card-body">
+                                <h5 class="card-title">@book.Title</h5>
+                                <p class="card-text">
+                                    <strong>מחבר:</strong> @book.MainAuthor<br />
+                                    <strong>שנת הוצאה:</strong> @book.PublishYear<br />
+                                    <strong>מחיר:</strong>
+                                    @if (book.OriginalPrice > 0 && book.PurchasePrice > 0 && book.PurchasePrice < book.OriginalPrice)
+                                    {
+                                        <del class="original-price">₪@book.OriginalPrice</del>
+                                        <span class="text-danger ms-2">₪@book.PurchasePrice</span>
+                                    }
+                                    else
+                                    {
+                                        <span>₪@book.PurchasePrice</span>
+                                    }
+                                </p>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            }
+        </div>
+    </div>
+
+    <script src="~/Content/Books/js/gallery.js"></script>
+</div>

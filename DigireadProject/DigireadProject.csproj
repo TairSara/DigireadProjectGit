@@ -196,8 +196,14 @@
       <DependentUpon>digireadModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\AdminController.cs" />
+    <Compile Include="Controllers\BookManagementController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\ShoppingCartController.cs" />
     <Compile Include="Controllers\UserManagementController.cs" />
+    <Compile Include="database_firewall_rules.cs">
+      <DependentUpon>digireadModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="digireadModel.Context.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -217,12 +223,15 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\Services\EmailService.cs" />
+    <Compile Include="Models\ViewModels\BookViewModel.cs" />
     <Compile Include="Models\ViewModels\ForgotPasswordViewModel.cs" />
+    <Compile Include="Models\ViewModels\GalleryViewModel.cs" />
     <Compile Include="Models\ViewModels\LoginViewModel.cs" />
     <Compile Include="Models\ViewModels\RegisterViewModel.cs" />
     <Compile Include="Models\ViewModels\ResetPasswordViewModel.cs" />
     <Compile Include="Models\ViewModels\UserManagementViewModel.cs" />
     <Compile Include="Models\ViewModels\UserProfileViewModel.cs" />
+    <Compile Include="Models\ViewModels\UserRentalViewModel.cs" />
     <Compile Include="PasswordResetTokens.cs">
       <DependentUpon>digireadModel.tt</DependentUpon>
     </Compile>
@@ -247,11 +256,40 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\Account\js\profile.js" />
+    <Content Include="Content\Account\js\register-validation.js" />
+    <Content Include="Content\Account\js\reset-password-validation.js" />
+    <Content Include="Content\Admin\css\admin-dashboard.css" />
+    <Content Include="Content\Admin\js\admin.js" />
+    <Content Include="Content\Books\css\book-details.css" />
+    <Content Include="Content\Books\css\book-management.css" />
+    <Content Include="Content\Books\css\gallery.css" />
+    <Content Include="Content\Books\css\GenreCarousel.css" />
+    <Content Include="Content\Books\css\library-management.css" />
+    <Content Include="Content\Books\js\book-details.js" />
+    <Content Include="Content\Books\js\book-management.js" />
+    <Content Include="Content\Books\js\gallery.js" />
+    <Content Include="Content\Books\js\GenreCarousel.js" />
+    <Content Include="Content\Books\js\library-management.js" />
     <Content Include="Content\bootstrap-theme.css" />
     <Content Include="Content\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\Home\css\file-explorer.css" />
+    <Content Include="Content\Home\js\file-explorer.js" />
+    <Content Include="Content\Illustrative-Colorful-Library--unscreen.gif" />
     <Content Include="Content\logo.png" />
+    <Content Include="Content\ביוגרפיה.gif" />
+    <Content Include="Content\היסטוריה.gif" />
+    <Content Include="Content\ילדים.gif" />
+    <Content Include="Content\מדע בדיוני.gif" />
+    <Content Include="Content\מדע.gif" />
+    <Content Include="Content\מתח ומסתורין.gif" />
+    <Content Include="Content\נוער.gif" />
+    <Content Include="Content\פילוסופיה.gif" />
+    <Content Include="Content\פנטזיה.gif" />
+    <Content Include="Content\רומן.gif" />
+    <Content Include="Content\שירה.gif" />
     <Content Include="digireadModel.Context.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>digireadModel.Context.cs</LastGenOutput>
@@ -287,6 +325,7 @@
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
     <Content Include="Scripts\modernizr-2.8.3.js" />
+    <Content Include="Content\Account\css\account.css" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
@@ -305,9 +344,18 @@
     <Content Include="Views\Account\Profile.cshtml" />
     <Content Include="Views\Account\ForgotPassword.cshtml" />
     <Content Include="Views\Account\ResetPassword.cshtml" />
+    <Content Include="Views\BookManagement\ManageBooks.cshtml" />
+    <Content Include="Views\Admin\Dashboard.cshtml" />
+    <Content Include="Views\BookManagement\AddBook.cshtml" />
+    <Content Include="Views\BookManagement\EditBook.cshtml" />
+    <Content Include="Views\BookManagement\Gallery.cshtml" />
+    <Content Include="Views\BookManagement\BookDetails.cshtml" />
+    <Content Include="Views\BookManagement\MainGallery.cshtml" />
+    <Content Include="Views\ShoppingCart\Cart.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Views\Shared\css\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />

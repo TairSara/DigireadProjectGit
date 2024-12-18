@@ -118,8 +118,8 @@ C:\Users\tairt\Desktop\פרויקט קורס תקשורת\DigireadProject\Digire
 C:\Users\tairt\Desktop\פרויקט קורס תקשורת\DigireadProject\DigireadProject\bin\Newtonsoft.Json.xml
 C:\Users\tairt\Desktop\פרויקט קורס תקשורת\DigireadProject\DigireadProject\bin\Antlr3.Runtime.pdb
 C:\Users\tairt\Desktop\פרויקט קורס תקשורת\DigireadProject\DigireadProject\bin\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.xml
-C:\Users\tairt\Desktop\פרויקט קורס תקשורת\DigireadProject\DigireadProject\obj\Debug\DigireadProject.csproj.AssemblyReference.cache
 C:\Users\tairt\Desktop\פרויקט קורס תקשורת\DigireadProject\DigireadProject\obj\Debug\DigireadProject.csproj.CoreCompileInputs.cache
 C:\Users\tairt\Desktop\פרויקט קורס תקשורת\DigireadProject\DigireadProject\obj\Debug\DigireadProject.csproj.CopyComplete
 C:\Users\tairt\Desktop\פרויקט קורס תקשורת\DigireadProject\DigireadProject\obj\Debug\DigireadProject.dll
 C:\Users\tairt\Desktop\פרויקט קורס תקשורת\DigireadProject\DigireadProject\obj\Debug\DigireadProject.pdb
+C:\Users\tairt\Desktop\פרויקט קורס תקשורת\DigireadProject\DigireadProject\obj\Debug\DigireadProject.csproj.AssemblyReference.cache

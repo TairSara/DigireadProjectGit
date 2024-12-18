@@ -1,0 +1,25 @@
+﻿@model IEnumerable<string>
+
+<link rel="stylesheet" href="~/Content/Books/css/GenreCarousel.css">
+
+<div class="text-center">
+    <h2 class="mb-4">קטגוריות ספרים</h2>
+    <div class="carousel-container">
+        <button class="carousel-button carousel-button-left" onclick="scrollCarousel('left')">❮</button>
+        <button class="carousel-button carousel-button-right" onclick="scrollCarousel('right')">❯</button>
+        <div class="genres-grid" id="genresCarousel">
+            @foreach (var genre in Model)
+            {
+                <a href="@Url.Action("GenreBooks", "BookManagement", new { genre = genre })" class="genre-container">
+                    <h3 class="genre-title">@genre</h3>
+                    <div class="genre-card">
+                        <img src="/Content/@(genre).gif" alt="@genre" class="genre-image">
+                        <div class="genre-overlay"></div>
+                    </div>
+                </a>
+            }
+        </div>
+    </div>
+
+    <script src="~/Content/Books/js/GenreCarousel.js"></script>
+</div>

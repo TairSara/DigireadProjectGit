@@ -3,93 +3,65 @@
     ViewBag.Title = "פרטי משתמש";
 }
 
-<div id="successModal" class="modal fade" tabindex="-1" role="dialog">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">הודעה</h5>
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
-            </div>
-            <div class="modal-body">
-                <p>הפרטים נשמרו בהצלחה!</p>
-            </div>
-            <div class="modal-footer">
-                <a href="@Url.Action("HomePage", "Home")" class="btn btn-primary">חזור לדף הבית</a>
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">סגור</button>
+<link rel="stylesheet" href="~/Content/Books/css/book-management.css">
+<link rel="stylesheet" href="~/Content/Account/css/profile.css">
+<script src="~/Content/Account/js/profile.js"></script>
+
+<div class="container">
+    <h2 class="text-center mb-4">פרטי משתמש</h2>
+
+    @using (Html.BeginForm("UpdateProfile", "Account", FormMethod.Post, new { id = "profileForm", @class = "form-horizontal" }))
+    {
+        @Html.AntiForgeryToken()
+
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                <div class="form-group">
+                    @Html.LabelFor(m => m.Username, "שם משתמש")
+                    @Html.TextBoxFor(m => m.Username, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(m => m.Username, "", new { @class = "text-danger" })
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(m => m.Email, "אימייל")
+                    @Html.TextBoxFor(m => m.Email, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(m => m.Email, "", new { @class = "text-danger" })
+                </div>
+
+                <div class="form-group">
+                    <label>תאריך הרשמה</label>
+                    <input type="text" class="form-control" value="@Model.RegistrationDate.ToString("dd/MM/yyyy")" readonly>
+                </div>
+
+                <div class="form-group">
+                    <label>סוג משתמש</label>
+                    <input type="text" class="form-control" value="@(Model.IsAdmin ? "מנהל" : "משתמש רגיל")" readonly>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(m => m.CurrentPassword, "סיסמה נוכחית")
+                    @Html.PasswordFor(m => m.CurrentPassword, new { @class = "form-control", placeholder = "הזן סיסמה נוכחית אם ברצונך לשנות סיסמה" })
+                    @Html.ValidationMessageFor(m => m.CurrentPassword, "", new { @class = "text-danger" })
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(m => m.NewPassword, "סיסמה חדשה")
+                    @Html.PasswordFor(m => m.NewPassword, new { @class = "form-control", placeholder = "סיסמה חדשה (אופציונלי)" })
+                    @Html.ValidationMessageFor(m => m.NewPassword, "", new { @class = "text-danger" })
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(m => m.ConfirmNewPassword, "אימות סיסמה חדשה")
+                    @Html.PasswordFor(m => m.ConfirmNewPassword, new { @class = "form-control", placeholder = "אימות סיסמה חדשה" })
+                    @Html.ValidationMessageFor(m => m.ConfirmNewPassword, "", new { @class = "text-danger" })
+                </div>
+
+                <div class="form-group text-center">
+                    <button type="submit" class="btn btn-primary btn-block">עדכן פרטים</button>
+                </div>
             </div>
         </div>
-    </div>
+    }
 </div>
-
-<h2 class="text-center">פרטי משתמש</h2>
-
-<style>
-    .text-muted {
-        color: #006400;
-    }
-
-    .modal-header .close {
-        margin: -1rem auto -1rem -1rem;
-    }
-</style>
-
-@using (Html.BeginForm("UpdateProfile", "Account", FormMethod.Post, new { id = "profileForm" }))
-{
-    @Html.AntiForgeryToken()
-    <div class="form-horizontal">
-        <hr />
-        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-        <div class="form-group text-center">
-            <div class="col-md-6 col-md-offset-3">
-                @Html.LabelFor(m => m.Username, "שם משתמש", new { @class = "control-label text-right" })
-                @Html.TextBoxFor(m => m.Username, new { @class = "form-control" })
-                @Html.ValidationMessageFor(m => m.Username, "", new { @class = "text-danger" })
-            </div>
-        </div>
-        <div class="form-group text-center">
-            <div class="col-md-6 col-md-offset-3">
-                @Html.LabelFor(m => m.Email, "אימייל", new { @class = "control-label text-right" })
-                @Html.TextBoxFor(m => m.Email, new { @class = "form-control" })
-                @Html.ValidationMessageFor(m => m.Email, "", new { @class = "text-danger" })
-            </div>
-        </div>
-        <div class="form-group text-center">
-            <div class="col-md-6 col-md-offset-3">
-                @Html.Label("תאריך הרשמה", new { @class = "control-label text-right" })
-                <input type="text" class="form-control" value="@Model.RegistrationDate.ToString("dd/MM/yyyy")" readonly>
-            </div>
-        </div>
-        <div class="form-group text-center">
-            <div class="col-md-6 col-md-offset-3">
-                @Html.Label("סוג משתמש", new { @class = "control-label text-right" })
-                <input type="text" class="form-control" value="@(Model.IsAdmin ? "מנהל" : "משתמש רגיל")" readonly>
-            </div>
-        </div>
-        <div class="form-group text-center">
-            <div class="col-md-6 col-md-offset-3">
-                <button type="submit" class="btn btn-primary">שמור שינויים</button>
-            </div>
-        </div>
-    </div>
-}
-
-@section Scripts {
-    @Scripts.Render("~/bundles/jqueryval")
-    <script>
-        $(document).ready(function() {
-            $("#profileForm").on("submit", function(e) {
-                e.preventDefault();
-                $.ajax({
-                    url: this.action,
-                    method: this.method,
-                    data: $(this).serialize(),
-                    success: function(response) {
-                        if (response.success) {
-                            $("#successModal").modal("show");
-                        }
-                    }
-                });
-            });
-        });
-    </script>
-}
