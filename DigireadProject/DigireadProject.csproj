@@ -222,6 +222,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Services\EmailService.cs" />
     <Compile Include="Models\ViewModels\BookViewModel.cs" />
     <Compile Include="Models\ViewModels\ForgotPasswordViewModel.cs" />
@@ -275,6 +276,8 @@
     <Content Include="Content\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\Cart\css\cartStyle.css" />
+    <Content Include="Content\Cart\js\cartDetailes.js" />
     <Content Include="Content\Home\css\file-explorer.css" />
     <Content Include="Content\Home\js\file-explorer.js" />
     <Content Include="Content\Illustrative-Colorful-Library--unscreen.gif" />
