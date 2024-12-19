@@ -258,6 +258,7 @@
     <NavigationProperty Name="Reviews" Relationship="libraryProject_digireadModel.FK__Reviews__BookID__02FC7413" FromRole="Books" ToRole="Reviews" />
     <NavigationProperty Name="ShoppingCart" Relationship="libraryProject_digireadModel.FK__ShoppingC__BookI__05D8E0BE" FromRole="Books" ToRole="ShoppingCart" />
     <NavigationProperty Name="WaitList" Relationship="libraryProject_digireadModel.FK__WaitList__BookID__06CD04F7" FromRole="Books" ToRole="WaitList" />
+    <Property Name="StockQuantityRent" Type="Int32" />
   </EntityType>
   <Association Name="FK__Purchases__BookI__7F2BE32F">
     <End Type="libraryProject_digireadModel.Books" Role="Books" Multiplicity="0..1" />

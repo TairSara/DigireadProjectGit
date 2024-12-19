@@ -46,6 +46,7 @@ namespace DigireadProject
         public string ImageSrc { get; set; }
         public Nullable<int> StockQuantity { get; set; }
         public string Description { get; set; }
+        public Nullable<int> StockQuantityRent { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Purchases> Purchases { get; set; }
