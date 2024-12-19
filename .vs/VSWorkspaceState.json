@@ -6,12 +6,11 @@
     "\\DigireadProject\\Models\\Services",
     "\\DigireadProject\\Views",
     "\\DigireadProject\\Views\\Account",
-    "\\DigireadProject\\Views\\Account\\css",
     "\\DigireadProject\\Views\\Admin",
     "\\DigireadProject\\Views\\BookManagement",
     "\\DigireadProject\\Views\\Home",
     "\\DigireadProject\\Views\\UserManagement"
   ],
-  "SelectedNode": "\\DigireadProject.sln",
+  "SelectedNode": "\\DigireadProject\\Content",
   "PreviewInSolutionExplorer": false
 }

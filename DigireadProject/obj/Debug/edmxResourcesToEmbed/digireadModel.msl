@@ -108,6 +108,7 @@
     <EntitySetMapping Name="Books">
       <EntityTypeMapping TypeName="libraryProject_digireadModel.Books">
         <MappingFragment StoreEntitySet="Books">
+          <ScalarProperty Name="StockQuantityRent" ColumnName="StockQuantityRent" />
           <ScalarProperty Name="Description" ColumnName="Description" />
           <ScalarProperty Name="StockQuantity" ColumnName="StockQuantity" />
           <ScalarProperty Name="ImageSrc" ColumnName="ImageSrc" />
