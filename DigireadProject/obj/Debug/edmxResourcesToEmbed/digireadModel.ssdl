@@ -26,6 +26,7 @@
     <Property Name="ImageSrc" Type="nvarchar(max)" />
     <Property Name="StockQuantity" Type="int" />
     <Property Name="Description" Type="text" />
+    <Property Name="StockQuantityRent" Type="int" />
   </EntityType>
   <EntityType Name="PasswordResetTokens">
     <Key>

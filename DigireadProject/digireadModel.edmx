@@ -31,6 +31,7 @@
           <Property Name="ImageSrc" Type="nvarchar(max)" />
           <Property Name="StockQuantity" Type="int" />
           <Property Name="Description" Type="text" />
+          <Property Name="StockQuantityRent" Type="int" />
         </EntityType>
         <EntityType Name="PasswordResetTokens">
           <Key>
@@ -577,6 +578,7 @@ warning 6002: The table/view 'libraryProject_digiread.sys.database_firewall_rule
           <NavigationProperty Name="Reviews" Relationship="libraryProject_digireadModel.FK__Reviews__BookID__02FC7413" FromRole="Books" ToRole="Reviews" />
           <NavigationProperty Name="ShoppingCart" Relationship="libraryProject_digireadModel.FK__ShoppingC__BookI__05D8E0BE" FromRole="Books" ToRole="ShoppingCart" />
           <NavigationProperty Name="WaitList" Relationship="libraryProject_digireadModel.FK__WaitList__BookID__06CD04F7" FromRole="Books" ToRole="WaitList" />
+          <Property Name="StockQuantityRent" Type="Int32" />
         </EntityType>
         <Association Name="FK__Purchases__BookI__7F2BE32F">
           <End Type="libraryProject_digireadModel.Books" Role="Books" Multiplicity="0..1" />
@@ -751,6 +753,7 @@ warning 6002: The table/view 'libraryProject_digiread.sys.database_firewall_rule
           <EntitySetMapping Name="Books">
             <EntityTypeMapping TypeName="libraryProject_digireadModel.Books">
               <MappingFragment StoreEntitySet="Books">
+                <ScalarProperty Name="StockQuantityRent" ColumnName="StockQuantityRent" />
                 <ScalarProperty Name="Description" ColumnName="Description" />
                 <ScalarProperty Name="StockQuantity" ColumnName="StockQuantity" />
                 <ScalarProperty Name="ImageSrc" ColumnName="ImageSrc" />
