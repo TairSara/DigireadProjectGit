@@ -7,83 +7,85 @@
 @{
     ViewBag.Title = "עגלת קניות";
 }
+@using (Html.BeginForm("CompletePurchase", "Order", FormMethod.Post, new { id = "purchaseForm" }))
+{
+    @Html.AntiForgeryToken()
 
-@Html.AntiForgeryToken()
+    <div class="cart-container">
+        <div class="cart-header">
+            <h2><i class="fas fa-shopping-cart"></i> עגלת קניות</h2>
+            <span class="items-count">@Model.Sum(item => item.Quantity) פריטים</span>
+        </div>
 
-<div class="cart-container">
-    <div class="cart-header">
-        <h2><i class="fas fa-shopping-cart"></i> עגלת קניות</h2>
-        <span class="items-count">@Model.Sum(item => item.Quantity) פריטים</span>
-    </div>
-
-    <div class="cart-content">
-        <div class="cart-items">
-            @foreach (var item in Model)
-            {
-                <div class="cart-item" id="cart-row-@item.CartID">
-                    <div class="item-image">
-                        @if (!string.IsNullOrEmpty(item.Books.ImageSrc))
-                        {
-                            <img src="@Url.Content(item.Books.ImageSrc)"
-                                 alt="@item.Books.Title"
-                                 class="book-thumbnail" />
-                        }
-                        else
-                        {
-                            <img src="@Url.Content("~/Content/Images/default-book.jpg")"
-                                 alt="תמונה לא זמינה"
-                                 class="book-thumbnail" />
-                        }
-                    </div>
-                    <div class="item-details">
-                        <h3 class="item-title">@item.Books.Title</h3>
-                        <div class="item-type">@(item.IsRental.GetValueOrDefault() ? "השכרה" : "קנייה")</div>
-                        <div class="item-quantity">
-                            <span>כמות:</span>
-                            <div class="quantity-controls">
-                                <button type="button" class="quantity-btn"
-                                        onclick="decreaseQuantity(@item.CartID, @item.Quantity)">-</button>
-                                <span id="quantity-@item.CartID">@item.Quantity</span>
-                                <button type="button" class="quantity-btn"
-                                        onclick="increaseQuantity(@item.CartID, @item.Quantity, @item.Books.StockQuantity)">+</button>
+        <div class="cart-content">
+            <div class="cart-items">
+                @foreach (var item in Model)
+                {
+                    <div class="cart-item" id="cart-row-@item.CartID">
+                        <div class="item-image">
+                            @if (!string.IsNullOrEmpty(item.Books.ImageSrc))
+                            {
+                                <img src="@Url.Content(item.Books.ImageSrc)"
+                                     alt="@item.Books.Title"
+                                     class="book-thumbnail" />
+                            }
+                            else
+                            {
+                                <img src="@Url.Content("~/Content/Images/default-book.jpg")"
+                                     alt="תמונה לא זמינה"
+                                     class="book-thumbnail" />
+                            }
+                        </div>
+                        <div class="item-details">
+                            <h3 class="item-title">@item.Books.Title</h3>
+                            <div class="item-type">@(item.IsRental.GetValueOrDefault() ? "השכרה" : "קנייה")</div>
+                            <div class="item-quantity">
+                                <span>כמות:</span>
+                                <div class="quantity-controls">
+                                    <button type="button" class="quantity-btn"
+                                            onclick="decreaseQuantity(@item.CartID, @item.Quantity)">-</button>
+                                    <span id="quantity-@item.CartID">@item.Quantity</span>
+                                    <button type="button" class="quantity-btn"
+                                            onclick="increaseQuantity(@item.CartID, @item.Quantity, @item.Books.StockQuantity)">+</button>
+                                </div>
                             </div>
                         </div>
+                        <div class="item-price">
+                            <div class="price">@item.Price.Value.ToString("C")</div>
+                            <div class="total">סה"כ: @((item.Price * item.Quantity).Value.ToString("C"))</div>
+                        </div>
+                        <button type="button" onclick="removeFromCart(@item.CartID)" class="remove-btn">
+                            <i class="fas fa-trash"></i>
+                        </button>
                     </div>
-                    <div class="item-price">
-                        <div class="price">@item.Price.Value.ToString("C")</div>
-                        <div class="total">סה"כ: @((item.Price * item.Quantity).Value.ToString("C"))</div>
-                    </div>
-                    <button type="button" onclick="removeFromCart(@item.CartID)" class="remove-btn">
-                        <i class="fas fa-trash"></i>
-                    </button>
-                </div>
-            }
-        </div>
-
-        <div class="cart-summary">
-            <div class="summary-header">
-                <h3>סיכום הזמנה</h3>
-            </div>
-            <div class="summary-content">
-                <div class="summary-row">
-                    <span>סה"כ פריטים</span>
-                    <span>@Model.Sum(item => item.Quantity)</span>
-                </div>
-                <div class="summary-row total">
-                    <span>סה"כ לתשלום</span>
-                    <span>@Model.Sum(x => x.Price * x.Quantity).Value.ToString("C")</span>
-                </div>
-                @if (Model.Any())
-                {
-                    <a href="@Url.Action("Checkout", "Order")" class="checkout-btn">
-                        <i class="fas fa-lock"></i>
-                        המשך לתשלום מאובטח
-                    </a>
                 }
+            </div>
+
+            <div class="cart-summary">
+                <div class="summary-header">
+                    <h3>סיכום הזמנה</h3>
+                </div>
+                <div class="summary-content">
+                    <div class="summary-row">
+                        <span>סה"כ פריטים</span>
+                        <span>@Model.Sum(item => item.Quantity)</span>
+                    </div>
+                    <div class="summary-row total">
+                        <span>סה"כ לתשלום</span>
+                        <span>@Model.Sum(x => x.Price * x.Quantity).Value.ToString("C")</span>
+                    </div>
+                    @if (Model.Any())
+                    {
+                        <button type="button" onclick="completePurchase()" class="checkout-btn">
+                            <i class="fas fa-lock"></i>
+                            המשך לתשלום מאובטח
+                        </button>
+                    }
+                </div>
             </div>
         </div>
     </div>
-</div>
+}
 
 <!-- Modal for delete confirmation -->
 <div class="modal" id="confirmDeleteModal" tabindex="-1">

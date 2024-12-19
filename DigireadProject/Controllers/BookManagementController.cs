@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;  // הוספנו את זה עבור List<>
 using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Mvc;
+using DigireadProject.Models;
 using DigireadProject.Models.ViewModels;
 
 namespace DigireadProject.Controllers
@@ -381,6 +383,75 @@ namespace DigireadProject.Controllers
                 return Json(new { success = true });
             }
             return Json(new { success = false, message = "לא ניתן להחזיר השאלה זו" });
+        }
+        
+        public async Task<ActionResult> MyLibrary()
+        {
+            var userId = GetCurrentUserId();
+            var result = new List<MyLibraryViewModel>();
+
+            // נביא קודם את כל הרכישות
+            var purchasedBookIds = await db.Purchases
+                .Where(p => p.UserID == userId)
+                .Select(p => p.BookID)
+                .ToListAsync();
+
+            // נביא את ההשאלות הפעילות
+            var rentalsWithDates = await db.Rentals
+                .Where(r => r.UserID == userId && r.ReturnDate == null)
+                .Select(r => new { r.BookID, r.RentalDate })
+                .ToListAsync();
+
+            var rentedBookIds = rentalsWithDates.Select(r => r.BookID).ToList();
+
+            // נביא את כל הספרים הרלוונטיים בשאילתה אחת
+            var allRelevantBooks = await db.Books
+                .Where(b => purchasedBookIds.Contains(b.BookID) || rentedBookIds.Contains(b.BookID))
+                .ToListAsync();
+
+            // נבנה את המודל עבור ספרים שנרכשו
+            foreach (var bookId in purchasedBookIds)
+            {
+                var book = allRelevantBooks.FirstOrDefault(b => b.BookID == bookId);
+                if (book != null)
+                {
+                    result.Add(new MyLibraryViewModel
+                    {
+                        BookId = book.BookID,
+                        Title = book.Title,
+                        Author = book.MainAuthor,
+                        ImageSrc = book.ImageSrc,
+                        Type = "רכישה"
+                    });
+                }
+            }
+
+            // נבנה את המודל עבור ספרים מושאלים
+            foreach (var rental in rentalsWithDates)
+            {
+                var book = allRelevantBooks.FirstOrDefault(b => b.BookID == rental.BookID);
+                if (book != null)
+                {
+                    result.Add(new MyLibraryViewModel
+                    {
+                        BookId = book.BookID,
+                        Title = book.Title,
+                        Author = book.MainAuthor,
+                        ImageSrc = book.ImageSrc,
+                        Type = "השאלה",
+                        ReturnDate = rental.RentalDate?.AddDays(14)
+                    });
+                }
+            }
+
+            return View(result);
+        }
+
+        private int GetCurrentUserId()
+        {
+            var username = User.Identity.Name;
+            var user = db.Users.FirstOrDefault(u => u.Username == username);
+            return user?.UserID ?? 0;
         }
     }
 

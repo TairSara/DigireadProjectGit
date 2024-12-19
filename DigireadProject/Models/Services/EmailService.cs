@@ -30,4 +30,26 @@ public class EmailService
 
         await _smtpClient.SendMailAsync(mailMessage);
     }
+
+    public async Task SendRentalExpirationAlertAsync(string email, string bookTitle, int daysLeft)
+    {
+        var mailMessage = new MailMessage
+        {
+            From = new MailAddress("tairsto@ac.sce.ac.il"),
+            Subject = "התראה על סיום תקופת השאלה - DigiRead",
+            IsBodyHtml = true,
+            Body = $@"
+                <div style='direction: rtl; text-align: right;'>
+                    <h2>התראה על סיום תקופת השאלה</h2>
+                    <p>שלום,</p>
+                    <p>ברצוננו להודיע לך שנותרו <strong>{daysLeft} ימים</strong> להשאלת הספר:</p>
+                    <h3 style='color: #007bff;'>{bookTitle}</h3>
+                    <p>אנא שים לב שבתום תקופת ההשאלה הספר יוסר אוטומטית מספריית הספרים שלך.</p>
+                    <p>תודה על שימושך בשירותי DigiRead!</p>
+                </div>"
+        };
+        mailMessage.To.Add(email);
+
+        await _smtpClient.SendMailAsync(mailMessage);
+    }
 }

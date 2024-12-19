@@ -2,6 +2,7 @@
 using System.Data.Entity;
 using System.Linq;
 using System.Web.Mvc;
+using DigireadProject.Models.ViewModels;  
 
 namespace DigireadProject.Controllers
 {
@@ -140,6 +141,67 @@ namespace DigireadProject.Controllers
                 db?.Dispose();
             }
             base.Dispose(disposing);
+        }
+        
+        [HttpGet]
+        [ValidateAntiForgeryToken]
+        public ActionResult Checkout()
+        {
+            try
+            {
+                int userId = GetCurrentUserId();
+                var cartItems = db.ShoppingCart
+                    .Include(s => s.Books)
+                    .Where(s => s.UserID == userId)
+                    .ToList();
+
+                foreach (var item in cartItems)
+                {
+                    if (item.IsRental.GetValueOrDefault())
+                    {
+                        // טיפול בהשאלה
+                        var rental = new Rentals  // שימי לב - משתמשים במודל Rentals ולא ב-ViewModel
+                        {
+                            UserID = userId,
+                            BookID = item.BookID,
+                            RentalDate = DateTime.Now,
+                            ReturnDate = DateTime.Now.AddDays(30),
+                            ImageSrc = item.Books.ImageSrc,
+                            DaysOverdue = 0
+                        };
+    
+                        db.Rentals.Add(rental);  
+                    }
+                    else
+                    {
+                        // טיפול ברכישה
+                        var purchase = new Purchases
+                        {
+                            UserID = userId,
+                            BookID = item.BookID,
+                            PurchaseDate = DateTime.Now,
+                            PaymentStatus = true,
+                            PaymentMethod = "כרטיס אשראי" // או כל שיטת תשלום אחרת שתרצי
+                        };
+                
+                        db.Purchases.Add(purchase);
+                    }
+
+                    // עדכון מלאי הספר
+                    var book = item.Books;
+                    book.StockQuantity -= item.Quantity ?? 1;
+
+                    // מחיקת הפריט מהעגלה
+                    db.ShoppingCart.Remove(item);
+                }
+
+                db.SaveChanges();
+                return RedirectToAction("Success", "Order");
+            }
+            catch (Exception ex)
+            {
+                return RedirectToAction("Error", "Order");
+            }
         }
     }
 }

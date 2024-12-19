@@ -104,6 +104,9 @@ namespace DigireadProject.Models.ViewModels
         }
         [Display(Name = "תיאור")]
         public string Description { get; set; }
+        
+        public string Type { get; set; }  // "רכישה" או "השאלה"
+        public DateTime? ReturnDate { get; set; }
 
     }
 }

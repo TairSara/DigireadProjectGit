@@ -1,0 +1,101 @@
+@model IEnumerable<DigireadProject.Models.ViewModels.MyLibraryViewModel>
+@{
+    ViewBag.Title = "הספרייה שלי";
+}
+
+<div class="library-container" dir="rtl">
+    <h2 class="text-center mb-4">הספרייה שלי</h2>
+
+    <div class="books-grid">
+        @foreach (var book in Model)
+        {
+            <div class="book-card">
+                <div class="book-image">
+                    @if (!string.IsNullOrEmpty(book.ImageSrc))
+                    {
+                        <img src="@Url.Content(book.ImageSrc)" alt="@book.Title" />
+                    }
+                    else
+                    {
+                        <img src="~/Content/Images/default-book.jpg" alt="תמונה לא זמינה" />
+                    }
+                </div>
+                <div class="book-info">
+                    <h3>@book.Title</h3>
+                    <p>מאת: @book.Author</p>
+                    <div class="book-type">@book.Type</div>
+                    @if (book.Type == "השאלה" && book.ReturnDate.HasValue)
+                    {
+                        <div class="return-date">
+                            תאריך החזרה: @book.ReturnDate.Value.ToString("dd/MM/yyyy")
+                        </div>
+                    }
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+
+<style>
+    .library-container {
+        padding: 20px;
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    .books-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: 20px;
+        margin-top: 20px;
+    }
+
+    .book-card {
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        overflow: hidden;
+    }
+
+    .book-image img {
+        width: 100%;
+        height: 280px;
+        object-fit: cover;
+    }
+
+    .book-info {
+        padding: 15px;
+    }
+
+    .book-info h3 {
+        margin: 0;
+        font-size: 1.1em;
+        margin-bottom: 5px;
+    }
+
+    .book-info p {
+        margin: 5px 0;
+        color: #666;
+    }
+
+    .book-type {
+        display: inline-block;
+        padding: 3px 8px;
+        background-color: #e3f2fd;
+        color: #1976d2;
+        border-radius: 4px;
+        font-size: 0.9em;
+        margin-top: 5px;
+    }
+
+    .return-date {
+        margin-top: 5px;
+        font-size: 0.9em;
+        color: #666;
+        background-color: #fff3e0;
+        padding: 3px 8px;
+        border-radius: 4px;
+    }
+</style>
+
