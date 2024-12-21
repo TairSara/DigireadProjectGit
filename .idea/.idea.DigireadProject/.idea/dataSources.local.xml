@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="dataSourceStorageLocal" created-in="RD-243.21565.191">
-    <data-source name="libraryProject_digiread@digiread.database.windows.net" uuid="99f2341a-5900-473e-ab4e-0e7e21ddbfde">
+    <data-source name="libraryProject_digiread@digiread.database.windows.net" uuid="5128b1bc-301f-4f72-aaf1-ed090f455d6e">
       <database-info product="Microsoft SQL Server" version="12.00.5688" jdbc-version="4.2" driver-name="JetBrains JDBC Driver for SQL Server" driver-version="1.0" dbms="AZURE" exact-version="12.0.5688" exact-driver-version="1.0">
         <extra-name-characters>$#@</extra-name-characters>
         <identifier-quote-string>&quot;</identifier-quote-string>

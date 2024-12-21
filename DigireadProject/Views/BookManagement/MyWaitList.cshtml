@@ -1,0 +1,78 @@
+@model IEnumerable<DigireadProject.Models.ViewModels.WaitListViewModel>
+@Html.AntiForgeryToken()
+
+@{
+    ViewBag.Title = "רשימת המתנה";
+    Layout = "~/Views/Shared/_Layout.cshtml"; 
+}
+
+<div class="container mt-4">
+    <h2 class="text-center mb-4">רשימת ההמתנה שלי</h2>
+
+    @if (!Model.Any())
+    {
+        <div class="alert alert-info text-center">
+            אין לך כרגע פריטים ברשימת ההמתנה
+        </div>
+    }
+    else
+    {
+        <div class="row">
+            @foreach (var item in Model)
+            {
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100">
+                        @if (!string.IsNullOrEmpty(item.ImageSrc))
+                        {
+                            <img src="@item.ImageSrc" class="card-img-top" alt="@item.BookTitle" style="height: 200px; object-fit: cover;">
+                        }
+                        <div class="card-body">
+                            <h5 class="card-title">@item.BookTitle</h5>
+                            <p class="card-text">
+                                מיקום בתור: @item.WaitPosition<br>
+                                תאריך הוספה:תאריך הוספה: @(item.AddedDate?.ToString("dd/MM/yyyy") ?? DateTime.Now.ToString("dd/MM/yyyy"))
+                            </p>
+                            @if (item.IsAvailable)
+                            {
+                                <div class="alert alert-success">
+                                    הספר זמין עכשיו!
+                                </div>
+                            }
+                            <button class="btn btn-danger" onclick="removeFromWaitList(@item.WaitListID)">
+                                הסר מהרשימה
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>
+
+@section Scripts {
+    <script>
+        function removeFromWaitList(waitListId) {
+            if (confirm('האם אתה בטוח שברצונך להסיר פריט זה מרשימת ההמתנה?')) {
+                $.ajax({
+                    url: '@Url.Action("RemoveFromWaitList")',
+                    type: 'POST',
+                    data: {
+                        waitListId: waitListId,
+                        __RequestVerificationToken: $('input[name="__RequestVerificationToken"]').val()
+                    },
+                    success: function (result) {
+                        if (result.success) {
+                            location.reload();
+                        } else {
+                            alert(result.message || 'אירעה שגיאה בהסרת הפריט');
+                        }
+                    },
+                    error: function () {
+                        alert('אירעה שגיאה בהסרת הפריט');
+                    }
+                });
+            }
+        }
+    </script>
+}
+

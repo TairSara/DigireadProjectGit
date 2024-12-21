@@ -105,6 +105,10 @@ namespace DigireadProject.Models.ViewModels
         [Display(Name = "תיאור")]
         public string Description { get; set; }
         
+        [Display(Name = "כמות במלאי להשכרה")]
+        [Range(0, 1000, ErrorMessage = "הכמות חייבת להיות בין 0 ל-1000")]
+        public Nullable<int> StockQuantityRent { get; set; } 
+        
         public string Type { get; set; }  // "רכישה" או "השאלה"
         public DateTime? ReturnDate { get; set; }
 

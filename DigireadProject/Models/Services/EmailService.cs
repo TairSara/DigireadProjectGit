@@ -52,4 +52,26 @@ public class EmailService
 
         await _smtpClient.SendMailAsync(mailMessage);
     }
+    
+    public async Task SendBookAvailableNotificationAsync(string email, string bookTitle)
+    {
+        var mailMessage = new MailMessage
+        {
+            From = new MailAddress("tairsto@ac.sce.ac.il"),
+            Subject = "הספר שביקשת זמין! - DigiRead",
+            IsBodyHtml = true,
+            Body = $@"
+            <div style='direction: rtl; text-align: right;'>
+                <h2>הספר שביקשת זמין עכשיו!</h2>
+                <p>שלום,</p>
+                <p>שמחים לבשר לך שהספר שביקשת זמין כעת:</p>
+                <h3 style='color: #007bff;'>{bookTitle}</h3>
+                <p>מהר לרכוש או להשאיל את הספר לפני שמישהו אחר יקדים אותך!</p>
+                <p>תודה על שימושך בשירותי DigiRead!</p>
+            </div>"
+        };
+        mailMessage.To.Add(email);
+
+        await _smtpClient.SendMailAsync(mailMessage);
+    }
 }

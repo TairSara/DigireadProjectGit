@@ -14,5 +14,6 @@ namespace DigireadProject.Models.ViewModels
         // Navigation properties
         public virtual Users User { get; set; }
         public virtual Books Book { get; set; }
+        
     }
 }
