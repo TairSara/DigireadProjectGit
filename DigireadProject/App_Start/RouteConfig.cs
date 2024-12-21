@@ -18,6 +18,11 @@ namespace DigireadProject
                 url: "{controller}/{action}/{id}",
                 defaults: new { controller = "Home", action = "HomePage", id = UrlParameter.Optional }
             );
+            routes.MapRoute(
+                name: "Checkout",
+                url: "Order/Checkout",
+                defaults: new { controller = "Order", action = "Checkout" }
+            );
         }
     }
 }

@@ -1,0 +1,115 @@
+@{
+    ViewBag.Title = "אישור הזמנה";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@if (TempData["PurchaseSuccess"] != null)
+{
+    <div class="checkout-success" dir="rtl">
+        <div class="success-container">
+            <div class="success-icon">
+                <i class="fas fa-check-circle"></i>
+            </div>
+            <div class="success-message">
+                <h2>ההזמנה בוצעה בהצלחה!</h2>
+                <p>תודה על רכישתך בחנות שלנו</p>
+            </div>
+            <div class="buttons">
+                <a href="@Url.Action("MyLibrary", "BookManagement")" class="library-btn">
+                    <i class="fas fa-book"></i>
+                    לספרייה שלי
+                </a>
+                <a href="@Url.Action("MainGallery", "BookManagement")" class="continue-shopping-btn">
+                    <i class="fas fa-shopping-cart"></i>
+                    המשך בקניות
+                </a>
+            </div>
+        </div>
+    </div>
+}
+else
+{
+    <script>
+        window.location.href = '@Url.Action("Cart", "Cart")';
+    </script>
+}
+<style>
+    * {
+        font-family: 'Rubik', 'Assistant', 'Heebo', Arial, sans-serif;
+    }
+    .checkout-success {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 70vh;
+        font-family: Arial, sans-serif;
+    }
+
+    .success-container {
+        background: #fff;
+        padding: 2rem;
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        text-align: center;
+        max-width: 500px;
+        width: 90%;
+    }
+
+    .success-icon {
+        color: #4CAF50;
+        font-size: 4rem;
+        margin-bottom: 1rem;
+    }
+
+    .success-message h2 {
+        color: #333;
+        margin-bottom: 0.5rem;
+        font-size: 1.5rem;
+        font-family: 'Rubik', 'Assistant', sans-serif;
+        font-weight: 500;
+    }
+
+    .success-message p {
+        color: #666;
+        margin-bottom: 2rem;
+        font-family: 'Assistant', 'Heebo', sans-serif;
+    }
+
+    .buttons {
+        display: flex;
+        gap: 1rem;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+
+    .library-btn, .continue-shopping-btn {
+        padding: 0.8rem 1.5rem;
+        border-radius: 4px;
+        text-decoration: none;
+        font-weight: 500;
+        transition: all 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-family: 'Assistant', 'Heebo', sans-serif;
+    }
+
+    .library-btn {
+        background-color: #2196F3;
+        color: white;
+    }
+
+    .continue-shopping-btn {
+        background-color: #4CAF50;
+        color: white;
+    }
+
+    .library-btn:hover, .continue-shopping-btn:hover {
+        opacity: 0.9;
+        transform: translateY(-2px);
+    }
+
+    .fas {
+        font-size: 1.2rem;
+    }
+</style>

@@ -102,12 +102,17 @@
                         </div>
 
                         <div class="row mb-3">
-                            <div class="col-md-6">
-                                @Html.LabelFor(m => m.StockQuantity, new { @class = "form-label" })
-                                @Html.TextBoxFor(m => m.StockQuantity, new { @class = "form-control", type = "number" })
+                            <div class="col-md-4">
+                                @Html.LabelFor(m => m.StockQuantity, "כמות במלאי לרכישה", new { @class = "form-label" })
+                                @Html.TextBoxFor(m => m.StockQuantity, new { @class = "form-control", type = "number", min = "0" })
                                 @Html.ValidationMessageFor(m => m.StockQuantity, "", new { @class = "text-danger" })
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-md-4">
+                                @Html.LabelFor(m => m.StockQuantityRent, "כמות במלאי להשכרה", new { @class = "form-label" })
+                                @Html.TextBoxFor(m => m.StockQuantityRent, new { @class = "form-control", type = "number", min = "0" })
+                                @Html.ValidationMessageFor(m => m.StockQuantityRent, "", new { @class = "text-danger" })
+                            </div>
+                            <div class="col-md-4">
                                 @Html.LabelFor(m => m.ImageSrc, "כתובת תמונה (URL)", new { @class = "form-label" })
                                 @Html.TextBoxFor(m => m.ImageSrc, new { @class = "form-control", type = "url", placeholder = "https://example.com/image.jpg" })
                                 @Html.ValidationMessageFor(m => m.ImageSrc, "", new { @class = "text-danger" })
@@ -223,6 +228,7 @@
                     StockQuantity: $('#StockQuantity').val(),
                     ImageSrc: $('#ImageSrc').val(),
                     Description: $('#Description').val(), // הוספתי את התיאור לטופס
+                    StockQuantityRent: $('#StockQuantityRent').val(),
 
                     // Boolean fields
                     IsAvailable: $('#IsAvailable').is(':checked'),
