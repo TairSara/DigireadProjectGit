@@ -5,6 +5,7 @@ namespace DigireadProject.Models.ViewModels
 
     public class UserRentalViewModel
     {
+        public int UserID { get; set; }
         public int RentalID { get; set; }
         public int BookID { get; set; }
         public string BookTitle { get; set; }

@@ -1,0 +1,333 @@
+@model IEnumerable<DigireadProject.Models.ViewModels.MyLibraryViewModel>
+@section Styles {
+    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
+}
+@{
+    ViewBag.Title = "הספרייה שלי";
+}
+@Html.AntiForgeryToken()
+<div class="library-container" dir="rtl">
+    <h2 class="text-center mb-4">הספרייה שלי</h2>
+
+    @if (TempData["ExpiredRentals"] != null)
+    {
+        <div class="alert alert-info" role="alert" dir="rtl">
+            שים לב: חלק מהספרים המושאלים הוסרו מהספרייה שלך עקב פקיעת תוקף ההשאלה
+        </div>
+    }
+
+    <div class="books-grid">
+        @foreach (var book in Model)
+        {
+            <div class="book-card">
+                <div class="book-image">
+                    @if (!string.IsNullOrEmpty(book.ImageSrc))
+                    {
+                        <img src="@Url.Content(book.ImageSrc)" alt="@book.Title" />
+                    }
+                    else
+                    {
+                        <img src="~/Content/Images/default-book.jpg" alt="תמונה לא זמינה" />
+                    }
+                </div>
+                <div class="book-info">
+                    <h3>@book.Title</h3>
+                    <p>מאת: @book.Author</p>
+                    <div class="book-type">@book.Type</div>
+                    @if (book.Type == "השאלה" && book.ReturnDate.HasValue)
+                    {
+                        <div class="return-date">
+                            תאריך החזרה: @book.ReturnDate.Value.ToString("dd/MM/yyyy")
+                        </div>
+
+                        {
+                            var daysLeft = (book.ReturnDate.Value - DateTime.Now).Days;
+                            if (daysLeft <= 5 && daysLeft > 0)
+                            {
+                                <div class="days-left-warning">
+                                    נותרו @daysLeft ימים להשכרה
+                                </div>
+                            }
+                        }
+                    }
+                    @if (book.Type == "רכישה")
+                    {
+                        <button class="download-btn" onclick="showFormatDialog(@book.BookId)">
+                            <i class="fas fa-download"></i> הורד ספר
+                        </button>
+                    }
+                    <button class="delete-btn" onclick="confirmDelete(@book.BookId, '@book.Type', '@book.Title')">
+                        <i class="fas fa-trash"></i> מחק
+                    </button>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+
+<style>
+    * {
+        font-family: 'Rubik', 'Assistant', 'Heebo', Arial, sans-serif;
+    }
+    .library-container {
+        padding: 20px;
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    .books-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: 20px;
+        margin-top: 20px;
+    }
+
+    .book-card {
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        overflow: hidden;
+    }
+
+    .book-image img {
+        width: 100%;
+        height: 280px;
+        object-fit: cover;
+    }
+
+    .book-info {
+        padding: 15px;
+    }
+
+    .book-info h3 {
+        margin: 0;
+        font-size: 1.1em;
+        margin-bottom: 5px;
+        font-weight: 500;
+        font-family: 'Rubik', 'Assistant', sans-serif;
+    }
+
+    .download-btn {
+        background-color: #4CAF50;
+        color: white;
+        border: none;
+        padding: 5px 10px;
+        border-radius: 4px;
+        margin-top: 10px;
+        cursor: pointer;
+        font-family: 'Assistant', 'Heebo', sans-serif;
+        transition: background-color 0.3s;
+        width: 100%;
+        margin-bottom: 5px;
+    }
+
+    .download-btn:hover {
+        background-color: #45a049;
+    }
+
+    .book-info p {
+        margin: 5px 0;
+        color: #666;
+        font-family: 'Assistant', 'Heebo', sans-serif;
+    }
+
+    .book-type {
+        display: inline-block;
+        padding: 3px 8px;
+        background-color: #e3f2fd;
+        color: #1976d2;
+        border-radius: 4px;
+        font-size: 0.9em;
+        margin-top: 5px;
+        font-family: 'Assistant', 'Heebo', sans-serif;
+        font-weight: 500;
+    }
+
+    .return-date {
+        margin-top: 5px;
+        font-size: 0.9em;
+        color: #666;
+        background-color: #fff3e0;
+        padding: 3px 8px;
+        border-radius: 4px;
+        font-family: 'Assistant', 'Heebo', sans-serif;
+    }
+
+    .alert {
+        margin-bottom: 20px;
+        padding: 15px;
+        border-radius: 4px;
+    }
+
+    .alert-info {
+        background-color: #e3f2fd;
+        border: 1px solid #bbdefb;
+        color: #0d47a1;
+    }
+
+    .delete-btn {
+        background-color: #dc3545;
+        color: white;
+        border: none;
+        padding: 5px 10px;
+        border-radius: 4px;
+        margin-top: 10px;
+        cursor: pointer;
+        font-family: 'Assistant', 'Heebo', sans-serif;
+        transition: background-color 0.3s;
+    }
+
+    .delete-btn:hover {
+        background-color: #c82333;
+    }
+
+    .format-dialog {
+        font-family: 'Rubik', 'Assistant', 'Heebo', Arial, sans-serif;
+    }
+
+    .format-options {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+        padding: 20px;
+    }
+
+    .format-btn {
+        background-color: #4CAF50;
+        color: white;
+        border: none;
+        padding: 10px;
+        border-radius: 4px;
+        cursor: pointer;
+        font-family: inherit;
+        transition: background-color 0.3s;
+    }
+
+    .format-btn:hover {
+        background-color: #45a049;
+    }
+</style>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        function confirmDelete(bookId, type, title) {
+            Swal.fire({
+                title: 'האם אתה בטוח?',
+                html: `האם אתה בטוח שברצונך למחוק את הספר <strong>${title}</strong> מהספרייה שלך?`,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'כן, מחק',
+                cancelButtonText: 'ביטול',
+                reverseButtons: true
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    deleteBook(bookId, type);
+                }
+            });
+        }
+
+        function deleteBook(bookId, type) {
+            console.log('מנסה למחוק ספר:', { bookId, type }); // הוספת לוג
+
+            $.ajax({
+                url: '/BookManagement/DeleteFromLibrary',
+                type: 'POST',
+                data: {
+                    bookId: bookId,
+                    type: type,
+                    __RequestVerificationToken: $('input[name="__RequestVerificationToken"]').val()
+                },
+                success: function(response) {
+                    console.log('תגובת השרת:', response); // הוספת לוג
+                    if (response.success) {
+                        Swal.fire({
+                            title: 'נמחק!',
+                            text: 'הספר נמחק בהצלחה מהספרייה שלך',
+                            icon: 'success'
+                        }).then(() => {
+                            location.reload();
+                        });
+                    } else {
+                        console.error('שגיאת שרת:', response.message); // הוספת לוג
+                        Swal.fire(
+                            'שגיאה!',
+                            response.message || 'אירעה שגיאה במחיקת הספר',
+                            'error'
+                        );
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error('שגיאת AJAX:', { status, error, responseText: xhr.responseText }); // הוספת לוג מפורט
+                    Swal.fire(
+                        'שגיאה!',
+                        'אירעה שגיאה במחיקת הספר',
+                        'error'
+                    );
+                }
+            });
+        }
+
+        function showFormatDialog(bookId) {
+            Swal.fire({
+                title: 'בחר פורמט להורדה',
+                html: `
+                    <div class="format-options" dir="rtl">
+                        <button class="format-btn" onclick="downloadBook(${bookId}, 'PDF')">PDF</button>
+                        <button class="format-btn" onclick="downloadBook(${bookId}, 'EPUB')">EPUB</button>
+                        <button class="format-btn" onclick="downloadBook(${bookId}, 'MOBI')">MOBI</button>
+                        <button class="format-btn" onclick="downloadBook(${bookId}, 'FB2')">FB2</button>
+                    </div>
+                `,
+                showConfirmButton: false,
+                showCloseButton: true,
+                customClass: {
+                    popup: 'format-dialog'
+                }
+            });
+        }
+
+        function downloadBook(bookId, format) {
+            $.ajax({
+                url: '/BookManagement/DownloadBook',
+                type: 'POST',
+                data: {
+                    bookId: bookId,
+                    format: format,
+                    __RequestVerificationToken: $('input[name="__RequestVerificationToken"]').val()
+                },
+                success: function(response) {
+                    console.log('Download response:', response);
+                    if (response.success) {
+                        // Create a temporary link to download the file
+                        const link = document.createElement('a');
+                        link.href = response.downloadUrl;
+                        link.download = response.fileName;
+                        document.body.appendChild(link);
+                        link.click();
+                        document.body.removeChild(link);
+
+                        Swal.close();
+                    } else {
+                        Swal.fire({
+                            title: 'שגיאה!',
+                            text: response.message || 'אירעה שגיאה בהורדת הספר',
+                            icon: 'error'
+                        });
+                    }
+                },
+                error: function() {
+                    console.error('Download error:', { status, error, response: xhr.responseText });
+                    Swal.fire({
+                        title: 'שגיאה!',
+                        text: 'אירעה שגיאה בהורדת הספר',
+                        icon: 'error'
+                    });
+                }
+            });
+        }
+    </script>
+}

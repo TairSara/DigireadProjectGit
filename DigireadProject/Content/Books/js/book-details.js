@@ -36,6 +36,9 @@
             const formData = new FormData(form);
             const token = form.querySelector('[name="__RequestVerificationToken"]').value;
 
+            // בדיקה האם זו הוספה לרשימת המתנה
+            const isWaitList = form.action.includes('AddToWaitList');
+
             const response = await fetch(form.action, {
                 method: 'POST',
                 body: formData,
@@ -44,20 +47,32 @@
                 }
             });
 
-            if (response.ok) {
-                this.closePurchaseDialog();
-                this.showSuccessMessage();
+            const result = await response.json();
 
-                // Wait for 1 second before redirecting
-                setTimeout(() => {
-                    window.location.href = '/BookManagement/Gallery';
-                }, 1000);
+            if (result.success) {
+                this.closePurchaseDialog();
+                Swal.fire({
+                    title: 'הצלחה!',
+                    text: isWaitList ? 'נוספת בהצלחה לרשימת ההמתנה' : 'הספר נוסף לסל הקניות בהצלחה',
+                    icon: 'success',
+                    confirmButtonText: 'אישור'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        window.location.href = isWaitList ? '/BookManagement/MyWaitList' : '/BookManagement/Gallery';
+                    }
+                });
             } else {
-                this.showErrorMessage();
+                // ... הטיפול בשגיאות הקיים ...
             }
         } catch (error) {
             console.error('Error:', error);
-            this.showErrorMessage();
+            Swal.fire({
+                title: 'שגיאה',
+                text: 'אירעה שגיאה בפעולה',
+                icon: 'error',
+                confirmButtonText: 'אישור',
+                allowOutsideClick: false
+            });
         }
     }
 
@@ -96,3 +111,21 @@
 document.addEventListener('DOMContentLoaded', () => {
     window.bookManager = new BookPurchaseManager();
 });
+
+var bookManager = {
+    showPurchaseOptions: function() {
+        document.getElementById('purchaseDialog').style.display = 'block';
+    },
+
+    closePurchaseDialog: function() {
+        document.getElementById('purchaseDialog').style.display = 'none';
+    },
+
+    showNoStockMessage: function() {
+        document.getElementById('errorModal').style.display = 'block';
+    },
+
+    closeErrorModal: function() {
+        document.getElementById('errorModal').style.display = 'none';
+    }
+};

@@ -1,6 +1,7 @@
 ﻿@model DigireadProject.Models.ViewModels.BookViewModel
 @section Styles {
     <link href="~/Content/Books/css/book-details.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
 }
 
 <div class="book-details">
@@ -40,26 +41,48 @@
         <div class="modal-content">
             <h3>בחר אפשרות רכישה</h3>
             <div class="purchase-options">
-                <form method="post" action="@Url.Action("AddToCart", "ShoppingCart")">
+                <!-- אפשרות רכישה -->
+                <form method="post" action="@(Model.StockQuantity > 0 ? Url.Action("AddToCart", "ShoppingCart") : Url.Action("AddToWaitList", "BookManagement"))">
                     @Html.AntiForgeryToken()
                     @Html.Hidden("bookId", Model.BookID)
                     @Html.Hidden("isRental", false)
-                    <button type="submit" class="btn btn-primary purchase-btn">
-                        <i class="fas fa-shopping-cart"></i>
-                        רכישה - ₪@Model.PurchasePrice
-                    </button>
+                    @if (Model.StockQuantity > 0)
+                    {
+                        <button type="submit" class="btn btn-primary purchase-btn">
+                            <i class="fas fa-shopping-cart"></i>
+                            רכישה - ₪@Model.PurchasePrice
+                        </button>
+                    }
+                    else
+                    {
+                        <button type="submit" class="btn btn-secondary">
+                            <i class="fas fa-clock"></i>
+                            הצטרף לרשימת המתנה לרכישה
+                        </button>
+                    }
                 </form>
 
+                <!-- אפשרות השאלה -->
                 @if (Model.IsForRent == true)
                 {
-                    <form method="post" action="@Url.Action("AddToCart", "ShoppingCart")">
+                    <form method="post" action="@(Model.StockQuantityRent > 0 ? Url.Action("AddToCart", "ShoppingCart") : Url.Action("AddToWaitList", "BookManagement"))">
                         @Html.AntiForgeryToken()
                         @Html.Hidden("bookId", Model.BookID)
                         @Html.Hidden("isRental", true)
-                        <button type="submit" class="btn btn-primary rental-btn">
-                            <i class="fas fa-clock"></i>
-                            השכרה - ₪@Model.RentalPrice
-                        </button>
+                        @if (Model.StockQuantityRent > 0)
+                        {
+                            <button type="submit" class="btn btn-primary rental-btn">
+                                <i class="fas fa-clock"></i>
+                                השכרה - ₪@Model.RentalPrice
+                            </button>
+                        }
+                        else
+                        {
+                            <button type="submit" class="btn btn-secondary">
+                                <i class="fas fa-clock"></i>
+                                הצטרף לרשימת המתנה להשאלה
+                            </button>
+                        }
                     </form>
                 }
             </div>
@@ -68,6 +91,16 @@
     </div>
 </div>
 
+<!-- הוספת Modal להודעת שגיאה -->
+<div id="errorModal" class="modal">
+    <div class="modal-content">
+        <h4>שגיאה</h4>
+        <p>הספר אינו זמין להשאלה כרגע</p>
+        <button onclick="bookManager.closeErrorModal()" class="btn btn-secondary">סגור</button>
+    </div>
+</div>
+
 @section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="~/Content/Books/js/book-details.js"></script>
 }
