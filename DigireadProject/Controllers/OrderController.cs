@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 using DigireadProject.Models;
+using DigireadProject.Controllers;
 
 namespace DigireadProject.Controllers
 {
@@ -31,6 +32,7 @@ namespace DigireadProject.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> CompletePurchase()
         {
+            var bookManagementController = new BookManagementController();
             using (var transaction = db.Database.BeginTransaction())
             {
                 try
@@ -87,6 +89,7 @@ namespace DigireadProject.Controllers
 
                             // עדכון מלאי ההשאלות
                             book.StockQuantityRent -= 1;
+                            await bookManagementController.RemoveFromWaitListAfterRental(item.BookID.Value, userId);
                         }
                         else
                         {

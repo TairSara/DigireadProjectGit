@@ -3,10 +3,10 @@
 
 @{
     ViewBag.Title = "רשימת המתנה";
-    Layout = "~/Views/Shared/_Layout.cshtml"; 
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<div class="container mt-4">
+<div class="wait-list-container">
     <h2 class="text-center mb-4">רשימת ההמתנה שלי</h2>
 
     @if (!Model.Any())
@@ -17,28 +17,38 @@
     }
     else
     {
-        <div class="row">
+        <div class="books-grid">
             @foreach (var item in Model)
             {
-                <div class="col-md-4 mb-4">
+                <div class="book-card">
                     <div class="card h-100">
                         @if (!string.IsNullOrEmpty(item.ImageSrc))
                         {
-                            <img src="@item.ImageSrc" class="card-img-top" alt="@item.BookTitle" style="height: 200px; object-fit: cover;">
+                            <img src="@item.ImageSrc" class="book-image card-img-top" alt="@item.BookTitle">
                         }
                         <div class="card-body">
                             <h5 class="card-title">@item.BookTitle</h5>
                             <p class="card-text">
                                 מיקום בתור: @item.WaitPosition<br>
-                                תאריך הוספה:תאריך הוספה: @(item.AddedDate?.ToString("dd/MM/yyyy") ?? DateTime.Now.ToString("dd/MM/yyyy"))
+                                תאריך הוספה: @(item.AddedDate?.ToString("dd/MM/yyyy") ?? DateTime.Now.ToString("dd/MM/yyyy"))<br>
                             </p>
-                            @if (item.IsAvailable)
+
+                            @if (item.StockQuantityRent > 0 && item.IsAvailableForUser)
                             {
-                                <div class="alert alert-success">
-                                    הספר זמין עכשיו!
+                                <a href="@Url.Action("BookDetails", "BookManagement", new { id = item.BookID })"
+                                   class="available-button">
+                                    <text>הספר זמין להשאלה - לחץ להשאלה</text>
+                                </a>
+                            }
+                            else
+                            {
+                                <div class="availability-status not-available">
+                                    <text>הספר אינו זמין להשאלה</text>
                                 </div>
                             }
-                            <button class="btn btn-danger" onclick="removeFromWaitList(@item.WaitListID)">
+                            
+
+                            <button class="btn btn-danger mt-3 w-100" onclick="removeFromWaitList(@item.WaitListID)">
                                 הסר מהרשימה
                             </button>
                         </div>
@@ -49,30 +59,9 @@
     }
 </div>
 
-@section Scripts {
-    <script>
-        function removeFromWaitList(waitListId) {
-            if (confirm('האם אתה בטוח שברצונך להסיר פריט זה מרשימת ההמתנה?')) {
-                $.ajax({
-                    url: '@Url.Action("RemoveFromWaitList")',
-                    type: 'POST',
-                    data: {
-                        waitListId: waitListId,
-                        __RequestVerificationToken: $('input[name="__RequestVerificationToken"]').val()
-                    },
-                    success: function (result) {
-                        if (result.success) {
-                            location.reload();
-                        } else {
-                            alert(result.message || 'אירעה שגיאה בהסרת הפריט');
-                        }
-                    },
-                    error: function () {
-                        alert('אירעה שגיאה בהסרת הפריט');
-                    }
-                });
-            }
-        }
-    </script>
+@section Styles {
+    <link href="~/Content/Books/css/MyWaitList.css" rel="stylesheet" />
 }
-
+@section Scripts {
+    <script src="~/Content/Books/js/MyWaitList.js"></script>
+}

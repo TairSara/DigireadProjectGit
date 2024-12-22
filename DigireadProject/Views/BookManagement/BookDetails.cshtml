@@ -41,31 +41,32 @@
         <div class="modal-content">
             <h3>בחר אפשרות רכישה</h3>
             <div class="purchase-options">
-                <!-- אפשרות רכישה -->
-                <form method="post" action="@(Model.StockQuantity > 0 ? Url.Action("AddToCart", "ShoppingCart") : Url.Action("AddToWaitList", "BookManagement"))">
-                    @Html.AntiForgeryToken()
-                    @Html.Hidden("bookId", Model.BookID)
-                    @Html.Hidden("isRental", false)
-                    @if (Model.StockQuantity > 0)
-                    {
+                <!-- אפשרות רכישה - או זמין או לא זמין -->
+                @if (Model.StockQuantity > 0)
+                {
+                    <form method="post" action="@Url.Action("AddToCart", "ShoppingCart")">
+                        @Html.AntiForgeryToken()
+                        @Html.Hidden("bookId", Model.BookID)
+                        @Html.Hidden("isRental", false)
                         <button type="submit" class="btn btn-primary purchase-btn">
                             <i class="fas fa-shopping-cart"></i>
                             רכישה - ₪@Model.PurchasePrice
                         </button>
-                    }
-                    else
-                    {
-                        <button type="submit" class="btn btn-secondary">
-                            <i class="fas fa-clock"></i>
-                            הצטרף לרשימת המתנה לרכישה
-                        </button>
-                    }
-                </form>
+                    </form>
+                }
+                else
+                {
+                    <div class="availability-status not-available">
+                        <text>הספר אינו זמין לרכישה - אין במלאי</text>
+                    </div>
+                }
 
-                <!-- אפשרות השאלה -->
+                <!-- אפשרות השאלה - כולל אפשרות להצטרף לרשימת המתנה -->
                 @if (Model.IsForRent == true)
                 {
-                    <form method="post" action="@(Model.StockQuantityRent > 0 ? Url.Action("AddToCart", "ShoppingCart") : Url.Action("AddToWaitList", "BookManagement"))">
+                    <form method="post" action="@(Model.StockQuantityRent > 0 ?
+                                                Url.Action("AddToCart", "ShoppingCart") :
+                                                Url.Action("AddToWaitList", "BookManagement"))">
                         @Html.AntiForgeryToken()
                         @Html.Hidden("bookId", Model.BookID)
                         @Html.Hidden("isRental", true)

@@ -14,10 +14,39 @@ namespace DigireadProject.Models.ViewModels
         public string ImageSrc { get; set; }
         public bool IsAvailable { get; set; }
         public bool IsRental { get; set; }
+        public int StockQuantity { get; set; }        // לרכישה
+        public int StockQuantityRent { get; set; }    // להשאלה
+
+        // מאפיין חדש שבודק אם הספר זמין בהתאם לסוג ההמתנה
+        public bool IsActuallyAvailable 
+        {
+            get
+            {
+                if (IsRental)
+                {
+                    return StockQuantityRent > 0;  // בודק רק את מלאי ההשאלות
+                }
+                return StockQuantity > 0;  // בודק רק את מלאי הרכישות
+            }
+        }
         
-        // Navigation Properties
-        public virtual Books Book { get; set; }
-        public virtual Users User { get; set; }
+        // מאפיין חדש שבודק אם הספר זמין למשתמש הספציפי
+        public bool IsAvailableForUser 
+        {
+            get
+            {
+                // הספר זמין רק אם המשתמש במקום הראשון והספר במלאי
+                if (WaitPosition == 1)
+                {
+                    if (IsRental)
+                    {
+                        return StockQuantityRent > 0;
+                    }
+                    return StockQuantity > 0;
+                }
+                return false;  // לא זמין למשתמשים במקום 2 ומעלה
+            }
+        }
+    }
         
     }
-}
