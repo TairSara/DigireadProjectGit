@@ -1,74 +1,61 @@
 @model IEnumerable<DigireadProject.Models.ViewModels.MyLibraryViewModel>
 @section Styles {
     <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
+    <link href="~/Content/Books/css/MyLibrary.css" rel="stylesheet" />
 }
-@{
-    ViewBag.Title = "הספרייה שלי";
-}
+@{ ViewBag.Title = "הספרייה שלי"; }
 @Html.AntiForgeryToken()
 <div class="library-container" dir="rtl">
     <h2 class="text-center mb-4">הספרייה שלי</h2>
 
     @if (TempData["ExpiredRentals"] != null)
     {
-        <div class="alert alert-info" role="alert" dir="rtl">
-            שים לב: חלק מהספרים המושאלים הוסרו מהספרייה שלך עקב פקיעת תוקף ההשאלה
-        </div>
-    }
+<div class="alert alert-info" role="alert" dir="rtl">
+    שים לב: חלק מהספרים המושאלים הוסרו מהספרייה שלך עקב פקיעת תוקף ההשאלה
+</div>}
 
     <div class="books-grid">
         @foreach (var book in Model)
         {
-            <div class="book-card">
-                <div class="book-image">
-                    @if (!string.IsNullOrEmpty(book.ImageSrc))
-                    {
-                        <img src="@Url.Content(book.ImageSrc)" alt="@book.Title" />
-                    }
-                    else
-                    {
-                        <img src="~/Content/Images/default-book.jpg" alt="תמונה לא זמינה" />
-                    }
-                </div>
-                <div class="book-info">
-                    <h3>@book.Title</h3>
-                    <p>מאת: @book.Author</p>
-                    <div class="book-type">@book.Type</div>
-                    @if (book.Type == "השאלה" && book.ReturnDate.HasValue)
-                    {
-                        <div class="return-date">
-                            תאריך החזרה: @book.ReturnDate.Value.ToString("dd/MM/yyyy")
-                        </div>
-
+<div class="book-card">
+    <div class="book-image">
+        @if (!string.IsNullOrEmpty(book.ImageSrc))
+        {
+<img src="@Url.Content(book.ImageSrc)" alt="@book.Title" /> }
+                else
+                {
+<img src="~/Content/Images/default-book.jpg" alt="תמונה לא זמינה" />}
+    </div>
+    <div class="book-info">
+        <h3>@book.Title</h3>
+        <p>מאת: @book.Author</p>
+        <div class="book-type">@book.Type</div>
+        @if (book.Type == "השאלה" && book.ReturnDate.HasValue)
+        {
+<div class="return-date">
+    תאריך החזרה: @book.ReturnDate.Value.ToString("dd/MM/yyyy")
+</div> {
+                        var daysLeft = (book.ReturnDate.Value - DateTime.Now).Days;
+                        if (daysLeft <= 5 && daysLeft > 0)
                         {
-                            var daysLeft = (book.ReturnDate.Value - DateTime.Now).Days;
-                            if (daysLeft <= 5 && daysLeft > 0)
-                            {
-                                <div class="days-left-warning">
-                                    נותרו @daysLeft ימים להשכרה
-                                </div>
-                            }
-                        }
+<div class="days-left-warning">
+    נותרו @daysLeft ימים להשכרה
+</div>}
                     }
-                    @if (book.Type == "רכישה")
-                    {
-                        <button class="download-btn" onclick="showFormatDialog(@book.BookId)">
-                            <i class="fas fa-download"></i> הורד ספר
-                        </button>
-                    }
-                    <button class="delete-btn" onclick="confirmDelete(@book.BookId, '@book.Type', '@book.Title')">
-                        <i class="fas fa-trash"></i> מחק
-                    </button>
-                </div>
-            </div>
-        }
+                }
+        @if (book.Type == "רכישה")
+        {
+<button class="download-btn" onclick="showFormatDialog(@book.BookId)">
+    <i class="fas fa-download"></i> הורד ספר
+</button>}
+        <button class="delete-btn" onclick="confirmDelete(@book.BookId, '@book.Type', '@book.Title')">
+            <i class="fas fa-trash"></i> מחק
+        </button>
+    </div>
+</div>}
     </div>
 </div>
 
-
-@section Styles {
-    <link href="~/Content/Books/css/MyLibrary.css" rel="stylesheet" />
-}
 
 @section Scripts {
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>

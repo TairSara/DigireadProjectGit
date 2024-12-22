@@ -1,67 +1,140 @@
 @model IEnumerable<DigireadProject.Models.ViewModels.WaitListViewModel>
 @Html.AntiForgeryToken()
 
-@{
-    ViewBag.Title = "רשימת המתנה";
-    Layout = "~/Views/Shared/_Layout.cshtml";
-}
+@{ ViewBag.Title = "רשימת המתנה";
+                Layout = "~/Views/Shared/_Layout.cshtml"; }
+
+<style>
+    .wait-list-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+    }
+
+    .books-grid {
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 20px;
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    .book-card {
+        width: 300px;
+        margin: 10px;
+    }
+
+    .book-image {
+        width: 100%;
+        height: 300px;
+        object-fit: contain;
+        margin: 0 auto;
+    }
+
+    .availability-status {
+        text-align: center;
+        padding: 10px;
+        margin: 10px 0;
+        border-radius: 5px;
+    }
+
+    .not-available {
+        background-color: #f8f9fa;
+        color: #6c757d;
+        border: 1px solid #dee2e6;
+    }
+
+    .available-button {
+        display: block;
+        width: 100%;
+        padding: 10px;
+        background-color: #28a745;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        text-decoration: none;
+        text-align: center;
+        transition: background-color 0.3s;
+    }
+
+        .available-button:hover {
+            background-color: #218838;
+            color: white;
+            text-decoration: none;
+        }
+</style>
 
 <div class="wait-list-container">
     <h2 class="text-center mb-4">רשימת ההמתנה שלי</h2>
 
     @if (!Model.Any())
     {
-        <div class="alert alert-info text-center">
-            אין לך כרגע פריטים ברשימת ההמתנה
-        </div>
-    }
-    else
-    {
-        <div class="books-grid">
-            @foreach (var item in Model)
+<div class="alert alert-info text-center">
+    אין לך כרגע פריטים ברשימת ההמתנה
+</div> }
+            else
             {
-                <div class="book-card">
-                    <div class="card h-100">
-                        @if (!string.IsNullOrEmpty(item.ImageSrc))
-                        {
-                            <img src="@item.ImageSrc" class="book-image card-img-top" alt="@item.BookTitle">
-                        }
-                        <div class="card-body">
-                            <h5 class="card-title">@item.BookTitle</h5>
-                            <p class="card-text">
-                                מיקום בתור: @item.WaitPosition<br>
-                                תאריך הוספה: @(item.AddedDate?.ToString("dd/MM/yyyy") ?? DateTime.Now.ToString("dd/MM/yyyy"))<br>
-                            </p>
+<div class="books-grid">
+    @foreach (var item in Model)
+    {
+<div class="book-card">
+    <div class="card h-100">
+        @if (!string.IsNullOrEmpty(item.ImageSrc))
+        {
+<img src="@item.ImageSrc" class="book-image card-img-top" alt="@item.BookTitle">}
+        <div class="card-body">
+            <h5 class="card-title">@item.BookTitle</h5>
+            <p class="card-text">
+                מיקום בתור: @item.WaitPosition<br>
+                תאריך הוספה: @(item.AddedDate?.ToString("dd/MM/yyyy") ?? DateTime.Now.ToString("dd/MM/yyyy"))<br>
+            </p>
 
-                            @if (item.StockQuantityRent > 0 && item.IsAvailableForUser)
-                            {
-                                <a href="@Url.Action("BookDetails", "BookManagement", new { id = item.BookID })"
-                                   class="available-button">
-                                    <text>הספר זמין להשאלה - לחץ להשאלה</text>
-                                </a>
-                            }
-                            else
-                            {
-                                <div class="availability-status not-available">
-                                    <text>הספר אינו זמין להשאלה</text>
-                                </div>
-                            }
-                            
+            @if (item.StockQuantityRent > 0 && item.IsAvailableForUser)
+            {
+<a href="@Url.Action("BookDetails", "BookManagement", new { id = item.BookID })"
+   class="available-button">
+    <text>הספר זמין להשאלה - לחץ להשאלה</text>
+</a> }
+                    else
+                    {
+<div class="availability-status not-available">
+    <text>הספר אינו זמין להשאלה</text>
+</div>}
 
-                            <button class="btn btn-danger mt-3 w-100" onclick="removeFromWaitList(@item.WaitListID)">
-                                הסר מהרשימה
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            }
+
+            <button class="btn btn-danger mt-3 w-100" onclick="removeFromWaitList(@item.WaitListID)">
+                הסר מהרשימה
+            </button>
         </div>
-    }
+    </div>
+</div>}
+</div>}
 </div>
 
-@section Styles {
-    <link href="~/Content/Books/css/MyWaitList.css" rel="stylesheet" />
-}
-@section Scripts {
-    <script src="~/Content/Books/js/MyWaitList.js"></script>
-}
+
+<script>
+    function removeFromWaitList(waitListId) {
+        if (confirm('האם אתה בטוח שברצונך להסיר ספר זה מרשימת ההמתנה?')) {
+            $.ajax({
+                url: '@Url.Action("RemoveFromWaitList", "BookManagement")',
+                type: 'POST',
+                data: {
+                    waitListId: waitListId,
+                    _RequestVerificationToken: $('input[name="_RequestVerificationToken"]').val()
+                },
+                success: function (result) {
+                    if (result.success) {
+                        location.reload();
+                    } else {
+                        alert(result.message || 'אירעה שגיאה בהסרת הספר מרשימת ההמתנה');
+                    }
+                },
+                error: function () {
+                    alert('אירעה שגיאה בהסרת הספר מרשימת ההמתנה');
+                }
+            });
+        }
+    }
+</script>

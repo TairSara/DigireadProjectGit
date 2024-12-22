@@ -1,0 +1,81 @@
+﻿@{
+    ViewBag.Title = "תשלום";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="container" dir="rtl">
+    <h2 class="text-center mb-4">פרטי תשלום</h2>
+    @using (Html.BeginForm("ProcessPayment", "Order", FormMethod.Post, new { @class = "form-horizontal", role = "form", id = "paymentForm" }))
+    {
+        @Html.AntiForgeryToken()
+        <div class="form-group row mb-3">
+            <label class="col-md-2 control-label">מספר כרטיס אשראי</label>
+            <div class="col-md-10">
+                @Html.TextBox("CardNumber", null, new { @class = "form-control", placeholder = "הכנס מספר כרטיס", maxlength = "16", required = "required" })
+                @Html.ValidationMessage("CardNumber", "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="form-group row mb-3">
+            <label class="col-md-2 control-label">תוקף</label>
+            <div class="col-md-5">
+                @Html.TextBox("ExpiryMonth", null, new { @class = "form-control", placeholder = "חודש (MM)", maxlength = "2", required = "required" })
+            </div>
+            <div class="col-md-5">
+                @Html.TextBox("ExpiryYear", null, new { @class = "form-control", placeholder = "שנה (YY)", maxlength = "2", required = "required" })
+            </div>
+        </div>
+        <div class="form-group row mb-3">
+            <label class="col-md-2 control-label">CVV</label>
+            <div class="col-md-4">
+                @Html.TextBox("Cvv", null, new { @class = "form-control", placeholder = "CVV", maxlength = "3", required = "required" })
+                @Html.ValidationMessage("Cvv", "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-md-offset-2 col-md-10">
+                <button type="submit" class="btn btn-primary">בצע תשלום</button>
+            </div>
+        </div>
+    }
+</div>
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $('#paymentForm').submit(function (e) {
+                e.preventDefault(); // Always prevent default form submission
+
+                var cardNumber = $('#CardNumber').val();
+                var cvv = $('#Cvv').val();
+                var month = $('#ExpiryMonth').val();
+                var year = $('#ExpiryYear').val();
+
+                // Validate card number
+                if (!/^\d{16}$/.test(cardNumber)) {
+                    alert('נא להזין מספר כרטיס תקין (16 ספרות)');
+                    return false;
+                }
+
+                // Validate CVV
+                if (!/^\d{3}$/.test(cvv)) {
+                    alert('נא להזין CVV תקין (3 ספרות)');
+                    return false;
+                }
+
+                // Validate expiry month
+                if (!/^\d{2}$/.test(month) || month < 1 || month > 12) {
+                    alert('נא להזין חודש תקין (01-12)');
+                    return false;
+                }
+
+                // Validate expiry year
+                if (!/^\d{2}$/.test(year)) {
+                    alert('נא להזין שנה תקינה (2 ספרות)');
+                    return false;
+                }
+
+                // If all validations pass, redirect to checkout page
+                window.location.href = '@Url.Action("Checkout", "Order")';
+                return false;
+            });
+        });
+    </script>
+}

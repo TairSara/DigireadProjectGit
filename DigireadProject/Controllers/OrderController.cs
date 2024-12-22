@@ -27,6 +27,11 @@ namespace DigireadProject.Controllers
             }
             return RedirectToAction("Cart", "BookManagement");
         }
+        public ActionResult payment()
+        {
+                return View();
+        }
+
 
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -141,5 +146,53 @@ namespace DigireadProject.Controllers
             }
             base.Dispose(disposing);
         }
+        // שיטה לאימות פרטי תשלום
+        private bool ValidatePaymentDetails(PaymentViewModel model)
+        {
+            // בדיקת תקינות מספר כרטיס אשראי
+            if (string.IsNullOrEmpty(model.CardNumber) || model.CardNumber.Length != 16)
+            {
+                return false;
+            }
+
+            // בדיקת תוקף כרטיס
+            var currentYear = DateTime.Now.Year % 100;
+            var currentMonth = DateTime.Now.Month;
+
+            if (model.ExpiryYear < currentYear ||
+                (model.ExpiryYear == currentYear && model.ExpiryMonth < currentMonth))
+            {
+                return false;
+            }
+
+            // בדיקת CVV
+            if (string.IsNullOrEmpty(model.Cvv) || model.Cvv.Length != 3)
+            {
+                return false;
+            }
+
+            return true;
+        }
+        public ActionResult ProcessPayment()
+        {
+            return View("Payment");
+        }
+
+
+        // שיטה לביצוע תשלום (סימולציה)
+        private bool ProcessCreditCardPayment(PaymentViewModel model)
+        {
+            // כאן תוסיף לוגיקת תשלום אמיתית עם שירות חיצוני
+            // לדוגמה, בדיקת כרטיס אשראי
+
+            // סימולציית תשלום פשוטה
+            if (model.CardNumber.StartsWith("4")) // אם מתחיל ב-4, התשלום מאושר
+            {
+                return true;
+            }
+            return false;
+        }
+
+     
     }
 }
