@@ -1,15 +1,23 @@
 ﻿using System;
 using System.Data.Entity;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Web.Mvc;
-using DigireadProject.Models.ViewModels;  
+using DigireadProject.Models.ViewModels;
 
 namespace DigireadProject.Controllers
 {
     [Authorize]
     public class ShoppingCartController : Controller
     {
-        private libraryProject_digireadEntities db = new libraryProject_digireadEntities();
+        private readonly libraryProject_digireadEntities db;
+        private readonly EmailService _emailService;
+
+        public ShoppingCartController()
+        {
+            db = new libraryProject_digireadEntities();
+            _emailService = new EmailService();
+        }
 
         public ActionResult Cart()
         {
@@ -20,7 +28,145 @@ namespace DigireadProject.Controllers
                 .ToList();
             return View(cartItems);
         }
-        
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> Checkout()
+        {
+            try
+            {
+                int userId = GetCurrentUserId();
+                System.Diagnostics.Debug.WriteLine($"התחלת תהליך Checkout עבור משתמש {userId}");
+
+                var cartItems = await db.ShoppingCart
+                    .Include(s => s.Books)
+                    .Where(s => s.UserID == userId)
+                    .ToListAsync();
+
+                System.Diagnostics.Debug.WriteLine($"נמצאו {cartItems.Count} פריטים בעגלה");
+
+                foreach (var item in cartItems)
+                {
+                    var book = item.Books;
+                    if (item.IsRental.GetValueOrDefault())
+                    {
+                        System.Diagnostics.Debug.WriteLine($"מטפל בהשאלת ספר {book.Title} (ID: {book.BookID})");
+
+                        // בדיקת מלאי לפני ההשאלה
+                        if (book.StockQuantityRent < (item.Quantity ?? 1))
+                        {
+                            System.Diagnostics.Debug.WriteLine($"אין מספיק מלאי להשאלה עבור ספר {book.Title}");
+                            TempData["Error"] = $"הספר {book.Title} אינו זמין בכמות המבוקשת להשאלה";
+                            return RedirectToAction("Cart");
+                        }
+
+                        var rental = new Rentals
+                        {
+                            UserID = userId,
+                            BookID = item.BookID,
+                            RentalDate = DateTime.Now,
+                            ReturnDate = null, // תאריך החזרה יהיה null עד שהספר יוחזר
+                            ImageSrc = book.ImageSrc,
+                            DaysOverdue = 0
+                        };
+
+                        db.Rentals.Add(rental);
+                        book.StockQuantityRent -= item.Quantity ?? 1;
+
+                        // מחיקת המשתמש מרשימת ההמתנה אם הוא נמצא בה
+                        var waitListItem = await db.WaitList
+                            .FirstOrDefaultAsync(w => w.BookID == item.BookID && w.UserID == userId);
+
+                        if (waitListItem != null)
+                        {
+                            System.Diagnostics.Debug.WriteLine($"נמצא פריט ברשימת ההמתנה למשתמש {userId} עבור ספר {book.Title}");
+                            
+                            // שמירת המיקום של הפריט שנמחק
+                            int deletedPosition = waitListItem.WaitPosition ?? 0;
+                            System.Diagnostics.Debug.WriteLine($"מיקום נוכחי ברשימת ההמתנה: {deletedPosition}");
+
+                            // מחיקת הפריט מרשימת ההמתנה
+                            db.WaitList.Remove(waitListItem);
+
+                            // עדכון המיקומים של שאר המשתמשים
+                            var remainingItems = await db.WaitList
+                                .Where(w => w.BookID == item.BookID && w.WaitPosition > deletedPosition)
+                                .ToListAsync();
+
+                            System.Diagnostics.Debug.WriteLine($"מעדכן {remainingItems.Count} משתמשים נוספים ברשימת ההמתנה");
+
+                            foreach (var remainingItem in remainingItems)
+                            {
+                                remainingItem.WaitPosition--;
+                                remainingItem.EmailNotificationSent = false;
+                                System.Diagnostics.Debug.WriteLine($"עדכון מיקום משתמש {remainingItem.UserID} ל-{remainingItem.WaitPosition}");
+                            }
+
+                            // בדיקה אם יש מלאי זמין למשתמש הבא בתור
+                            if (book.StockQuantityRent > 0)
+                            {
+                                var nextInLine = remainingItems
+                                    .OrderBy(w => w.WaitPosition)
+                                    .FirstOrDefault();
+
+                                if (nextInLine != null)
+                                {
+                                    var nextUser = await db.Users
+                                        .FirstOrDefaultAsync(u => u.UserID == nextInLine.UserID);
+
+                                    if (nextUser?.Email != null)
+                                    {
+                                        System.Diagnostics.Debug.WriteLine($"שולח התראה למשתמש הבא בתור {nextUser.Username}");
+                                        await _emailService.SendBookAvailableNotificationAsync(
+                                            nextUser.Email,
+                                            book.Title
+                                        );
+                                        nextInLine.EmailNotificationSent = true;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    else
+                    {
+                        System.Diagnostics.Debug.WriteLine($"מטפל ברכישת ספר {book.Title}");
+
+                        if (book.StockQuantity < (item.Quantity ?? 1))
+                        {
+                            TempData["Error"] = $"הספר {book.Title} אינו זמין בכמות המבוקשת לרכישה";
+                            return RedirectToAction("Cart");
+                        }
+
+                        var purchase = new Purchases
+                        {
+                            UserID = userId,
+                            BookID = item.BookID,
+                            PurchaseDate = DateTime.Now,
+                            PaymentStatus = true,
+                            PaymentMethod = "כרטיס אשראי"
+                        };
+
+                        db.Purchases.Add(purchase);
+                        book.StockQuantity -= item.Quantity ?? 1;
+                    }
+
+                    db.ShoppingCart.Remove(item);
+                }
+
+                await db.SaveChangesAsync();
+                System.Diagnostics.Debug.WriteLine("תהליך הרכישה הושלם בהצלחה");
+
+                return RedirectToAction("Success", "Order");
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"שגיאה בתהליך הרכישה: {ex.Message}");
+                System.Diagnostics.Debug.WriteLine($"Stack Trace: {ex.StackTrace}");
+                TempData["Error"] = "אירעה שגיאה בביצוע ההזמנה";
+                return RedirectToAction("Cart");
+            }
+        }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult AddToCart(int bookId, bool isRental)
@@ -32,7 +178,9 @@ namespace DigireadProject.Controllers
                 if (isRental)
                 {
                     var activeRentals = db.Rentals
-                        .Count(r => r.UserID == userId && r.ReturnDate == null);
+                        .Count(r => r.UserID == userId && 
+                                    r.ReturnDate == null && 
+                                    DbFunctions.AddDays(r.RentalDate, 30) >= DateTime.Now);
                            
                     var cartRentals = db.ShoppingCart
                         .Count(s => s.UserID == userId && s.IsRental == true);
@@ -42,7 +190,7 @@ namespace DigireadProject.Controllers
                         return Json(new { 
                             success = false, 
                             message = "שים לב! לא ניתן להשאיל יותר מ-3 ספרים במקביל",
-                            isRentalLimit = true  // דגל מיוחד לזיהוי שזו שגיאת מגבלת השאלות
+                            isRentalLimit = true
                         });
                     }
                 }
@@ -51,7 +199,6 @@ namespace DigireadProject.Controllers
                 if (book == null)
                     return Json(new { success = false, message = "הספר לא נמצא" });
 
-                // המרה בטוחה של ערכי null
                 int availableStock = isRental ? 
                     (book.StockQuantityRent ?? 0) : 
                     (book.StockQuantity ?? 0);
@@ -134,7 +281,6 @@ namespace DigireadProject.Controllers
                 if (cartItem == null)
                     return Json(new { success = false, message = "פריט לא נמצא" });
                 
-                // אם זו השאלה, נבדוק את המגבלה
                 if (cartItem.IsRental == true)
                 {
                     var activeRentals = db.Rentals
@@ -155,7 +301,6 @@ namespace DigireadProject.Controllers
                     }
                 }
 
-                // בדיקת כמות המלאי בהתאם לסוג הפעולה
                 int availableStock = cartItem.IsRental.GetValueOrDefault() ? 
                     (cartItem.Books.StockQuantityRent ?? 0) : 
                     (cartItem.Books.StockQuantity ?? 0);
@@ -195,79 +340,5 @@ namespace DigireadProject.Controllers
             }
             base.Dispose(disposing);
         }
-        
-        [HttpGet]
-        [ValidateAntiForgeryToken]
-        public ActionResult Checkout()
-        {
-            try
-            {
-                int userId = GetCurrentUserId();
-                var cartItems = db.ShoppingCart
-                    .Include(s => s.Books)
-                    .Where(s => s.UserID == userId)
-                    .ToList();
-
-                foreach (var item in cartItems)
-                {
-                    var book = item.Books;
-                    if (item.IsRental.GetValueOrDefault())
-                    {
-                        // בדיקת מלאי לפני ההשאלה
-                        if (book.StockQuantityRent < (item.Quantity ?? 1))
-                        {
-                            TempData["Error"] = $"הספר {book.Title} אינו זמין בכמות המבוקשת להשאלה";
-                            return RedirectToAction("Cart");
-                        }
-
-                        var rental = new Rentals
-                        {
-                            UserID = userId,
-                            BookID = item.BookID,
-                            RentalDate = DateTime.Now,
-                            ReturnDate = DateTime.Now.AddDays(30),
-                            ImageSrc = item.Books.ImageSrc,
-                            DaysOverdue = 0
-                        };
-
-                        db.Rentals.Add(rental);
-                        book.StockQuantityRent -= item.Quantity ?? 1;  // עדכון מלאי השאלה
-                    }
-                    else
-                    {
-                        // בדיקת מלאי לפני הרכישה
-                        if (book.StockQuantity < (item.Quantity ?? 1))
-                        {
-                            TempData["Error"] = $"הספר {book.Title} אינו זמין בכמות המבוקשת לרכישה";
-                            return RedirectToAction("Cart");
-                        }
-
-                        var purchase = new Purchases
-                        {
-                            UserID = userId,
-                            BookID = item.BookID,
-                            PurchaseDate = DateTime.Now,
-                            PaymentStatus = true,
-                            PaymentMethod = "כרטיס אשראי"
-                        };
-                        
-                        db.Purchases.Add(purchase);
-                        book.StockQuantity -= item.Quantity ?? 1;  // עדכון מלאי רכישה
-                    }
-
-                    db.ShoppingCart.Remove(item);
-                }
-
-                db.SaveChanges();
-                return RedirectToAction("Success", "Order");
-            }
-            catch (Exception ex)
-            {
-                TempData["Error"] = "אירעה שגיאה בביצוע ההזמנה";
-                return RedirectToAction("Cart");
-            }
-        }
-        
     }
-    
 }

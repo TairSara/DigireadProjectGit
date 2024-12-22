@@ -36,7 +36,6 @@
             const formData = new FormData(form);
             const token = form.querySelector('[name="__RequestVerificationToken"]').value;
 
-            // בדיקה האם זו הוספה לרשימת המתנה
             const isWaitList = form.action.includes('AddToWaitList');
 
             const response = await fetch(form.action, {
@@ -62,7 +61,38 @@
                     }
                 });
             } else {
-                // ... הטיפול בשגיאות הקיים ...
+                if (result.isRentalLimit) {
+                    this.closePurchaseDialog();
+                    Swal.fire({
+                        title: 'לא ניתן להוסיף לסל הקניות',
+                        html: `
+                        <div class="text-center">
+                            <div class="mb-4">
+                                <i class="fas fa-exclamation-circle text-warning" style="font-size: 48px;"></i>
+                            </div>
+                            <div class="mb-3" style="font-size: 16px;">
+                                <strong>שים לב!</strong>
+                            </div>
+                            <div class="mb-2" style="font-size: 16px;">
+                                הגעת למגבלת ההשאלות המקסימלית.
+                            </div>
+                            <div style="font-size: 16px;">
+                                ניתן להשאיל עד 3 ספרים במקביל.
+                            </div>
+                        </div>
+                    `,
+                        icon: 'warning',
+                        confirmButtonText: 'הבנתי',
+                        confirmButtonColor: '#3085d6'
+                    });
+                } else {
+                    Swal.fire({
+                        title: 'שגיאה',
+                        text: result.message || 'אירעה שגיאה בהוספת הספר לסל',
+                        icon: 'error',
+                        confirmButtonText: 'אישור'
+                    });
+                }
             }
         } catch (error) {
             console.error('Error:', error);
@@ -70,8 +100,7 @@
                 title: 'שגיאה',
                 text: 'אירעה שגיאה בפעולה',
                 icon: 'error',
-                confirmButtonText: 'אישור',
-                allowOutsideClick: false
+                confirmButtonText: 'אישור'
             });
         }
     }

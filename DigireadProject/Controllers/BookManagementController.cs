@@ -127,6 +127,8 @@ namespace DigireadProject.Controllers
                     {
                         return Json(new { success = false, message = "הספר לא נמצא" });
                     }
+                    
+                    bool wasAvailable = book.IsAvailable ?? false;
 
                     book.Title = viewModel.Title;
                     book.MainAuthor = viewModel.MainAuthor;
@@ -148,7 +150,14 @@ namespace DigireadProject.Controllers
                     book.ImageSrc = viewModel.ImageSrc;
                     book.Description = viewModel.Description; 
                     book.StockQuantityRent = (viewModel.IsForRent ?? false) ? viewModel.StockQuantityRent : 0;
-
+                    book.IsAvailable = viewModel.IsAvailable ?? false;
+                    
+                    // אם הספר הפך לזמין, בדוק את רשימת ההמתנה
+                    if (!wasAvailable && book.IsAvailable == true)
+                    {
+                        await CheckAndUpdateWaitList(book.BookID);
+                    }
+                    
                     await db.SaveChangesAsync();
                     return Json(new { success = true, message = "הספר עודכן בהצלחה" });
                 }
@@ -316,9 +325,9 @@ namespace DigireadProject.Controllers
                     ReturnDate = r.ReturnDate,
                     BookID = r.BookID ?? 0,
                     Status = r.ReturnDate.HasValue ? "הוחזר" :
-                             (r.RentalDate.Value.AddDays(14) < now ? "פג תוקף" : "פעיל"),
-                    DaysOverdue = r.ReturnDate == null && r.RentalDate.Value.AddDays(14) < now
-                        ? (int)(now - r.RentalDate.Value.AddDays(14)).TotalDays
+                             (r.RentalDate.Value.AddDays(1) < now ? "פג תוקף" : "פעיל"),//לשנות
+                    DaysOverdue = r.ReturnDate == null && r.RentalDate.Value.AddDays(1) < now
+                        ? (int)(now - r.RentalDate.Value.AddDays(1)).TotalDays
                         : 0
                 })
                 .ToListAsync();
@@ -379,7 +388,11 @@ namespace DigireadProject.Controllers
                 if (book != null)
                 {
                     book.IsAvailable = true;
-                    book.StockQuantityRent += 1; // החזרת הספר למלאי ההשאלות
+                    book.StockQuantityRent += 1;
+                    
+                    await RemoveFromWaitListAfterRental(book.BookID, rental.UserID ?? 0);
+                    // בדוק את רשימת ההמתנה כשהספר חוזר למלאי
+                    await CheckAndUpdateWaitList(book.BookID);
                 }
 
                 await db.SaveChangesAsync();
@@ -404,7 +417,7 @@ namespace DigireadProject.Controllers
             var rentalsWithDates = await db.Rentals
                 .Where(r => r.UserID == userId && 
                             r.ReturnDate == null && 
-                            DbFunctions.AddDays(r.RentalDate, 30) >= now)
+                            DbFunctions.AddDays(r.RentalDate, 1) >= now)//לשנות
                 .Select(r => new { r.BookID, r.RentalDate })
                 .ToListAsync();
 
@@ -445,7 +458,7 @@ namespace DigireadProject.Controllers
                         Author = book.MainAuthor,
                         ImageSrc = book.ImageSrc,
                         Type = "השאלה",
-                        ReturnDate = rental.RentalDate?.AddDays(7) //פה לשנות ל30 אחרי הבדי
+                        ReturnDate = rental.RentalDate?.AddDays(1) //לשנות
                     });
                 }
             }
@@ -468,7 +481,7 @@ namespace DigireadProject.Controllers
         private bool IsRentalExpired(DateTime? rentalDate)
         {
             if (!rentalDate.HasValue) return false;
-            return (DateTime.Now - rentalDate.Value).TotalDays >= 30;
+            return (DateTime.Now - rentalDate.Value).TotalDays >= 1; //לשנות
         }
         
         //Automatically handles expired questions
@@ -478,7 +491,7 @@ namespace DigireadProject.Controllers
             var expiredRentals = await db.Rentals
                 .Where(r => r.UserID == userId && 
                             r.ReturnDate == null && 
-                            DbFunctions.AddDays(r.RentalDate, 30) < now)
+                            DbFunctions.AddDays(r.RentalDate, 1) < now)//לשנות
                 .ToListAsync();
 
             if (expiredRentals.Any())
@@ -693,28 +706,32 @@ namespace DigireadProject.Controllers
         {
             int userId = GetCurrentUserId();
 
-            var waitList = await db.WaitList
+            // שלב 1: הבאת הנתונים מהדאטהבייס
+            var waitListItems = await db.WaitList
                 .Where(w => w.UserID == userId)
-                .Join(
-                    db.Books,
-                    wait => wait.BookID,
-                    book => book.BookID,
-                    (wait, book) => new WaitListViewModel
-                    {
-                        WaitListID = (int)wait.WaitListID,  // הוספת המרה מפורשת
-                        BookID = (int)wait.BookID,          // הוספת המרה מפורשת
-                        UserID = (int)wait.UserID,          // הוספת המרה מפורשת
-                        WaitPosition = (int)wait.WaitPosition, // הוספת המרה מפורשת
-                        AddedDate = wait.AddedDate ?? DateTime.Now,
-                        EmailNotificationSent = wait.EmailNotificationSent ?? false,
-                        BookTitle = book.Title,
-                        ImageSrc = book.ImageSrc,
-                        IsAvailable = book.IsAvailable ?? false  // הוספת ערך ברירת מחדל
-                    })
-                .OrderBy(w => w.WaitPosition)
+                .Include(w => w.Books)
                 .ToListAsync();
 
-            return View(waitList);
+            // שלב 2: המרה ל-ViewModel
+            var waitListViewModels = waitListItems.Select(w => new WaitListViewModel
+                {
+                    WaitListID = w.WaitListID,
+                    BookID = w.BookID ?? 0,
+                    UserID = w.UserID ?? 0,
+                    WaitPosition = w.WaitPosition ?? 0,
+                    AddedDate = w.AddedDate ?? DateTime.Now,
+                    EmailNotificationSent = w.EmailNotificationSent ?? false,
+                    BookTitle = w.Books?.Title ?? string.Empty,
+                    ImageSrc = w.Books?.ImageSrc ?? string.Empty,
+                    IsAvailable = w.Books?.IsAvailable ?? false,
+                    IsRental = w.IsRental ?? false,
+                    StockQuantity = w.Books?.StockQuantity ?? 0,
+                    StockQuantityRent = w.Books?.StockQuantityRent ?? 0
+                })
+                .OrderBy(w => w.WaitPosition)
+                .ToList();
+
+            return View(waitListViewModels);
         }
 
         [HttpPost]
@@ -729,25 +746,43 @@ namespace DigireadProject.Controllers
 
                 if (waitListItem != null)
                 {
+                    int bookId = waitListItem.BookID ?? 0;
+
+                    // מחיקת הפריט מרשימת ההמתנה
                     db.WaitList.Remove(waitListItem);
-                    
-                    // עדכון מיקומים של משתמשים אחרים ברשימה
-                    var otherWaitingUsers = await db.WaitList
-                        .Where(w => w.BookID == waitListItem.BookID && w.WaitPosition > waitListItem.WaitPosition)
+                    await db.SaveChangesAsync();
+
+                    // מציאת כל המשתמשים שעדיין ממתינים לאותו ספר ומיון לפי המיקום הנוכחי
+                    var remainingUsers = await db.WaitList
+                        .Where(w => w.BookID == bookId)
+                        .OrderBy(w => w.WaitPosition)
                         .ToListAsync();
 
-                    foreach (var user in otherWaitingUsers)
+                    // עדכון המיקומים החדשים - התחלה מ-1
+                    for (int i = 0; i < remainingUsers.Count; i++)
                     {
-                        user.WaitPosition--;
+                        remainingUsers[i].WaitPosition = i + 1;
+                        remainingUsers[i].EmailNotificationSent = false;
                     }
 
                     await db.SaveChangesAsync();
+
+                    // בדיקה אם יש ספר זמין במלאי ושליחת התראה למשתמש הראשון
+                    var book = await db.Books.FindAsync(bookId);
+                    if (book != null && book.StockQuantityRent > 0)
+                    {
+                        await CheckAndUpdateWaitList(bookId);
+                    }
+
                     return Json(new { success = true });
                 }
+
                 return Json(new { success = false, message = "פריט לא נמצא" });
             }
             catch (Exception ex)
             {
+                System.Diagnostics.Debug.WriteLine($"שגיאה: {ex.Message}");
+                System.Diagnostics.Debug.WriteLine($"Stack Trace: {ex.StackTrace}");
                 return Json(new { success = false, message = ex.Message });
             }
         }
@@ -758,12 +793,18 @@ namespace DigireadProject.Controllers
         {
             try
             {
+                // אם זו לא השאלה, אין אפשרות להצטרף לרשימת המתנה
+                if (!isRental)
+                {
+                    return Json(new { success = false, 
+                        message = "לא ניתן להצטרף לרשימת המתנה עבור רכישת ספר" });
+                }
+
                 int userId = GetCurrentUserId();
-        
+
                 // בדיקה אם המשתמש כבר ברשימת המתנה לספר זה
                 var existingWaitListItem = await db.WaitList
-                    .FirstOrDefaultAsync(w => w.BookID == bookId && 
-                                              w.UserID == userId);
+                    .FirstOrDefaultAsync(w => w.BookID == bookId && w.UserID == userId);
 
                 if (existingWaitListItem != null)
                 {
@@ -771,7 +812,20 @@ namespace DigireadProject.Controllers
                         message = "את/ה כבר נמצא/ת ברשימת ההמתנה לספר זה" });
                 }
 
-                // מציאת המיקום הבא ברשימת ההמתנה
+                var book = await db.Books.FindAsync(bookId);
+                if (book == null)
+                {
+                    return Json(new { success = false, message = "הספר לא נמצא" });
+                }
+
+                // בדיקה שאכן מדובר בספר להשאלה ושאין מלאי
+                if (!book.IsForRent == true || book.StockQuantityRent > 0)
+                {
+                    return Json(new { success = false, 
+                        message = "הספר זמין להשאלה או שאינו מיועד להשאלה" });
+                }
+
+                // חישוב המיקום הבא ברשימת ההמתנה
                 var nextPosition = await db.WaitList
                     .Where(w => w.BookID == bookId)
                     .Select(w => (int?)w.WaitPosition)
@@ -784,7 +838,7 @@ namespace DigireadProject.Controllers
                     WaitPosition = nextPosition + 1,
                     AddedDate = DateTime.Now,
                     EmailNotificationSent = false,
-                    IsRental = isRental
+                    IsRental = true // תמיד true כי רק השאלות יכולות להיכנס לרשימת המתנה
                 };
 
                 db.WaitList.Add(waitListItem);
@@ -796,6 +850,78 @@ namespace DigireadProject.Controllers
             {
                 return Json(new { success = false, 
                     message = "אירעה שגיאה בהוספה לרשימת ההמתנה" });
+            }
+        }
+        
+        private async Task CheckAndUpdateWaitList(int bookId)
+        {
+            var book = await db.Books.FindAsync(bookId);
+            if (book != null && book.IsAvailable == true)
+            {
+                // מצא רק את המשתמש הראשון ברשימת ההמתנה שעוד לא קיבל התראה
+                var firstWaitingUser = await db.WaitList
+                    .Where(w => w.BookID == bookId && 
+                                (!w.EmailNotificationSent.HasValue || !w.EmailNotificationSent.Value))
+                    .OrderBy(w => w.WaitPosition)
+                    .Include(w => w.Users)
+                    .FirstOrDefaultAsync();
+
+                if (firstWaitingUser != null && firstWaitingUser.Users?.Email != null)
+                {
+                    // שלח מייל רק למשתמש הראשון
+                    await _emailService.SendBookAvailableNotificationAsync(
+                        firstWaitingUser.Users.Email,
+                        book.Title
+                    );
+
+                    // עדכן שנשלח מייל
+                    firstWaitingUser.EmailNotificationSent = true;
+                    await db.SaveChangesAsync();
+                }
+            }
+        }
+        
+        public async Task RemoveFromWaitListAfterRental(int bookId, int userId)
+        {
+            try
+            {
+                // מוצא את הפריט ברשימת ההמתנה של המשתמש
+                var waitListItem = await db.WaitList
+                    .FirstOrDefaultAsync(w => w.BookID == bookId && w.UserID == userId);
+
+                if (waitListItem != null)
+                {
+                    // מחיקת הפריט מרשימת ההמתנה
+                    db.WaitList.Remove(waitListItem);
+                    await db.SaveChangesAsync();
+
+                    // מציאת כל המשתמשים שעדיין ממתינים לאותו ספר ומיון לפי המיקום הנוכחי
+                    var remainingUsers = await db.WaitList
+                        .Where(w => w.BookID == bookId)
+                        .OrderBy(w => w.WaitPosition)
+                        .ToListAsync();
+
+                    // עדכון המיקומים החדשים - התחלה מ-1
+                    for (int i = 0; i < remainingUsers.Count; i++)
+                    {
+                        remainingUsers[i].WaitPosition = i + 1;
+                        // מאפס את סטטוס ההתראה כי המיקום השתנה
+                        remainingUsers[i].EmailNotificationSent = false;
+                    }
+
+                    await db.SaveChangesAsync();
+
+                    // אם יש ספר זמין במלאי, שולח התראה למשתמש הראשון החדש
+                    var book = await db.Books.FindAsync(bookId);
+                    if (book != null && book.StockQuantityRent > 0)
+                    {
+                        await CheckAndUpdateWaitList(bookId);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"שגיאה בהסרה מרשימת המתנה לאחר השאלה: {ex.Message}");
             }
         }
                 

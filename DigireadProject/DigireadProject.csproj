@@ -272,11 +272,16 @@
     <Content Include="Content\Books\css\gallery.css" />
     <Content Include="Content\Books\css\GenreCarousel.css" />
     <Content Include="Content\Books\css\library-management.css" />
+    <Content Include="Content\Books\css\MyLibrary.css" />
+    <Content Include="Content\Books\css\MyWaitList.css" />
     <Content Include="Content\Books\js\book-details.js" />
     <Content Include="Content\Books\js\book-management.js" />
+    <Content Include="Content\Books\js\EditBook.js" />
     <Content Include="Content\Books\js\gallery.js" />
     <Content Include="Content\Books\js\GenreCarousel.js" />
     <Content Include="Content\Books\js\library-management.js" />
+    <Content Include="Content\Books\js\MyLibrary.js" />
+    <Content Include="Content\Books\js\MyWaitList.js" />
     <Content Include="Content\bootstrap-theme.css" />
     <Content Include="Content\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap.css" />
@@ -287,6 +292,7 @@
     <Content Include="Content\Home\js\file-explorer.js" />
     <Content Include="Content\Illustrative-Colorful-Library--unscreen.gif" />
     <Content Include="Content\logo.png" />
+    <Content Include="Content\Order\css\Checkout.css" />
     <Content Include="Content\SampleBooks\sample_book.epub" />
     <Content Include="Content\SampleBooks\sample_book.mobi" />
     <Content Include="Content\SampleBooks\sample_book.pdf" />
