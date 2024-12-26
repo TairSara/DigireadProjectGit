@@ -2,6 +2,7 @@
 <html lang="he" dir="rtl">
 <head>
     <meta charset="utf-8" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/js/bootstrap.bundle.min.js"></script>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@ViewBag.Title - Digital Books</title>
@@ -169,57 +170,12 @@
     </style>
 </head>
 <body>
-    <div class="background-wrapper"></div>
-    <div id="background-books"></div>
+<div class="background-wrapper"></div>
+<div id="background-books"></div>
 
-    <!-- Navigation Bar -->
-    <nav class="navbar">
-        <div class="nav-links">
-            <a href="@Url.Action("HomePage", "Home")" class="nav-link">
-                <i class="fas fa-home"></i>
-                <span>דף הבית</span>
-            </a>
-            <a href="@Url.Action("Login", "Account")" class="nav-link">
-                <i class="fas fa-sign-in-alt"></i>
-                <span>התחברות</span>
-            </a>
-            <a href="@Url.Action("Register", "Account")" class="nav-link">
-                <i class="fas fa-user-plus"></i>
-                <span>הרשמה</span>
-            </a>
-            <a href="@Url.Action("Profile", "Account")" class="nav-link">
-                <i class="fas fa-user-circle"></i>
-                <span>פרופיל אישי</span>
-            </a>
-            <a href="@Url.Action("MainGallery", "BookManagement")" class="nav-link">
-                <i class="fas fa-book"></i>
-                <span>גלריית ספרים</span>
-            </a>
-            <a href="@Url.Action("Cart", "ShoppingCart")" class="nav-link">
-                <i class="fas fa-cart-plus"></i>
-                <span>עגלה</span>
-            </a>
-            <a href="@Url.Action("MyLibrary", "BookManagement")" class="nav-link">
-                <i class="fas fa-book-reader"></i>
-                <span>הספרייה שלי</span>
-            </a>
-            <a href="@Url.Action("MyWaitList", "BookManagement")" class="nav-link">
-                <i class="fas fa-list-alt"></i>
-                <span>רשימת המתנה</span>
-            </a>
-            <a href="@Url.Action("Logout", "Account")" class="nav-link">
-                <i class="fas fa-sign-out-alt"></i>
-                <span>התנתקות</span>
-            </a>
-        </div>
-
-        <button class="mobile-menu-btn" onclick="toggleMobileMenu()">
-            <i class="fas fa-bars"></i>
-        </button>
-    </nav>
-
-    <!-- Mobile Navigation -->
-    <div class="mobile-nav">
+<!-- Navigation Bar -->
+<nav class="navbar">
+    <div class="nav-links">
         <a href="@Url.Action("HomePage", "Home")" class="nav-link">
             <i class="fas fa-home"></i>
             <span>דף הבית</span>
@@ -244,8 +200,7 @@
             <i class="fas fa-cart-plus"></i>
             <span>עגלה</span>
         </a>
-        
-        <a href="@Url.Action("MyLibrary", "BookManagement")" class="nav-link"> 
+        <a href="@Url.Action("MyLibrary", "BookManagement")" class="nav-link">
             <i class="fas fa-book-reader"></i>
             <span>הספרייה שלי</span>
         </a>
@@ -259,19 +214,65 @@
         </a>
     </div>
 
-    <div class="container body-content @(ViewBag.Title == "דף הבית" ? "home-page" : "")">
-        @RenderBody()
-        <hr />
-        <footer>
-            <p>&copy; @DateTime.Now.Year - Digital Books</p>
-        </footer>
-    </div>
+    <button class="mobile-menu-btn" onclick="toggleMobileMenu()">
+        <i class="fas fa-bars"></i>
+    </button>
+</nav>
 
-    @Scripts.Render("~/bundles/jquery")
-    @Scripts.Render("~/bundles/bootstrap")
-    @RenderSection("scripts", required: false)
+<!-- Mobile Navigation -->
+<div class="mobile-nav">
+    <a href="@Url.Action("HomePage", "Home")" class="nav-link">
+        <i class="fas fa-home"></i>
+        <span>דף הבית</span>
+    </a>
+    <a href="@Url.Action("Login", "Account")" class="nav-link">
+        <i class="fas fa-sign-in-alt"></i>
+        <span>התחברות</span>
+    </a>
+    <a href="@Url.Action("Register", "Account")" class="nav-link">
+        <i class="fas fa-user-plus"></i>
+        <span>הרשמה</span>
+    </a>
+    <a href="@Url.Action("Profile", "Account")" class="nav-link">
+        <i class="fas fa-user-circle"></i>
+        <span>פרופיל אישי</span>
+    </a>
+    <a href="@Url.Action("MainGallery", "BookManagement")" class="nav-link">
+        <i class="fas fa-book"></i>
+        <span>גלריית ספרים</span>
+    </a>
+    <a href="@Url.Action("Cart", "ShoppingCart")" class="nav-link">
+        <i class="fas fa-cart-plus"></i>
+        <span>עגלה</span>
+    </a>
+        
+    <a href="@Url.Action("MyLibrary", "BookManagement")" class="nav-link"> 
+        <i class="fas fa-book-reader"></i>
+        <span>הספרייה שלי</span>
+    </a>
+    <a href="@Url.Action("MyWaitList", "BookManagement")" class="nav-link">
+        <i class="fas fa-list-alt"></i>
+        <span>רשימת המתנה</span>
+    </a>
+    <a href="@Url.Action("Logout", "Account")" class="nav-link">
+        <i class="fas fa-sign-out-alt"></i>
+        <span>התנתקות</span>
+    </a>
+</div>
 
-    <script>
+<div class="container body-content @(ViewBag.Title == "דף הבית" ? "home-page" : "")">
+    @RenderBody()
+    <hr />
+    <footer>
+        <p>&copy; @DateTime.Now.Year - Digital Books</p>
+    </footer>
+</div>
+
+@Scripts.Render("~/bundles/jquery")
+@Scripts.Render("~/bundles/bootstrap")
+@RenderSection("scripts", required: false)
+
+<script>
         function createFloatingBook() {
             const book = document.createElement('i');
             book.className = 'fas fa-book floating-book';
@@ -317,3 +318,5 @@
     </script>
 </body>
 </html>
+@Scripts.Render("~/bundles/jquery")
+@Scripts.Render("~/bundles/bootstrap")

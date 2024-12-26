@@ -102,15 +102,14 @@
                         </div>
 
                         <div class="row mb-3">
-                            <div class="col-md-4">
-                                @Html.LabelFor(m => m.StockQuantity, "כמות במלאי לרכישה", new { @class = "form-label" })
-                                @Html.TextBoxFor(m => m.StockQuantity, new { @class = "form-control", type = "number", min = "0" })
-                                @Html.ValidationMessageFor(m => m.StockQuantity, "", new { @class = "text-danger" })
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label">כמות במלאי לרכישה</label>
+                                <input type="text" class="form-control" value="אין כמות מוגבלת" readonly />
                             </div>
                             <div class="col-md-4">
                                 @Html.LabelFor(m => m.StockQuantityRent, "כמות במלאי להשכרה", new { @class = "form-label" })
                                 @Html.TextBoxFor(m => m.StockQuantityRent, new { @class = "form-control", type = "number", min = "0" })
-                                @Html.ValidationMessageFor(m => m.StockQuantityRent, "", new { @class = "text-danger" })
+                                @Html.HiddenFor(m => m.StockQuantity, new { Value = 2147483647 })
                             </div>
                             <div class="col-md-4">
                                 @Html.LabelFor(m => m.ImageSrc, "כתובת תמונה (URL)", new { @class = "form-label" })

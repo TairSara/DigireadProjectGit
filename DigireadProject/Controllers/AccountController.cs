@@ -263,6 +263,10 @@ namespace DigireadProject.Controllers
             TempData["SuccessMessage"] = "אם האימייל קיים במערכת, נשלח אליך קישור לאיפוס סיסמה";
             return RedirectToAction("Login");
         }
+        public ActionResult ForgotPassword()
+        {
+            return View();
+        }
 
         public async Task<ActionResult> ResetPassword(string token)
         {

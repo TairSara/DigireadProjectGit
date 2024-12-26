@@ -1,11 +1,12 @@
 function removeFromWaitList(waitListId) {
     if (confirm('האם אתה בטוח שברצונך להסיר ספר זה מרשימת ההמתנה?')) {
+        var token = $('input[name="__RequestVerificationToken"]').val();
         $.ajax({
-            url: '@Url.Action("RemoveFromWaitList", "BookManagement")',
+            url: '/BookManagement/RemoveFromWaitList',
             type: 'POST',
             data: {
                 waitListId: waitListId,
-                __RequestVerificationToken: $('input[name="__RequestVerificationToken"]').val()
+                __RequestVerificationToken: token
             },
             success: function (result) {
                 if (result.success) {
@@ -14,7 +15,10 @@ function removeFromWaitList(waitListId) {
                     alert(result.message || 'אירעה שגיאה בהסרת הספר מרשימת ההמתנה');
                 }
             },
-            error: function () {
+            error: function (xhr, status, error) {
+                console.error('שגיאה:', error);
+                console.error('סטטוס:', status);
+                console.error('תגובה:', xhr.responseText);
                 alert('אירעה שגיאה בהסרת הספר מרשימת ההמתנה');
             }
         });

@@ -76,8 +76,6 @@ namespace DigireadProject.Models.ViewModels
         [Display(Name = "תמונת ספר")]
         public byte[] BookImage { get; set; }
 
-        [Display(Name = "כמות במלאי")]
-        [Range(0, 1000, ErrorMessage = "הכמות חייבת להיות בין 0 ל-1000")]
         public Nullable<int> StockQuantity { get; set; }
         private string _imageSrc;
 

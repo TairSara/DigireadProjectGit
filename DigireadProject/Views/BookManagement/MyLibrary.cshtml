@@ -1,6 +1,7 @@
 @model IEnumerable<DigireadProject.Models.ViewModels.MyLibraryViewModel>
 @section Styles {
     <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
+    <link href="~/Content/Books/css/MyLibrary.css" rel="stylesheet" />
 }
 @{
     ViewBag.Title = "הספרייה שלי";
@@ -65,10 +66,6 @@
     </div>
 </div>
 
-
-@section Styles {
-    <link href="~/Content/Books/css/MyLibrary.css" rel="stylesheet" />
-}
 
 @section Scripts {
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>

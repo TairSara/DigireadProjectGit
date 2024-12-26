@@ -23,6 +23,11 @@ namespace DigireadProject
                 url: "Order/Checkout",
                 defaults: new { controller = "Order", action = "Checkout" }
             );
+            routes.MapRoute(
+                name: "RemoveFromWaitList",
+                url: "BookManagement/RemoveFromWaitList",
+                defaults: new { controller = "BookManagement", action = "RemoveFromWaitList" }
+            );
         }
     }
 }

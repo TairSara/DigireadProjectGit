@@ -1,13 +1,13 @@
-﻿using System.Net.Mail;
+﻿﻿using System.Net.Mail;
 using System.Threading.Tasks;
 
 public class EmailService
 {
-    private readonly SmtpClient _smtpClient;
+    private readonly SmtpClient smtpClient;
 
     public EmailService()
     {
-        _smtpClient = new SmtpClient();
+        smtpClient = new SmtpClient();
     }
 
     public async Task SendPasswordResetEmailAsync(string email, string resetLink)
@@ -28,7 +28,7 @@ public class EmailService
         };
         mailMessage.To.Add(email);
 
-        await _smtpClient.SendMailAsync(mailMessage);
+        await smtpClient.SendMailAsync(mailMessage);
     }
 
     public async Task SendRentalExpirationAlertAsync(string email, string bookTitle, int daysLeft)
@@ -50,7 +50,7 @@ public class EmailService
         };
         mailMessage.To.Add(email);
 
-        await _smtpClient.SendMailAsync(mailMessage);
+        await smtpClient.SendMailAsync(mailMessage);
     }
     
     public async Task SendBookAvailableNotificationAsync(string email, string bookTitle)
@@ -72,6 +72,6 @@ public class EmailService
         };
         mailMessage.To.Add(email);
 
-        await _smtpClient.SendMailAsync(mailMessage);
+        await smtpClient.SendMailAsync(mailMessage);
     }
 }

@@ -1,6 +1,6 @@
 $(document).ready(function () {
     // Image preview handler
-    $('#ImageSrc').on('change', function() {
+    $('#ImageSrc').on('change', function () {
         var imgUrl = $(this).val();
         if (imgUrl) {
             var img = $('<img>', {
@@ -9,12 +9,10 @@ $(document).ready(function () {
                 class: 'img-thumbnail mt-2',
                 style: 'max-width: 200px'
             });
-
-            img.on('error', function() {
+            img.on('error', function () {
                 alert('לא ניתן לטעון את התמונה מה-URL שהוזן');
                 $(this).remove();
             });
-
             var previewDiv = $('#imagePreview');
             if (previewDiv.length === 0) {
                 previewDiv = $('<div>', { id: 'imagePreview' }).insertAfter('#currentImage');
@@ -23,10 +21,8 @@ $(document).ready(function () {
         }
     });
 
-    // Form submission handler
     $('#editBookForm').on('submit', function (e) {
         e.preventDefault();
-
         var formData = {
             BookID: $('#BookID').val(),
             Title: $('#Title').val(),
@@ -39,12 +35,10 @@ $(document).ready(function () {
             Genre: $('#Genre').val(),
             OriginalPrice: $('#OriginalPrice').val(),
             DiscountEndDate: $('#DiscountEndDate').val(),
-            StockQuantity: $('#StockQuantity').val(),
             ImageSrc: $('#ImageSrc').val(),
-            Description: $('#Description').val(), // הוספתי את התיאור לטופס
+            Description: $('#Description').val(),
             StockQuantityRent: $('#StockQuantityRent').val(),
-
-            // Boolean fields
+            StockQuantity: 2147483647, // קבוע - אינסוף
             IsAvailable: $('#IsAvailable').is(':checked'),
             IsForRent: $('#IsForRent').is(':checked'),
             IsEPUBAvailable: $('#IsEPUBAvailable').is(':checked'),
@@ -53,8 +47,11 @@ $(document).ready(function () {
             IsPDFAvailable: $('#IsPDFAvailable').is(':checked')
         };
 
-        // Add anti-forgery token
         formData["__RequestVerificationToken"] = $('input[name="__RequestVerificationToken"]').val();
+
+        var submitButton = $(this).find('button[type="submit"]');
+        var originalButtonText = submitButton.text();
+        submitButton.prop('disabled', true).text('מעדכן...');
 
         $.ajax({
             url: $(this).attr('action'),
@@ -63,14 +60,31 @@ $(document).ready(function () {
             success: function (response) {
                 if (response.success) {
                     alert('הספר עודכן בהצלחה!');
-                    window.location.href = '@Url.Action("ManageBooks", "BookManagement")';
+                    window.location.href = '/BookManagement/ManageBooks';
                 } else {
                     alert(response.message || 'אירעה שגיאה בעדכון הספר');
+                    submitButton.prop('disabled', false).text(originalButtonText);
                 }
             },
-            error: function () {
-                alert('אירעה שגיאה בשליחת הטופס');
+            error: function (xhr, status, error) {
+                alert('אירעה שגיאה בשליחת הטופס: ' + error);
+                submitButton.prop('disabled', false).text(originalButtonText);
             }
         });
     });
+
+    // רק טיפול בכמות להשכרה
+    $('#IsForRent').on('change', function () {
+        var stockQuantityRentInput = $('#StockQuantityRent');
+        if (!$(this).is(':checked')) {
+            stockQuantityRentInput.val(0);
+            stockQuantityRentInput.prop('readonly', true);
+        } else {
+            stockQuantityRentInput.prop('readonly', false);
+        }
+    });
+
+    if (!$('#IsForRent').is(':checked')) {
+        $('#StockQuantityRent').prop('readonly', true);
+    }
 });

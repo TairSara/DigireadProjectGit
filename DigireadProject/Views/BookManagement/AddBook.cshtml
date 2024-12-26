@@ -90,12 +90,10 @@
                                 @Html.ValidationMessageFor(m => m.RentalPrice, "", new { @class = "text-danger" })
                             </div>
                         </div>
-
                         <div class="row">
-                            <div class="col-md-6 mb-3">
-                                @Html.LabelFor(m => m.OriginalPrice, new { @class = "form-label" })
-                                @Html.TextBoxFor(m => m.OriginalPrice, new { @class = "form-control", type = "number", step = "0.01" })
-                                @Html.ValidationMessageFor(m => m.OriginalPrice, "", new { @class = "text-danger" })
+                            <div class="col-md-6">
+                                <label class="form-label">כמות במלאי לרכישה</label>
+                                <input type="text" class="form-control" value="אין כמות מוגבלת לרכישה" readonly />
                             </div>
                             <div class="col-md-6 mb-3">
                                 @Html.LabelFor(m => m.DiscountEndDate, new { @class = "form-label" })
@@ -106,9 +104,9 @@
 
                         <div class="row mb-3">
                             <div class="col-md-6">
-                                @Html.LabelFor(m => m.StockQuantity, new { @class = "form-label" })
-                                @Html.TextBoxFor(m => m.StockQuantity, new { @class = "form-control", type = "number" })
-                                @Html.ValidationMessageFor(m => m.StockQuantity, "", new { @class = "text-danger" })
+                                @Html.LabelFor(m => m.StockQuantityRent, "כמות במלאי להשכרה", new { @class = "form-label" })
+                                @Html.TextBoxFor(m => m.StockQuantityRent, new { @class = "form-control", type = "number" })
+                                @Html.ValidationMessageFor(m => m.StockQuantityRent, "", new { @class = "text-danger" })
                             </div>
                             <div class="col-md-6">
                                 @Html.LabelFor(m => m.ImageSrc, "כתובת תמונה (URL)", new { @class = "form-label" })

@@ -32,3 +32,23 @@
         $('#deleteModal').modal('hide');
     });
 });
+
+$.ajax({
+    type: 'POST',
+    url: window.deleteBookUrl,
+    data: {
+        id: bookIdToDelete,
+        __RequestVerificationToken: $('input[name="__RequestVerificationToken"]').val()
+    },
+    success: function (response) {
+        if (response.success) {
+            $('#book-' + bookIdToDelete).remove();
+            $('#deleteModal').modal('hide');
+        } else {
+            alert(response.message);
+        }
+    },
+    error: function () {
+        alert('שגיאה במחיקת הספר');
+    }
+});
