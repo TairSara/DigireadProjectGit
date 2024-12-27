@@ -1,4 +1,11 @@
 ﻿document.addEventListener("DOMContentLoaded", () => {
     console.log("DigiRead page loaded!");
-    // הוסף כאן את הפונקציונליות הנדרשת
+    const welcomeSection = document.querySelector('.welcome-section');
+    if (welcomeSection) {
+        welcomeSection.style.opacity = '0';
+        welcomeSection.style.transition = 'opacity 0.5s ease-in';
+        setTimeout(() => {
+            welcomeSection.style.opacity = '1';
+        }, 500);
+    }
 });

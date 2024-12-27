@@ -6,12 +6,11 @@
     <link href="~/Content/Account/css/account.css" rel="stylesheet">
 
 }
-<h2 class="text-center">התחברות</h2>
 @using (Html.BeginForm("Login", "Account", FormMethod.Post))
 {
     @Html.AntiForgeryToken()
     <div class="form-horizontal">
-        <hr />
+        <h2 class="text-center">התחברות</h2>
         @if (TempData["LoginError"] != null || !ViewData.ModelState.IsValid)
         {
             <div class="form-group text-center">
@@ -46,4 +45,5 @@
 }
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
+
 }

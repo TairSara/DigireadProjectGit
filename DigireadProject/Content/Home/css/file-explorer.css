@@ -1,35 +1,192 @@
-﻿body {
-    font-family: system-ui, -apple-system, sans-serif;
-    margin: 0;
-    padding: 0;
+﻿.welcome-section {
+    width: 100%;
+    min-height: 300vh;
+    position: relative;
+    overflow: hidden;
 }
 
-main {
-    padding-top: 0;
-    margin-top: -40px;
+.bg-section {
+    background-size: contain;
+    background-position: top center;
+    background-repeat: no-repeat;
+    width: 100%;
+    height: 100vh;
+    position: absolute;
 }
 
-.welcome-section {
+.bg-top {
+    background-image: url('~/Content/DigiRead/1.png');
+    top: 0;
+}
+
+.bg-middle {
+    background-image: url('~/Content/DigiRead/7.png');
+    top: 58vh;
+    transform: scale(0.65);
+}
+
+.bg-bottom {
+    background-image: url('/Content/DigiRead/2.png');
+    top: 102.5vh;
+    transform: scale(0.65);
+    margin-right: -1.5px;
+}
+
+.bg-third {
+    background-image: url('/Content/DigiRead/3.png');
+    top:138.5vh;
+    transform: scale(0.65);
+    margin-right: -6px;
+}
+.top-menu {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    gap: 6rem;
+    direction: rtl;
+}
+
+.menu-item {
+    width: 180px;
+    height: 140px;
+    background-color: transparent; /* רקע שקוף לחלוטין */
+    border: none; /* ביטול המסגרת */
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: block;
+    outline: none; /* ביטול המתאר */
+}
+
+.menu-item:hover {
+    transform: scale(1.1);
+}
+/* רשת ספרים */
+.books-grid {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: grid;
+    gap: 2rem;
+    direction: rtl;
+}
+
+.roman-books {
+    grid-template-columns: repeat(4, 1fr);
+    width: 80%;
+}
+
+.youth-books {
+    grid-template-columns: repeat(6, 1fr);
+    width: 90%;
+}
+
+.recommended-books {
+    grid-template-columns: repeat(5, 1fr);
+    width: 85%;
+}
+
+.book-link {
+    position: relative;
+    aspect-ratio: 2/3;
+    display: block;
+    text-decoration: none;
+    transition: transform 0.3s ease;
+}
+
+.book-link:hover {
+    transform: scale(1.1);
+}
+
+.book-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(0, 0, 0, 0.7);
+    color: white;
+    padding: 0.5rem;
     text-align: center;
-    margin: 0;
-    padding: 0 2em;
+    opacity: 0;
+    transition: opacity 0.3s ease;
 }
 
-    .welcome-section h1 {
-        font-size: 6em;
-        color: #2c3e50;
-        font-weight: bold;
-        text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.2);
-        margin: 0;
-        padding-top: 0;
-    }
+.book-link:hover .book-overlay {
+    opacity: 1;
+}
+.harry-potter-books {
+    grid-template-columns: repeat(6, 0fr);
+    width: 50%; /* הקטנת הרוחב הכולל */
+    gap:3rem; /* הקטנת הרווח בין הספרים */
+}
 
-    .welcome-section h2 {
-        font-size: 2em;
-        color: #471e4b;
-        font-weight: normal;
-        margin-top: 0.1em;
-    }
+.harry-potter-books .book-link {
+    width: 120px; /* הקטנת רוחב הספר */
+    height: 200px; /* הקטנת גובה הספר בהתאמה */
+    background-color: transparent;
+    cursor: pointer;
+}
+
+.harry-potter-books .book-link:hover {
+    transform: scale(1.1);
+}
+
+
+/* סגנונות לספרי רומן */
+.roman-books {
+    grid-template-columns: repeat(6, 0fr);  /* זהה להארי פוטר */
+    width: 45%;  /* זהה להארי פוטר */
+    gap: 6rem;  /* זהה להארי פוטר */
+}
+
+.roman-books .book-link {
+    width: 160px;  /* זהה להארי פוטר */
+    height: 300px;  /* זהה להארי פוטר */
+    background-color: transparent;
+    cursor: pointer;
+    position: relative;
+}
+
+.roman-books .book-link:hover {
+    transform: scale(1.1);  /* זהה להארי פוטר */
+}
+
+/* התאמת המיקום של הרשת לספרי רומן */
+.bg-bottom .books-grid {
+    top: 45%;  /* זהה למיקום של הארי פוטר */
+    direction: rtl;
+}
+/* סגנונות לספרי נוער */
+.young-books {
+    grid-template-columns: repeat(6, 0fr);
+    width: 50%;
+    gap: 6rem;
+    margin-top: 3rem;
+}
+
+.young-books .book-link {
+    width: 120px;
+    height: 180px;
+    background-color: transparent;
+    cursor: pointer;
+    position: relative;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* עיצוב הטקסט בתוך הכפתורים */
+.young-books .book-link {
+    color: #333;
+    font-weight: bold;
+    font-size: 1.2rem;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
 
 .featured-books {
     text-align: center;
@@ -50,16 +207,352 @@ main {
     padding: 0.5em;
 }
 
-    #more-info h2 {
-        color: #2c3e50;
-        font-size: 2.5em;
-        margin-bottom: 0.3em;
+#more-info h2 {
+    color: #2c3e50;
+    font-size: 2.5em;
+    margin-bottom: 0.3em;
+}
+
+#more-info p {
+    color: #34495e;
+    font-size: 1.2em;
+    line-height: 1.6;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.rate-website-btn {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    margin-top: 20px;
+    text-decoration: none;
+    display: inline-block;
+    transition: background-color 0.3s;
+}
+
+.rate-website-btn:hover {
+    background-color: #45a049;
+    text-decoration: none;
+    color: white;
+}
+
+.star-rating {
+    direction: ltr;
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
+
+.star {
+    color: #ddd;
+    font-size: 30px;
+    cursor: pointer;
+    transition: color 0.2s;
+    user-select: none;
+    padding: 5px;
+}
+
+.star:hover,
+.star.active,
+.star.selected {
+    color: #ffd700;
+}
+
+#rating-text {
+    margin-top: 10px;
+    text-align: center;
+    font-size: 16px;
+}
+
+.swal2-textarea {
+    direction: rtl !important;
+}
+
+.swal2-popup {
+    direction: rtl;
+}
+
+.popular-books-section {
+    padding: 2rem;
+    margin-top: 2rem;
+    background-color: #f8f9fa;
+    text-align: center;
+}
+
+.popular-books-section h2 {
+    color: #2c3e50;
+    font-size: 2.5em;
+    margin-bottom: 1.5rem;
+}
+
+.books-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 2rem;
+    padding: 1rem;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.book-card {
+    background: white;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    transition: transform 0.3s ease;
+    height: 100%;
+}
+
+.book-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+.book-card a {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+    height: 100%;
+}
+
+.book-image {
+    position: relative;
+    padding-top: 150%; /* יחס גובה-רוחב 3:2 */
+    overflow: hidden;
+}
+
+.book-image img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.book-info {
+    padding: 1rem;
+    text-align: right;
+}
+
+.book-title {
+    font-size: 1.1rem;
+    margin: 0;
+    color: #2c3e50;
+    line-height: 1.4;
+    height: 2.8em;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+}
+
+.book-author {
+    color: #666;
+    font-size: 0.9rem;
+    margin: 0.5rem 0;
+}
+
+.book-rating {
+    margin-top: 0.5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.stars {
+    color: #ddd;
+    direction: ltr;
+    display: inline-block;
+    font-size: 1.2rem;
+    margin-bottom: 0.5rem;
+}
+
+.stars .fa-star {
+    margin: 0 1px;
+}
+
+.stars .fa-star.active,
+.stars .fa-star-half-alt.active {
+    color: #ffd700;
+}
+
+.rating-count {
+    font-size: 0.8rem;
+    color: #666;
+    margin-top: 0.25rem;
+}
+
+/* Media Queries */
+@media (max-width: 768px) {
+    .books-grid {
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+        gap: 1rem;
+        padding: 0.5rem;
     }
 
-    #more-info p {
-        color: #34495e;
-        font-size: 1.2em;
-        line-height: 1.6;
-        max-width: 800px;
+    .book-title {
+        font-size: 1rem;
+    }
+
+    .popular-books-section h2 {
+        font-size: 2em;
+    }
+
+    .book-card {
+        max-width: 250px;
         margin: 0 auto;
     }
+}
+
+@media (max-width: 480px) {
+    .books-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .book-image {
+        padding-top: 140%;
+    }
+}
+
+.recent-reviews {
+    margin-top: 1rem;
+    padding: 0.5rem;
+    background-color: #f8f9fa;
+    border-radius: 4px;
+}
+
+.review {
+    margin-bottom: 0.5rem;
+    padding: 0.5rem;
+    border-bottom: 1px solid #dee2e6;
+}
+
+.review:last-child {
+    border-bottom: none;
+}
+
+.review-stars {
+    margin-bottom: 0.25rem;
+}
+
+.review-comment {
+    font-size: 0.9rem;
+    margin: 0.25rem 0;
+}
+
+.review-date {
+    color: #6c757d;
+    font-size: 0.8rem;
+}
+
+.average-rating {
+    font-weight: bold;
+    color: #2c3e50;
+    margin-top: 0.25rem;
+    display: block;
+}
+
+.rating-container {
+    margin: 20px 0;
+}
+
+.website-reviews-section {
+    padding: 3rem 0;
+    background-color: #f8f9fa;
+    margin-top: 2rem;
+}
+
+.reviews-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 2rem;
+    padding: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.website-review-card {
+    background: white;
+    border-radius: 8px;
+    padding: 1.5rem;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    transition: transform 0.3s ease;
+}
+
+.website-review-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+.review-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 1rem;
+}
+
+.reviewer-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.reviewer-name {
+    font-weight: bold;
+    color: #2c3e50;
+    margin-bottom: 0.25rem;
+}
+
+.review-date {
+    color: #6c757d;
+    font-size: 0.875rem;
+}
+
+.stars {
+    color: #ffd700;
+    direction: ltr;
+}
+
+.stars .fa-star {
+    margin: 0 1px;
+}
+
+.stars .fa-star:not(.active) {
+    color: #ddd;
+}
+
+.review-text {
+    color: #4a5568;
+    line-height: 1.6;
+    margin: 0;
+    font-size: 0.95rem;
+}
+
+@media (max-width: 768px) {
+    .reviews-grid {
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        padding: 1rem;
+        gap: 1rem;
+    }
+
+    .website-review-card {
+        padding: 1rem;
+    }
+}
+
+.view-all-reviews {
+    color: #4a90e2;
+    font-size: 0.9rem;
+    text-decoration: underline;
+    margin-top: 0.5rem;
+}
+
+.view-all-reviews:hover {
+    color: #357abd;
+    text-decoration: none;
+}

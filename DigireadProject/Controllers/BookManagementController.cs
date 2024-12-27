@@ -325,6 +325,25 @@ namespace DigireadProject.Controllers
             }
 
             var viewModel = MapToViewModel(book);
+    
+            // הוספת הדירוגים למודל
+            viewModel.Reviews = await db.Reviews
+                .Where(r => r.BookID == id && r.RatingBook.HasValue)
+                .OrderByDescending(r => r.ReviewDateBook)
+                .Select(r => new BookReviewViewModel
+                {
+                    Username = r.Users.Username,
+                    Rating = r.RatingBook ?? 0,
+                    Comment = r.ReviewTextBook,
+                    ReviewDate = r.ReviewDateBook ?? DateTime.Now
+                })
+                .ToListAsync();
+
+            viewModel.AverageRating = viewModel.Reviews.Any() 
+                ? (decimal)viewModel.Reviews.Average(r => r.Rating) 
+                : 0m;
+            viewModel.ReviewCount = viewModel.Reviews.Count;
+
             return View(viewModel);
         }
         [AllowAnonymous]
@@ -361,9 +380,9 @@ namespace DigireadProject.Controllers
                     ReturnDate = r.ReturnDate,
                     BookID = r.BookID ?? 0,
                     Status = r.ReturnDate.HasValue ? "הוחזר" :
-                             (r.RentalDate.Value.AddDays(1) < now ? "פג תוקף" : "פעיל"),//לשנות
-                    DaysOverdue = r.ReturnDate == null && r.RentalDate.Value.AddDays(1) < now
-                        ? (int)(now - r.RentalDate.Value.AddDays(1)).TotalDays
+                             (r.RentalDate.Value.AddDays(31) < now ? "פג תוקף" : "פעיל"),//לשנות
+                    DaysOverdue = r.ReturnDate == null && r.RentalDate.Value.AddDays(31) < now
+                        ? (int)(now - r.RentalDate.Value.AddDays(31)).TotalDays
                         : 0
                 })
                 .ToListAsync();
@@ -477,7 +496,7 @@ namespace DigireadProject.Controllers
             var rentalsWithDates = await db.Rentals
                 .Where(r => r.UserID == userId && 
                             r.ReturnDate == null && 
-                            DbFunctions.AddDays(r.RentalDate, 1) >= now)//לשנות
+                            DbFunctions.AddDays(r.RentalDate, 31) >= now)//לשנות
                 .Select(r => new { r.BookID, r.RentalDate })
                 .ToListAsync();
 
@@ -518,7 +537,7 @@ namespace DigireadProject.Controllers
                         Author = book.MainAuthor,
                         ImageSrc = book.ImageSrc,
                         Type = "השאלה",
-                        ReturnDate = rental.RentalDate?.AddDays(1) //לשנות
+                        ReturnDate = rental.RentalDate?.AddDays(31) //לשנות
                     });
                 }
             }
@@ -541,7 +560,7 @@ namespace DigireadProject.Controllers
         private bool IsRentalExpired(DateTime? rentalDate)
         {
             if (!rentalDate.HasValue) return false;
-            return (DateTime.Now - rentalDate.Value).TotalDays >= 1; //לשנות
+            return (DateTime.Now - rentalDate.Value).TotalDays >= 31; //לשנות
         }
         
         //Automatically handles expired questions
@@ -551,7 +570,7 @@ namespace DigireadProject.Controllers
             var expiredRentals = await db.Rentals
                 .Where(r => r.UserID == userId && 
                             r.ReturnDate == null && 
-                            DbFunctions.AddDays(r.RentalDate, 1) < now)//לשנות
+                            DbFunctions.AddDays(r.RentalDate, 31) < now)//לשנות
                 .ToListAsync();
 
             if (expiredRentals.Any())
@@ -577,7 +596,7 @@ namespace DigireadProject.Controllers
         {
             var now = DateTime.Now;
             var fiveDaysFromNow = now.AddDays(5);
-    
+
             // מצא את כל ההשאלות שיפוגו בעוד 5 ימים
             var expiringRentals = await db.Rentals
                 .Where(r => r.ReturnDate == null // עדיין לא הוחזר
@@ -601,6 +620,7 @@ namespace DigireadProject.Controllers
                 }
             }
         }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> DeleteFromLibrary(int bookId, string type)
@@ -663,22 +683,15 @@ namespace DigireadProject.Controllers
             try
             {
                 var userId = GetCurrentUserId();
-                System.Diagnostics.Debug.WriteLine($"Starting download for user {userId}, book {bookId}, format {format}");
-                
-                // בדוק אם המשתמש רכש את הספר
-                var purchase = await db.Purchases
-                    .FirstOrDefaultAsync(p => p.BookID == bookId && p.UserID == userId);
-                    
-                System.Diagnostics.Debug.WriteLine($"Purchase found: {purchase != null}");
-                
-                if (purchase == null)
+                var purchase = await db.Purchases.FirstOrDefaultAsync(p => p.BookID == bookId && p.UserID == userId);
+                var rental = await db.Rentals.FirstOrDefaultAsync(r => r.BookID == bookId && r.UserID == userId && r.ReturnDate == null);
+
+                if (purchase == null && rental == null)
                 {
-                    return Json(new { success = false, message = "לא נמצאה רכישה לספר זה" });
+                    return Json(new { success = false, message = "לא נמצאה רכישה או השאלה פעילה לספר זה" });
                 }
 
                 var book = await db.Books.FindAsync(bookId);
-                System.Diagnostics.Debug.WriteLine($"Book found: {book != null}");
-                
                 if (book == null)
                 {
                     return Json(new { success = false, message = "הספר לא נמצא" });
@@ -687,10 +700,7 @@ namespace DigireadProject.Controllers
                 string fileName = $"{book.Title}.{format.ToLower()}";
                 string sampleFileName = $"sample_book.{format.ToLower()}";
                 string filePath = System.IO.Path.Combine(Server.MapPath("~/Content/SampleBooks"), sampleFileName);
-                
-                System.Diagnostics.Debug.WriteLine($"Checking file path: {filePath}");
-                System.Diagnostics.Debug.WriteLine($"File exists: {System.IO.File.Exists(filePath)}");
-                
+
                 if (!System.IO.File.Exists(filePath))
                 {
                     return Json(new { success = false, message = $"הקובץ {sampleFileName} לא נמצא בנתיב {filePath}" });
@@ -701,8 +711,6 @@ namespace DigireadProject.Controllers
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Debug.WriteLine($"Error in DownloadBook: {ex.Message}");
-                System.Diagnostics.Debug.WriteLine($"Stack trace: {ex.StackTrace}");
                 return Json(new { success = false, message = "אירעה שגיאה בהורדת הספר: " + ex.Message });
             }
         }
@@ -714,8 +722,9 @@ namespace DigireadProject.Controllers
             {
                 var userId = GetCurrentUserId();
                 var purchase = db.Purchases.FirstOrDefault(p => p.BookID == bookId && p.UserID == userId);
-                    
-                if (purchase == null)
+                var rental = db.Rentals.FirstOrDefault(r => r.BookID == bookId && r.UserID == userId && r.ReturnDate == null);
+
+                if (purchase == null && rental == null)
                 {
                     return new HttpStatusCodeResult(System.Net.HttpStatusCode.Forbidden);
                 }
@@ -739,7 +748,6 @@ namespace DigireadProject.Controllers
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Debug.WriteLine($"Error in DownloadFile: {ex.Message}");
                 return new HttpStatusCodeResult(System.Net.HttpStatusCode.InternalServerError);
             }
         }

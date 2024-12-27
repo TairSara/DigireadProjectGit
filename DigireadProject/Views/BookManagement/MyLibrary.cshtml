@@ -1,6 +1,7 @@
 @model IEnumerable<DigireadProject.Models.ViewModels.MyLibraryViewModel>
 @section Styles {
     <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
     <link href="~/Content/Books/css/MyLibrary.css" rel="stylesheet" />
 }
 @{
@@ -41,24 +42,29 @@
                             תאריך החזרה: @book.ReturnDate.Value.ToString("dd/MM/yyyy")
                         </div>
 
+                        var daysLeft = (book.ReturnDate.Value - DateTime.Now).Days;
+                        <div class="days-left">
+                            נותרו @daysLeft ימים להשאלה
+                        </div>
+
+                        if (daysLeft <= 5 && daysLeft > 0)
                         {
-                            var daysLeft = (book.ReturnDate.Value - DateTime.Now).Days;
-                            if (daysLeft <= 5 && daysLeft > 0)
-                            {
-                                <div class="days-left-warning">
-                                    נותרו @daysLeft ימים להשכרה
-                                </div>
-                            }
+                            <div class="days-left-warning">
+                                נותרו @daysLeft ימים להשכרה
+                            </div>
                         }
                     }
-                    @if (book.Type == "רכישה")
-                    {
-                        <button class="download-btn" onclick="showFormatDialog(@book.BookId)">
-                            <i class="fas fa-download"></i> הורד ספר
-                        </button>
-                    }
+                   
+                    <button class="download-btn" onclick="showFormatDialog(@book.BookId)">
+                        <i class="fas fa-download"></i> הורד ספר
+                    </button>
+                    
                     <button class="delete-btn" onclick="confirmDelete(@book.BookId, '@book.Type', '@book.Title')">
                         <i class="fas fa-trash"></i> מחק
+                    </button>
+
+                    <button class="rate-btn" data-book-id="@book.BookId" data-book-title="@book.Title">
+                        <i class="fas fa-star"></i> דרג ספר
                     </button>
                 </div>
             </div>
@@ -68,6 +74,333 @@
 
 
 @section Scripts {
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script src="~/Content/Books/js/MyLibrary.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/js/all.min.js"></script>
+    
+    <script>
+        $(document).ready(function() {
+            // בדיקת כל הספרים שבספרייה
+            $('.rate-btn').each(function() {
+                const $button = $(this);
+                const bookId = $button.data('book-id');
+
+                $.get('/Reviews/HasUserReviewedBook', { bookId: bookId }, function(response) {
+                    if (response.hasReviewed) {
+                        $button.prop('disabled', true)
+                            .addClass('already-rated')
+                            .html('<i class="fas fa-star"></i> כבר דירגת');
+                    }
+                });
+            });
+
+            // הוספת טיפול באירוע לחיצה על כפתור הדירוג
+            $('.rate-btn').on('click', function() {
+                if (!$(this).hasClass('already-rated')) {
+                    const bookId = $(this).data('book-id');
+                    const bookTitle = $(this).data('book-title');
+                    showRatingDialog(bookId, bookTitle);
+                }
+            });
+        });
+        function confirmDelete(bookId, type, title) {
+            Swal.fire({
+                title: 'האם אתה בטוח?',
+                html: `האם אתה בטוח שברצונך למחוק את הספר <strong>${title}</strong> מהספרייה שלך?`,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'כן, מחק',
+                cancelButtonText: 'ביטול',
+                reverseButtons: true
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    deleteBook(bookId, type);
+                }
+            });
+        }
+
+        function deleteBook(bookId, type) {
+            console.log('מנסה למחוק ספר:', { bookId, type }); // הוספת לוג
+
+            $.ajax({
+                url: '/BookManagement/DeleteFromLibrary',
+                type: 'POST',
+                data: {
+                    bookId: bookId,
+                    type: type,
+                    __RequestVerificationToken: $('input[name="__RequestVerificationToken"]').val()
+                },
+                success: function(response) {
+                    console.log('תגובת השרת:', response); // הוספת לוג
+                    if (response.success) {
+                        Swal.fire({
+                            title: 'נמחק!',
+                            text: 'הספר נמחק בהצלחה מהספרייה שלך',
+                            icon: 'success'
+                        }).then(() => {
+                            location.reload();
+                        });
+                    } else {
+                        console.error('שגיאת שרת:', response.message); // הוספת לוג
+                        Swal.fire(
+                            'שגיאה!',
+                            response.message || 'אירעה שגיאה במחיקת הספר',
+                            'error'
+                        );
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error('שגיאת AJAX:', { status, error, responseText: xhr.responseText }); // הוספת לוג מפורט
+                    Swal.fire(
+                        'שגיאה!',
+                        'אירעה שגיאה במחיקת הספר',
+                        'error'
+                    );
+                }
+            });
+        }
+
+        function showFormatDialog(bookId) {
+            Swal.fire({
+                title: 'בחר פורמט להורדה',
+                html: `
+                    <div class="format-options" dir="rtl">
+                        <button class="format-btn" onclick="downloadBook(${bookId}, 'PDF')">PDF</button>
+                        <button class="format-btn" onclick="downloadBook(${bookId}, 'EPUB')">EPUB</button>
+                        <button class="format-btn" onclick="downloadBook(${bookId}, 'MOBI')">MOBI</button>
+                        <button class="format-btn" onclick="downloadBook(${bookId}, 'FB2')">FB2</button>
+                    </div>
+                `,
+                showConfirmButton: false,
+                showCloseButton: true,
+                customClass: {
+                    popup: 'format-dialog'
+                }
+            });
+        }
+
+        function downloadBook(bookId, format) {
+            $.ajax({
+                url: '/BookManagement/DownloadBook',
+                type: 'POST',
+                data: {
+                    bookId: bookId,
+                    format: format,
+                    __RequestVerificationToken: $('input[name="__RequestVerificationToken"]').val()
+                },
+                success: function(response) {
+                    console.log('Download response:', response);
+                    if (response.success) {
+                        // Create a temporary link to download the file
+                        const link = document.createElement('a');
+                        link.href = response.downloadUrl;
+                        link.download = response.fileName;
+                        document.body.appendChild(link);
+                        link.click();
+                        document.body.removeChild(link);
+
+                        Swal.close();
+                    } else {
+                        Swal.fire({
+                            title: 'שגיאה!',
+                            text: response.message || 'אירעה שגיאה בהורדת הספר',
+                            icon: 'error'
+                        });
+                    }
+                },
+                error: function() {
+                    console.error('Download error:', { status, error, response: xhr.responseText });
+                    Swal.fire({
+                        title: 'שגיאה!',
+                        text: 'אירעה שגיאה בהורדת הספר',
+                        icon: 'error'
+                    });
+                }
+            });
+        }
+
+
+        function showRatingDialog(bookId, title) {
+            console.log('Opening rating dialog for:', {bookId, title});
+            // בדיקה האם המשתמש כבר דירג את הספר
+            $.get('/Reviews/HasUserReviewedBook', {bookId: bookId}, function (response) {
+                if (response.hasReviewed) {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'לא ניתן לדרג',
+                        text: 'כבר דירגת את הספר הזה בעבר',
+                        confirmButtonText: 'אישור'
+                    });
+                    return;
+                }
+
+                let currentRating = 0;
+
+                Swal.fire({
+                    title: `דרג את הספר "${title}"`,
+                    html: `
+            <div class="rating-container">
+                <div class="star-rating">
+                    <span class="star" data-rating="1">★</span>
+                    <span class="star" data-rating="2">★</span>
+                    <span class="star" data-rating="3">★</span>
+                    <span class="star" data-rating="4">★</span>
+                    <span class="star" data-rating="5">★</span>
+                </div>
+                <div id="rating-text">בחר דירוג</div>
+            </div>
+            <textarea id="reviewText" class="swal2-textarea" placeholder="כתוב את חוות דעתך כאן..." dir="rtl"></textarea>
+        `,
+                    showCancelButton: true,
+                    confirmButtonText: 'שלח דירוג',
+                    cancelButtonText: 'ביטול',
+                    customClass: {
+                        container: 'custom-swal-container',
+                        popup: 'custom-swal-popup',
+                        content: 'custom-swal-content'
+                    },
+                    didOpen: (popup) => {
+                        const ratingDescriptions = ['גרוע', 'לא טוב', 'סביר', 'טוב', 'מצוין'];
+                        const stars = popup.querySelectorAll('.star');
+                        const ratingText = popup.querySelector('#rating-text');
+
+                        stars.forEach(star => {
+                            // טיפול באירוע hover
+                            star.addEventListener('mouseenter', () => {
+                                const rating = parseInt(star.dataset.rating);
+                                stars.forEach((s, index) => {
+                                    if (index < rating) {
+                                        s.classList.add('active');
+                                    } else {
+                                        s.classList.remove('active');
+                                    }
+                                });
+                                ratingText.textContent = ratingDescriptions[rating - 1];
+                            });
+
+                            // טיפול בלחיצה
+                            star.addEventListener('click', () => {
+                                currentRating = parseInt(star.dataset.rating);
+                                stars.forEach((s, index) => {
+                                    if (index < currentRating) {
+                                        s.classList.add('selected');
+                                    } else {
+                                        s.classList.remove('selected');
+                                    }
+                                });
+                            });
+                        });
+
+                        // טיפול ביציאת העכבר מאזור הכוכבים
+                        const container = popup.querySelector('.star-rating');
+                        container.addEventListener('mouseleave', () => {
+                            stars.forEach((s, index) => {
+                                s.classList.remove('active');
+                                if (index < currentRating) {
+                                    s.classList.add('selected');
+                                }
+                            });
+                            ratingText.textContent = currentRating ? ratingDescriptions[currentRating - 1] : 'בחר דירוג';
+                        });
+                    }
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        if (currentRating === 0) {
+                            Swal.fire('שגיאה', 'אנא בחר דירוג', 'error');
+                            return;
+                        }
+                        const reviewText = document.getElementById('reviewText').value;
+                        submitRating(bookId, currentRating, reviewText);
+                    }
+                });
+            })
+
+            function updateStars(stars, rating, className) {
+                stars.forEach((star, index) => {
+                    const starRating = parseInt(star.dataset.rating);
+                    if (starRating <= rating) {
+                        star.classList.add(className);
+                    } else {
+                        star.classList.remove(className);
+                    }
+                });
+            }
+
+            function submitRating(bookId, rating, reviewText) {
+                console.log('Submitting rating:', {bookId, rating, reviewText});
+
+                $.ajax({
+                    url: '/Reviews/AddBookReview',
+                    type: 'POST',
+                    contentType: 'application/x-www-form-urlencoded',
+                    data: {
+                        bookId: bookId,
+                        rating: rating,
+                        reviewText: reviewText,
+                        __RequestVerificationToken: $('input[name="__RequestVerificationToken"]').val()
+                    },
+                    beforeSend: function () {
+                        Swal.showLoading();
+                    },
+                    success: function (response) {
+                        console.log('Server response:', response);
+
+                        if (response.success) {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'תודה!',
+                                text: response.message,
+                                confirmButtonText: 'אישור'
+                            });
+                        } else {
+                            if (response.message === "יש להתחבר למערכת") {
+                                Swal.fire({
+                                    title: 'שגיאה',
+                                    text: 'יש להתחבר למערכת כדי לדרג ספרים',
+                                    icon: 'error',
+                                    confirmButtonText: 'התחבר',
+                                }).then((result) => {
+                                    if (result.isConfirmed) {
+                                        window.location.href = '/Account/Login';
+                                    }
+                                });
+                            } else {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'שגיאה',
+                                    text: response.message,
+                                    confirmButtonText: 'אישור'
+                                });
+                            }
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        console.error('Ajax error:', {
+                            status: status,
+                            error: error,
+                            response: xhr.responseText
+                        });
+
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'שגיאה',
+                            text: 'אירעה שגיאה בשמירת הדירוג',
+                            confirmButtonText: 'אישור'
+                        });
+                    }
+                });
+            }
+
+            $(document).ready(function () {
+                // הוספת טיפול באירוע לחיצה על כפתור הדירוג
+                $('.rate-btn').on('click', function () {
+                    const bookId = $(this).data('book-id');
+                    const bookTitle = $(this).data('book-title');
+                    showRatingDialog(bookId, bookTitle);
+                });
+            });
+        }
+    </script>
 }

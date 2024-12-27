@@ -219,3 +219,178 @@
     background-color: #cccccc;
     cursor: not-allowed;
 }
+
+.reviews-section {
+    margin-top: 3rem;
+    padding: 2rem;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+}
+
+.reviews-title {
+    text-align: center;
+    color: #2c3e50;
+    margin-bottom: 2rem;
+}
+
+.ratings-summary {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 2rem;
+}
+
+.average-rating {
+    text-align: center;
+}
+
+.big-rating {
+    font-size: 3rem;
+    font-weight: bold;
+    color: #2c3e50;
+}
+
+.stars {
+    color: #ddd;
+    font-size: 1.2rem;
+    direction: ltr;
+    margin: 0.5rem 0;
+}
+
+.stars .fa-star.active {
+    color: #ffd700;
+}
+
+.total-reviews {
+    font-size: 0.9rem;
+    color: #666;
+}
+
+.reviews-list {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.review-card {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.review-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.reviewer-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.reviewer-name {
+    font-weight: bold;
+    color: #2c3e50;
+}
+
+.review-date {
+    font-size: 0.8rem;
+    color: #666;
+}
+
+.review-comment {
+    color: #4a5568;
+    line-height: 1.6;
+    margin: 0;
+}
+
+.no-reviews {
+    text-align: center;
+    color: #666;
+    font-style: italic;
+}
+
+@media (max-width: 768px) {
+    .reviews-section {
+        padding: 1rem;
+    }
+
+    .review-card {
+        padding: 1rem;
+    }
+}
+
+.stars {
+    display: inline-flex;
+    align-items: center;
+    margin-right: 5px;
+}
+
+.stars .fa-star {
+    color: #ffd700; /* צבע זהב לכוכבים */
+    margin: 0 2px;
+    font-size: 1.2rem;
+}
+
+.stars .fa-star.active {
+    color: #ffd700; /* צבע זהב לכוכבים מלאים */
+}
+
+.rating-number {
+    margin-right: 5px;
+    color: #666;
+    font-size: 0.9rem;
+}
+
+.rating-value {
+    margin-right: 5px;
+    color: #666;
+    font-size: 0.9rem;
+}
+
+.btn-quick-purchase {
+    background-color: #ff9800;
+    color: white;
+    border: none;
+    padding: 0.8rem 1.5rem;
+    border-radius: 4px;
+    margin-right: 1rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: background-color 0.2s ease;
+}
+
+.btn-quick-purchase:hover {
+    background-color: #f57c00;
+    color: white;
+}
+
+.btn-quick-purchase:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
+
+.btn-quick-purchase .fa-spinner {
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Make the actions container flex to accommodate both buttons */
+.actions {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1.5rem;
+}
+
+/* Ensure buttons are equal width */
+.actions button {
+    flex: 1;
+    white-space: nowrap;
+}

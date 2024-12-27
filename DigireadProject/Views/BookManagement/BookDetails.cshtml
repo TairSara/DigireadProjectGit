@@ -4,6 +4,7 @@
     <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
 }
 
+@Html.AntiForgeryToken()
 <div class="book-details">
     <h2>@Model.Title</h2>
     <img src="@Model.ImageSrc" alt="תמונה של @Model.Title" class="book-image" />
@@ -27,6 +28,9 @@
             <button onclick="bookManager.showPurchaseOptions()" class="btn btn-add-to-cart">
                 <i class="fas fa-shopping-cart"></i> הוסף לסל
             </button>
+            <button type="button" onclick="bookManager.quickPurchase(@Model.BookID, false)" class="btn btn-quick-purchase">
+                <i class="fas fa-bolt"></i> קנייה מהירה
+            </button>
         }
         else
         {
@@ -34,6 +38,57 @@
                 התחבר כדי לרכוש
             </a>
         }
+    </div>
+    <div class="reviews-section">
+        <h3 class="reviews-title">דירוגים וביקורות</h3>
+
+        <!-- סיכום דירוגים -->
+        <div class="ratings-summary">
+            <div class="average-rating">
+                <div class="big-rating">@Model.AverageRating.ToString("F1")</div>
+                <div class="stars">
+                    @for (int i = 1; i <= 5; i++)
+                    {
+                        <i class="fas fa-star @(i <= Math.Round(Model.AverageRating) ? "active" : "")"></i>
+                    }
+                </div>
+                <div class="total-reviews">מתוך @Model.ReviewCount דירוגים</div>
+            </div>
+        </div>
+
+        <!-- רשימת הביקורות -->
+        <div class="reviews-list">
+            @if (Model.Reviews.Any())
+            {
+                foreach (var review in Model.Reviews)
+                {
+                    <div class="review-card">
+                        <div class="review-header">
+                            <div class="reviewer-info">
+                                <span class="reviewer-name">@review.Username</span>
+                                <span class="review-date">@review.ReviewDate.ToString("dd/MM/yyyy")</span>
+                            </div>
+                            <div class="stars">
+                                @* מציג רק את מספר הכוכבים שווה לדירוג *@
+                                @for (int i = 0; i < review.Rating; i++)
+                                {
+                                    <i class="fas fa-star active"></i>
+                                }
+                                <span class="rating-value">(@review.Rating)</span>
+                            </div>
+                        </div>
+                        @if (!string.IsNullOrEmpty(review.Comment))
+                        {
+                            <p class="review-comment">@review.Comment</p>
+                        }
+                    </div>
+                }
+            }
+            else
+            {
+                <p class="no-reviews">אין דירוגים עדיין</p>
+            }
+        </div>
     </div>
 
     <!-- Purchase Dialog -->
@@ -103,5 +158,15 @@
 
 @section Scripts {
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        // Initialize empty bookManager object first
+        window.bookManager = {
+            showPurchaseOptions: function() { console.log('Not initialized yet'); },
+            closePurchaseDialog: function() { console.log('Not initialized yet'); },
+            showNoStockMessage: function() { console.log('Not initialized yet'); },
+            closeErrorModal: function() { console.log('Not initialized yet'); },
+            quickPurchase: function() { console.log('Not initialized yet'); }
+        };
+    </script>
     <script src="~/Content/Books/js/book-details.js"></script>
 }

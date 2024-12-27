@@ -31,6 +31,73 @@
         this.modal.style.display = 'none';
     }
 
+    showNoStockMessage() {
+        document.getElementById('errorModal').style.display = 'block';
+    }
+
+    closeErrorModal() {
+        document.getElementById('errorModal').style.display = 'none';
+    }
+
+    async quickPurchase(bookId, isRental) {
+        try {
+            // מצא את הכפתור ושמור את הטקסט המקורי
+            const button = document.querySelector('.btn-quick-purchase');
+            const originalText = button.innerHTML;
+
+            // הצג מצב טעינה
+            button.disabled = true;
+            button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> מעבד...';
+
+            // קבל את טוקן האבטחה
+            const token = document.querySelector('[name="__RequestVerificationToken"]').value;
+
+            // קודם נוסיף לעגלה
+            const addToCartResponse = await fetch('/ShoppingCart/AddToCart', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'RequestVerificationToken': token
+                },
+                body: new URLSearchParams({
+                    bookId: bookId,
+                    isRental: isRental,
+                    __RequestVerificationToken: token
+                })
+            });
+
+            const addToCartResult = await addToCartResponse.json();
+
+            if (addToCartResult.success) {
+                // אם ההוספה לעגלה הצליחה, נעבור לדף הקופה
+                window.location.href = '/Order/QuickPurchase';
+            } else {
+                // הצג הודעת שגיאה
+                Swal.fire({
+                    title: 'שגיאה',
+                    text: addToCartResult.message || 'אירעה שגיאה בתהליך הרכישה',
+                    icon: 'error',
+                    confirmButtonText: 'אישור'
+                });
+                // החזר את הכפתור למצב הרגיל
+                button.disabled = false;
+                button.innerHTML = originalText;
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            Swal.fire({
+                title: 'שגיאה',
+                text: 'אירעה שגיאה בתהליך הרכישה',
+                icon: 'error',
+                confirmButtonText: 'אישור'
+            });
+            // החזר את הכפתור למצב הרגיל
+            const button = document.querySelector('.btn-quick-purchase');
+            button.disabled = false;
+            button.innerHTML = '<i class="fas fa-bolt"></i> קנייה מהירה';
+        }
+    }
+
     async handleSubmit(form, isRental) {
         try {
             const formData = new FormData(form);
@@ -136,25 +203,31 @@
     }
 }
 
-// Initialize when document is ready
-document.addEventListener('DOMContentLoaded', () => {
-    window.bookManager = new BookPurchaseManager();
-});
+// Create global instance of BookPurchaseManager
+let purchaseManager = null;
 
-var bookManager = {
-    showPurchaseOptions: function() {
-        document.getElementById('purchaseDialog').style.display = 'block';
-    },
+// Function to initialize manager and attach methods
+function initializeBookManager() {
+    try {
+        // Create manager instance first
+        purchaseManager = new BookPurchaseManager();
 
-    closePurchaseDialog: function() {
-        document.getElementById('purchaseDialog').style.display = 'none';
-    },
+        // Then attach methods to global bookManager object
+        bookManager.showPurchaseOptions = function() { purchaseManager.showPurchaseOptions(); };
+        bookManager.closePurchaseDialog = function() { purchaseManager.closePurchaseDialog(); };
+        bookManager.showNoStockMessage = function() { purchaseManager.showNoStockMessage(); };
+        bookManager.closeErrorModal = function() { purchaseManager.closeErrorModal(); };
+        bookManager.quickPurchase = function(bookId, isRental) { purchaseManager.quickPurchase(bookId, isRental); };
 
-    showNoStockMessage: function() {
-        document.getElementById('errorModal').style.display = 'block';
-    },
-
-    closeErrorModal: function() {
-        document.getElementById('errorModal').style.display = 'none';
+        console.log('BookManager initialized successfully');
+    } catch (error) {
+        console.error('Error initializing BookManager:', error);
     }
-};
+}
+
+// Call initialize function when DOM is loaded
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initializeBookManager);
+} else {
+    initializeBookManager();
+}

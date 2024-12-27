@@ -201,6 +201,7 @@
     <Compile Include="Controllers\BookManagementController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\OrderController.cs" />
+    <Compile Include="Controllers\ReviewsController.cs" />
     <Compile Include="Controllers\ShoppingCartController.cs" />
     <Compile Include="Controllers\UserManagementController.cs" />
     <Compile Include="database_firewall_rules.cs">
@@ -231,6 +232,7 @@
     <Compile Include="Models\ViewModels\GalleryViewModel.cs" />
     <Compile Include="Models\ViewModels\LoginViewModel.cs" />
     <Compile Include="Models\ViewModels\MyLibraryViewModel.cs" />
+    <Compile Include="Models\ViewModels\PopularBookViewModel.cs" />
     <Compile Include="Models\ViewModels\RegisterViewModel.cs" />
     <Compile Include="Models\ViewModels\ResetPasswordViewModel.cs" />
     <Compile Include="Models\ViewModels\UserManagementViewModel.cs" />
@@ -288,6 +290,21 @@
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\Cart\css\cartStyle.css" />
     <Content Include="Content\Cart\js\cartDetailes.js" />
+    <Content Include="Content\DigiRead\1.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\DigiRead\2.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\DigiRead\3.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\DigiRead\7.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\DigiRead\main.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Content\Home\css\file-explorer.css" />
     <Content Include="Content\Home\js\file-explorer.js" />
     <Content Include="Content\Illustrative-Colorful-Library--unscreen.gif" />

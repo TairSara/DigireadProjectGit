@@ -138,6 +138,8 @@ namespace DigireadProject.Controllers
                     ModelState.AddModelError("", "שם משתמש או סיסמה שגויים");
                     return View(model);
                 }
+                
+                Session["UserID"] = user.UserID;
 
                 FormsAuthentication.SetAuthCookie(user.Username, model.RememberMe);
                 TempData["SuccessMessage"] = "התחברת בהצלחה!";
@@ -158,6 +160,7 @@ namespace DigireadProject.Controllers
         public ActionResult Logout()
         {
             FormsAuthentication.SignOut();
+            Session["UserID"] = null; // הוספת ניקוי ה-Session
             TempData["SuccessMessage"] = "התנתקת בהצלחה!";
             return RedirectToAction("HomePage", "Home");
         }
@@ -197,6 +200,56 @@ namespace DigireadProject.Controllers
             };
 
             return View(model);
+        }
+        
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public JsonResult AddWebsiteReview(int rating, string reviewText)
+        {
+            try
+            {
+                if (Session["UserID"] == null)
+                {
+                    return Json(new { success = false, message = "יש להתחבר למערכת" });
+                }
+
+                var userId = (int)Session["UserID"];
+
+                // בדיקה אם כבר קיימת ביקורת על האתר מהמשתמש
+                var existingReview = db.Reviews.FirstOrDefault(r => 
+                    r.UserID == userId && r.RatingWeb != null);
+
+                if (existingReview != null)
+                {
+                    // עדכון ביקורת קיימת
+                    existingReview.RatingWeb = rating;
+                    existingReview.ReviewTextWeb = reviewText;
+                    existingReview.ReviewDateWeb = DateTime.Now;
+                }
+                else
+                {
+                    // יצירת ביקורת חדשה
+                    var review = new Reviews
+                    {
+                        UserID = userId,
+                        RatingWeb = rating,
+                        ReviewTextWeb = reviewText,
+                        ReviewDateWeb = DateTime.Now
+                    };
+                    db.Reviews.Add(review);
+                }
+
+                db.SaveChanges();
+
+                return Json(new { 
+                    success = true, 
+                    message = "תודה על הדירוג!"
+                });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = "אירעה שגיאה בשמירת הדירוג" });
+            }
         }
 
         [HttpPost]
@@ -292,6 +345,13 @@ namespace DigireadProject.Controllers
 
             TempData["SuccessMessage"] = "הסיסמה אופסה בהצלחה";
             return RedirectToAction("HomePage", "Home");
+        }
+        
+        [HttpGet]
+        public JsonResult IsUserLoggedIn()
+        {
+            var isLoggedIn = User.Identity.IsAuthenticated && Session["UserID"] != null;
+            return Json(new { isLoggedIn = isLoggedIn, message = isLoggedIn ? "מחובר" : "לא מחובר" }, JsonRequestBehavior.AllowGet);
         }
     }
 }

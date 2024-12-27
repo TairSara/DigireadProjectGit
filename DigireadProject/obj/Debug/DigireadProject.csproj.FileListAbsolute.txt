@@ -123,6 +123,11 @@ C:\Users\tairt\Desktop\פרויקט קורס תקשורת\DigireadProject\Digire
 C:\Users\tairt\Desktop\פרויקט קורס תקשורת\DigireadProject\DigireadProject\obj\Debug\DigireadProject.dll
 C:\Users\tairt\Desktop\פרויקט קורס תקשורת\DigireadProject\DigireadProject\obj\Debug\DigireadProject.pdb
 C:\Users\tairt\Desktop\פרויקט קורס תקשורת\DigireadProject\DigireadProject\obj\Debug\DigireadProject.csproj.AssemblyReference.cache
+C:\Users\noamd\RiderProjects\DigireadProjectGit\DigireadProject\bin\Content\DigiRead\1.png
+C:\Users\noamd\RiderProjects\DigireadProjectGit\DigireadProject\bin\Content\DigiRead\2.png
+C:\Users\noamd\RiderProjects\DigireadProjectGit\DigireadProject\bin\Content\DigiRead\3.png
+C:\Users\noamd\RiderProjects\DigireadProjectGit\DigireadProject\bin\Content\DigiRead\7.png
+C:\Users\noamd\RiderProjects\DigireadProjectGit\DigireadProject\bin\Content\DigiRead\main.png
 C:\Users\noamd\RiderProjects\DigireadProjectGit\DigireadProject\bin\DigireadProject.dll
 C:\Users\noamd\RiderProjects\DigireadProjectGit\DigireadProject\bin\DigireadProject.pdb
 C:\Users\noamd\RiderProjects\DigireadProjectGit\DigireadProject\bin\roslyn\csc.exe

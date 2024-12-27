@@ -28,6 +28,11 @@ namespace DigireadProject
                 url: "BookManagement/RemoveFromWaitList",
                 defaults: new { controller = "BookManagement", action = "RemoveFromWaitList" }
             );
+            routes.MapRoute(
+                name: "Reviews",
+                url: "Reviews/{action}/{id}",
+                defaults: new { controller = "Reviews", action = "Index", id = UrlParameter.Optional }
+            );
         }
     }
 }

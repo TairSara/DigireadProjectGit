@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Web;
 
@@ -27,7 +28,7 @@ namespace DigireadProject.Models.ViewModels
 
         [Display(Name = "מחיר השכרה")]
         [DataType(DataType.Currency)]
-        [Range(0, 1000, ErrorMessage = "המחיר חייב להיות בין 0 ל-1000")]
+        [Range(0, 1000, ErrorMessage = "המחיר חייב להיות בי ן 0 ל-1000")]
         public decimal? RentalPrice { get; set; }
 
         [Required(ErrorMessage = "שדה מחיר רכישה הינו חובה")]
@@ -109,6 +110,22 @@ namespace DigireadProject.Models.ViewModels
         
         public string Type { get; set; }  // "רכישה" או "השאלה"
         public DateTime? ReturnDate { get; set; }
-
+        
+        public List<BookReviewViewModel> Reviews { get; set; }
+        public decimal AverageRating { get; set; }
+        public int ReviewCount { get; set; }
+        
+        public BookViewModel()
+        {
+            Reviews = new List<BookReviewViewModel>();
+        }
+    }
+    
+    public class BookReviewViewModel
+    {
+        public string Username { get; set; }
+        public int Rating { get; set; }
+        public string Comment { get; set; }
+        public DateTime ReviewDate { get; set; }
     }
 }

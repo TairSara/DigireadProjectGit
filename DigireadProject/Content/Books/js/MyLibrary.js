@@ -115,3 +115,85 @@ function downloadBook(bookId, format) {
         }
     });
 }
+
+
+function showRatingDialog(bookId, title) {
+    let currentRating = 0;
+
+    Swal.fire({
+        title: `דרג את הספר "${title}"`,
+        html: `
+            <div class="rating-stars" dir="ltr">
+                <span class="star" data-rating="1">★</span>
+                <span class="star" data-rating="2">★</span>
+                <span class="star" data-rating="3">★</span>
+                <span class="star" data-rating="4">★</span>
+                <span class="star" data-rating="5">★</span>
+            </div>
+            <textarea id="reviewText" class="swal2-textarea" placeholder="הוסף ביקורת (אופציונלי)" dir="rtl"></textarea>
+        `,
+        showCancelButton: true,
+        confirmButtonText: 'שלח דירוג',
+        cancelButtonText: 'ביטול',
+        reverseButtons: true,
+        didOpen: () => {
+            const stars = document.querySelectorAll('.rating-stars .star');
+            stars.forEach(star => {
+                star.addEventListener('click', function() {
+                    const rating = this.dataset.rating;
+                    currentRating = rating;
+                    stars.forEach(s => {
+                        s.classList.remove('active');
+                        if (s.dataset.rating <= rating) {
+                            s.classList.add('active');
+                        }
+                    });
+                });
+            });
+        }
+    }).then((result) => {
+        if (result.isConfirmed) {
+            if (currentRating === 0) {
+                Swal.fire('שגיאה', 'אנא בחר דירוג', 'error');
+                return;
+            }
+            submitRating(bookId, currentRating, document.getElementById('reviewText').value);
+        }
+    });
+}
+
+function submitRating(bookId, rating, reviewText) {
+    $.ajax({
+        url: '/Reviews/AddBookReview',
+        type: 'POST',
+        data: {
+            bookId: bookId,
+            rating: rating,
+            reviewText: reviewText,
+            __RequestVerificationToken: $('input[name="__RequestVerificationToken"]').val()
+        },
+        success: function(response) {
+            if (response.success) {
+                Swal.fire({
+                    title: 'תודה!',
+                    text: 'הדירוג נשמר בהצלחה',
+                    icon: 'success'
+                });
+            } else {
+                Swal.fire(
+                    'שגיאה!',
+                    response.message || 'אירעה שגיאה בשמירת הדירוג',
+                    'error'
+                );
+            }
+        },
+        error: function(xhr, status, error) {
+            console.error('שגיאת AJAX:', { status, error, responseText: xhr.responseText });
+            Swal.fire(
+                'שגיאה!',
+                'אירעה שגיאה בשמירת הדירוג',
+                'error'
+            );
+        }
+    });
+}
