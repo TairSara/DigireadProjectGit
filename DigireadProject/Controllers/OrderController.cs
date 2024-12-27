@@ -3,8 +3,7 @@ using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Mvc;
-using DigireadProject.Models;
-using DigireadProject.Controllers;
+using DigireadProject.Models.ViewModels; 
 
 namespace DigireadProject.Controllers
 {
@@ -27,102 +26,125 @@ namespace DigireadProject.Controllers
             }
             return RedirectToAction("Cart", "BookManagement");
         }
+        
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult CompletePurchase()
+        {
+            return RedirectToAction("PaymentForm");
+        }
+
+        [HttpGet]
+        public ActionResult PaymentForm()
+        {
+            try
+            {
+                var userId = GetCurrentUserId();
+                if (userId == 0)
+                {
+                    return RedirectToAction("Login", "Account");
+                }
+
+                var cartItems = db.ShoppingCart
+                    .Where(c => c.UserID == userId)
+                    .ToList();
+
+                if (!cartItems.Any())
+                {
+                    return RedirectToAction("Cart", "ShoppingCart");
+                }
+
+                var totalAmount = cartItems.Sum(x => x.Price * x.Quantity);
+                ViewBag.TotalAmount = totalAmount;
+
+                System.Diagnostics.Debug.WriteLine($"Loading PaymentForm for user {userId} with total amount {totalAmount}");
+
+                return View(new PaymentViewModel());
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Error in PaymentForm: {ex.Message}");
+                throw;
+            }
+        }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> CompletePurchase()
+        public async Task<ActionResult> ProcessPayment(PaymentViewModel model)
         {
-            var bookManagementController = new BookManagementController();
+            if (!ModelState.IsValid)
+            {
+                ViewBag.TotalAmount = model.Price;
+                return View("PaymentForm", model);
+            }
+
             using (var transaction = db.Database.BeginTransaction())
             {
                 try
                 {
                     var userId = GetCurrentUserId();
-                    var cartItems = await db.ShoppingCart
-                        .Where(c => c.UserID == userId)
-                        .ToListAsync();
-                    var activeRentals = await db.Rentals
-                        .CountAsync(r => r.UserID == userId && 
-                                         r.ReturnDate == null);
-                                
-                    var rentalItemsInCart = cartItems
-                        .Count(i => i.IsRental == true);
-                
-                    if (activeRentals + rentalItemsInCart > 3)
+                    var book = await db.Books.FindAsync(model.BookId);
+                    
+                    if (book == null)
                     {
-                        return Json(new { 
-                            success = false, 
-                            message = "לא ניתן להשאיל יותר מ-3 ספרים במקביל" 
-                        });
+                        ModelState.AddModelError("", "הספר לא נמצא");
+                        return View("PaymentForm", model);
                     }
 
-                    if (!cartItems.Any())
+                    if (model.IsRental)
                     {
-                        return RedirectToAction("Cart", "BookManagement");
-                    }
-
-                    foreach (var item in cartItems)
-                    {
-                        var book = await db.Books.FindAsync(item.BookID);
-                        if (book == null) continue;
-
-                        if (item.IsRental == true)
+                        if (book.StockQuantityRent <= 0)
                         {
-                            // בדיקה אם יש מלאי להשאלה
-                            if (book.StockQuantityRent <= 0)
-                            {
-                                return Json(new 
-                                { 
-                                    success = false, 
-                                    message = $"הספר {book.Title} אינו זמין להשאלה כרגע. אנא נסה שוב מאוחר יותר." 
-                                });
-                            }
-
-                            var rental = new Rentals
-                            {
-                                UserID = userId,
-                                BookID = item.BookID,
-                                RentalDate = DateTime.Now,
-                                ReturnDate = null
-                            };
-                            db.Rentals.Add(rental);
-
-                            // עדכון מלאי ההשאלות
-                            book.StockQuantityRent -= 1;
-                            await bookManagementController.RemoveFromWaitListAfterRental(item.BookID.Value, userId);
+                            ModelState.AddModelError("", "הספר אינו זמין להשאלה כרגע");
+                            return View("PaymentForm", model);
                         }
-                        else
-                        {
-                            // טיפול ברכישה רגילה
-                            var purchase = new Purchases
-                            {
-                                UserID = userId,
-                                BookID = item.BookID,
-                                PurchaseDate = DateTime.Now,
-                                PaymentStatus = true,
-                                PaymentMethod = "Credit Card"
-                            };
-                            db.Purchases.Add(purchase);
 
-                            book.StockQuantity -= item.Quantity;
-                            if (book.StockQuantity <= 0)
-                            {
-                                book.IsAvailable = false;
-                            }
+                        var rental = new Rentals
+                        {
+                            UserID = userId,
+                            BookID = model.BookId,
+                            RentalDate = DateTime.Now,
+                            ReturnDate = null
+                        };
+                        db.Rentals.Add(rental);
+                        book.StockQuantityRent -= 1;
+                    }
+                    else
+                    {
+                        if (book.StockQuantity <= 0)
+                        {
+                            ModelState.AddModelError("", "הספר אינו זמין לרכישה כרגע");
+                            return View("PaymentForm", model);
+                        }
+
+                        var purchase = new Purchases
+                        {
+                            UserID = userId,
+                            BookID = model.BookId,
+                            PurchaseDate = DateTime.Now,
+                            PaymentStatus = true,
+                            PaymentMethod = "Credit Card"
+                        };
+                        db.Purchases.Add(purchase);
+                        book.StockQuantity -= 1;
+
+                        if (book.StockQuantity <= 0)
+                        {
+                            book.IsAvailable = false;
                         }
                     }
 
-                    db.ShoppingCart.RemoveRange(cartItems);
                     await db.SaveChangesAsync();
                     transaction.Commit();
 
                     TempData["PurchaseSuccess"] = true;
                     return RedirectToAction("Checkout");
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     transaction.Rollback();
-                    return Json(new { success = false, message = ex.Message });
+                    ModelState.AddModelError("", "אירעה שגיאה בביצוע התשלום");
+                    return View("PaymentForm", model);
                 }
             }
         }
@@ -143,74 +165,67 @@ namespace DigireadProject.Controllers
         }
         
         [HttpGet]
-        public ActionResult QuickPurchase()
+        public async Task<ActionResult> DirectPurchase(int bookId, bool isRental = false)
         {
-            var userId = GetCurrentUserId();
-            var cartItems = db.ShoppingCart
-                .Include(s => s.Books)
-                .Where(s => s.UserID == userId)
-                .ToList();
-
-            if (!cartItems.Any())
+            try
             {
-                // If the cart is empty, redirect to the main gallery
-                return RedirectToAction("MainGallery", "BookManagement");
+                var userId = GetCurrentUserId();
+                if (userId == 0)
+                {
+                    return RedirectToAction("Login", "Account");
+                }
+
+                var book = await db.Books.FindAsync(bookId);
+                if (book == null)
+                {
+                    return HttpNotFound();
+                }
+
+                if (isRental)
+                {
+                    // Check rental availability
+                    if (book.IsForRent== false || book.StockQuantityRent <= 0)
+                    {
+                        return RedirectToAction("BookDetails", "BookManagement", new { id = bookId });
+                    }
+
+                    // Check rental limit
+                    var activeRentals = await db.Rentals
+                        .CountAsync(r => r.UserID == userId && r.ReturnDate == null);
+                    if (activeRentals >= 3)
+                    {
+                        TempData["ErrorMessage"] = "לא ניתן להשאיל יותר מ-3 ספרים במקביל";
+                        return RedirectToAction("BookDetails", "BookManagement", new { id = bookId });
+                    }
+                }
+                else
+                {
+                    // Check purchase availability
+                    if (book == null || book.IsAvailable == false || book.StockQuantity <= 0)
+                    {
+                        return RedirectToAction("BookDetails", "BookManagement", new { id = bookId });
+                    }
+                }
+
+                var viewModel = new PaymentViewModel
+                {
+                    BookId = book.BookID,
+                    BookTitle = book.Title,
+                    BookImageSrc = book.ImageSrc,
+                    Price = isRental ? book.RentalPrice ?? 0 : book.PurchasePrice ?? 0,
+                    IsRental = isRental
+                };
+
+                ViewBag.TotalAmount = viewModel.Price;
+
+                return View("PaymentForm", viewModel);
             }
-
-            // Render the Checkout view
-            return View("Checkout");
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<ActionResult> QuickPurchase(int bookId)
-        {
-            using (var transaction = db.Database.BeginTransaction())
+            catch (Exception ex)
             {
-                try
-                {
-                    var userId = GetCurrentUserId();
-                    var book = await db.Books.FindAsync(bookId);
-
-                    if (book == null)
-                    {
-                        return Json(new { success = false, message = "The book was not found" });
-                    }
-
-                    // Create a new purchase record
-                    var purchase = new Purchases
-                    {
-                        UserID = userId,
-                        BookID = bookId,
-                        PurchaseDate = DateTime.Now,
-                        PaymentStatus = true,
-                        PaymentMethod = "Credit Card"
-                    };
-
-                    db.Purchases.Add(purchase);
-
-                    // Update the book stock
-                    book.StockQuantity -= 1;
-                    if (book.StockQuantity <= 0)
-                    {
-                        book.IsAvailable = false;
-                    }
-
-                    await db.SaveChangesAsync();
-                    transaction.Commit();
-
-                    // Set a flag to indicate a successful purchase
-                    TempData["PurchaseSuccess"] = true;
-
-                    // Redirect to the Checkout page
-                    return RedirectToAction("Checkout");
-                }
-                catch (Exception ex)
-                {
-                    transaction.Rollback();
-                    return Json(new { success = false, message = ex.Message });
-                }
+                System.Diagnostics.Debug.WriteLine($"Error in DirectPurchase: {ex.Message}");
+                return RedirectToAction("BookDetails", "BookManagement", new { id = bookId });
             }
         }
     }
 }
+

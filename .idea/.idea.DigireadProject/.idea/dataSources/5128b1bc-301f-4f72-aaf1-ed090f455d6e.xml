@@ -16806,8 +16806,8 @@
     </schema>
     <schema id="5580" parent="5542" name="dbo">
       <Current>1</Current>
-      <IntrospectionTimestamp>2024-12-26.22:56:54.337</IntrospectionTimestamp>
-      <LastIntrospectionLocalTimestamp>2024-12-26.20:56:54</LastIntrospectionLocalTimestamp>
+      <IntrospectionTimestamp>2024-12-28.00:55:17.267</IntrospectionTimestamp>
+      <LastIntrospectionLocalTimestamp>2024-12-27.22:55:17</LastIntrospectionLocalTimestamp>
       <ObjectId>1</ObjectId>
     </schema>
     <schema id="5581" parent="5542" name="guest">
@@ -17088,7 +17088,7 @@
     <column id="5631" parent="5585" name="PurchaseID">
       <NotNull>1</NotNull>
       <Position>1</Position>
-      <SequenceIdentity>1(27)</SequenceIdentity>
+      <SequenceIdentity>1(38)</SequenceIdentity>
       <StoredType>int|0s</StoredType>
     </column>
     <column id="5632" parent="5585" name="BookID">
@@ -17168,7 +17168,7 @@
     <column id="5643" parent="5586" name="RentalID">
       <NotNull>1</NotNull>
       <Position>1</Position>
-      <SequenceIdentity>1(19)</SequenceIdentity>
+      <SequenceIdentity>1(22)</SequenceIdentity>
       <StoredType>int|0s</StoredType>
     </column>
     <column id="5644" parent="5586" name="BookID">
@@ -17252,7 +17252,7 @@
     <column id="5656" parent="5587" name="ReviewID">
       <NotNull>1</NotNull>
       <Position>1</Position>
-      <SequenceIdentity>1</SequenceIdentity>
+      <SequenceIdentity>1(14)</SequenceIdentity>
       <StoredType>int|0s</StoredType>
     </column>
     <column id="5657" parent="5587" name="BookID">
@@ -17326,7 +17326,7 @@
     <column id="5669" parent="5588" name="CartID">
       <NotNull>1</NotNull>
       <Position>1</Position>
-      <SequenceIdentity>1(70)</SequenceIdentity>
+      <SequenceIdentity>1(84)</SequenceIdentity>
       <StoredType>int|0s</StoredType>
     </column>
     <column id="5670" parent="5588" name="UserID">
@@ -17432,7 +17432,7 @@ typeBook</ColNames>
     <column id="5686" parent="5589" name="UserID">
       <NotNull>1</NotNull>
       <Position>1</Position>
-      <SequenceIdentity>1(22)</SequenceIdentity>
+      <SequenceIdentity>1(24)</SequenceIdentity>
       <StoredType>int|0s</StoredType>
     </column>
     <column id="5687" parent="5589" name="Username">

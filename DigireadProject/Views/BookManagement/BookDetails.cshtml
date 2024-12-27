@@ -4,7 +4,6 @@
     <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
 }
 
-@Html.AntiForgeryToken()
 <div class="book-details">
     <h2>@Model.Title</h2>
     <img src="@Model.ImageSrc" alt="תמונה של @Model.Title" class="book-image" />
@@ -25,11 +24,26 @@
     <div class="actions">
         @if (User.Identity.IsAuthenticated)
         {
-            <button onclick="bookManager.showPurchaseOptions()" class="btn btn-add-to-cart">
-                <i class="fas fa-shopping-cart"></i> הוסף לסל
-            </button>
-            <button type="button" onclick="bookManager.quickPurchase(@Model.BookID, false)" class="btn btn-quick-purchase">
-                <i class="fas fa-bolt"></i> קנייה מהירה
+            if (Model.StockQuantity > 0)
+            {
+                <a href="@Url.Action("DirectPurchase", "Order", new { bookId = Model.BookID, isRental = false })"
+                   class="btn btn-primary direct-purchase-btn">
+                    <i class="fas fa-shopping-cart"></i>
+                    רכישה מיידית - ₪@Model.PurchasePrice
+                </a>
+            }
+
+            if (Model.IsForRent == true && Model.StockQuantityRent > 0)
+            {
+                <a href="@Url.Action("DirectPurchase", "Order", new { bookId = Model.BookID, isRental = true })"
+                   class="btn btn-secondary direct-rental-btn">
+                    <i class="fas fa-clock"></i>
+                    השכרה מיידית - ₪@Model.RentalPrice
+                </a>
+            }
+
+            <button onclick="bookManager.showPurchaseOptions()" class="btn btn-outline-primary">
+                <i class="fas fa-cart-plus"></i> הוסף לסל
             </button>
         }
         else
@@ -158,15 +172,5 @@
 
 @section Scripts {
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script>
-        // Initialize empty bookManager object first
-        window.bookManager = {
-            showPurchaseOptions: function() { console.log('Not initialized yet'); },
-            closePurchaseDialog: function() { console.log('Not initialized yet'); },
-            showNoStockMessage: function() { console.log('Not initialized yet'); },
-            closeErrorModal: function() { console.log('Not initialized yet'); },
-            quickPurchase: function() { console.log('Not initialized yet'); }
-        };
-    </script>
     <script src="~/Content/Books/js/book-details.js"></script>
 }

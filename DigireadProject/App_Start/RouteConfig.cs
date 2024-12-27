@@ -33,6 +33,11 @@ namespace DigireadProject
                 url: "Reviews/{action}/{id}",
                 defaults: new { controller = "Reviews", action = "Index", id = UrlParameter.Optional }
             );
+            routes.MapRoute(
+                name: "Payment",
+                url: "Order/PaymentForm",
+                defaults: new { controller = "Order", action = "PaymentForm" }
+            );
         }
     }
 }

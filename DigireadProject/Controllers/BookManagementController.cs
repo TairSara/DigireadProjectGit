@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;  // הוספנו את זה עבור List<>
+using System.Collections.Generic;  
 using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks;
