@@ -201,9 +201,11 @@
     <Compile Include="Controllers\BookManagementController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\OrderController.cs" />
+    <Compile Include="Controllers\RentalsManagementController.cs" />
     <Compile Include="Controllers\ReviewsController.cs" />
     <Compile Include="Controllers\ShoppingCartController.cs" />
     <Compile Include="Controllers\UserManagementController.cs" />
+    <Compile Include="Controllers\WishlistController.cs" />
     <Compile Include="database_firewall_rules.cs">
       <DependentUpon>digireadModel.tt</DependentUpon>
     </Compile>
@@ -235,12 +237,15 @@
     <Compile Include="Models\ViewModels\MyLibraryViewModel.cs" />
     <Compile Include="Models\ViewModels\PaymentViewModel.cs" />
     <Compile Include="Models\ViewModels\PopularBookViewModel.cs" />
+    <Compile Include="Models\ViewModels\PurchaseHistoryViewModel.cs" />
     <Compile Include="Models\ViewModels\RegisterViewModel.cs" />
+    <Compile Include="Models\ViewModels\RentalManagementViewModel.cs" />
     <Compile Include="Models\ViewModels\ResetPasswordViewModel.cs" />
     <Compile Include="Models\ViewModels\UserManagementViewModel.cs" />
     <Compile Include="Models\ViewModels\UserProfileViewModel.cs" />
     <Compile Include="Models\ViewModels\UserPurchaseViewModel.cs" />
     <Compile Include="Models\ViewModels\UserRentalViewModel.cs" />
+    <Compile Include="Models\ViewModels\WaitListManagementViewModel.cs" />
     <Compile Include="Models\ViewModels\WaitListViewModel.cs" />
     <Compile Include="PasswordResetTokens.cs">
       <DependentUpon>digireadModel.tt</DependentUpon>
@@ -262,6 +267,9 @@
       <DependentUpon>digireadModel.tt</DependentUpon>
     </Compile>
     <Compile Include="WaitList.cs">
+      <DependentUpon>digireadModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Wishlist.cs">
       <DependentUpon>digireadModel.tt</DependentUpon>
     </Compile>
   </ItemGroup>
@@ -357,6 +365,9 @@
     <Content Include="Views\BookManagement\MyWaitList.cshtml" />
     <Content Include="Views\Order\Checkout.cshtml" />
     <Content Include="Views\Order\PaymentForm.cshtml" />
+    <Content Include="Views\RentalsManagement\ManageRentals.cshtml" />
+    <Content Include="Views\RentalsManagement\ManageWaitList.cshtml" />
+    <Content Include="Views\Wishlist\Index.cshtml" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>

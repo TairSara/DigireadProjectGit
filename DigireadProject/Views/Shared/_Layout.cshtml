@@ -8,6 +8,8 @@
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
+    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     @RenderSection("Styles", required: false)
     <style>
         .background-wrapper {
@@ -60,6 +62,7 @@
             padding: 8px 0;
             transition: all 0.3s ease;
             position: relative;
+            cursor: pointer;
         }
         .nav-link::after {
             content: '';
@@ -77,6 +80,14 @@
         .nav-link:hover {
             color: #6B5B95;
         }
+        .nav-link button {
+            background: none;
+            border: none;
+            padding: 0;
+            font: inherit;
+            color: inherit;
+            cursor: pointer;
+        }
         #bthn {
             position: fixed;
             bottom: 0;
@@ -86,64 +97,131 @@
             background: white;
         }
 
-        /* סגנון חדש לכותרת */
         .page-title {
             text-align: center;
             font-size: 2.5em;
             font-weight: bold;
             color: #6B5B95;
             margin: 20px 0 40px 0;
-            display: none; /* מוסתר כברירת מחדל */
+            display: none;
         }
 
-        /* הצגת הכותרת בכל הדפים חוץ מדף הבית */
         body:not(.home-page) .page-title {
             display: block;
+        }
+
+        .star-rating .star {
+            font-size: 24px;
+            color: #ddd;
+            cursor: pointer;
+            transition: color 0.2s;
+            margin: 0 2px;
+        }
+
+        .star-rating .star.active,
+        .star-rating .star.selected {
+            color: #FFD700;
+        }
+
+        .rating-container {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        #rating-text {
+            margin-top: 10px;
+            font-size: 16px;
+            color: #666;
+        }
+
+        .swal2-textarea {
+            direction: rtl;
+            text-align: right;
+            min-height: 100px;
+            margin-top: 15px;
         }
     </style>
 </head>
 <body class="@(ViewContext.RouteData.Values["action"].ToString() == "HomePage" ? "home-page" : "")">
+@Html.AntiForgeryToken()
 <div class="background-wrapper"></div>
 <nav class="navbar">
     <div class="navbar-content">
         <img src="~/Content/Illustrative-Colorful-Library--unscreen.gif" alt="Logo" class="logo">
         <div class="nav-links">
+            <!-- קישורים שמוצגים לכולם -->
             <a href="@Url.Action("HomePage", "Home")" class="nav-link">
                 <i class="fas fa-home"></i>
                 <span>דף הבית</span>
-            </a>
-            <a href="@Url.Action("Login", "Account")" class="nav-link">
-                <i class="fas fa-sign-in-alt"></i>
-                <span>התחברות</span>
-            </a>
-            <a href="@Url.Action("Register", "Account")" class="nav-link">
-                <i class="fas fa-user-plus"></i>
-                <span>הרשמה</span>
-            </a>
-            <a href="@Url.Action("Profile", "Account")" class="nav-link">
-                <i class="fas fa-user-circle"></i>
-                <span>פרופיל אישי</span>
             </a>
             <a href="@Url.Action("MainGallery", "BookManagement")" class="nav-link">
                 <i class="fas fa-book"></i>
                 <span>גלריית ספרים</span>
             </a>
-            <a href="@Url.Action("Cart", "ShoppingCart")" class="nav-link">
-                <i class="fas fa-cart-plus"></i>
-                <span>עגלה</span>
+            <a href="@Url.Action("About", "Home")" class="nav-link">
+                <i class="fas fa-info-circle"></i>
+                <span>אודות</span>
             </a>
-            <a href="@Url.Action("MyLibrary", "BookManagement")" class="nav-link">
-                <i class="fas fa-book-reader"></i>
-                <span>הספרייה שלי</span>
-            </a>
-            <a href="@Url.Action("MyWaitList", "BookManagement")" class="nav-link">
-                <i class="fas fa-list-alt"></i>
-                <span>רשימת המתנה</span>
-            </a>
-            <a href="@Url.Action("Logout", "Account")" class="nav-link">
-                <i class="fas fa-sign-out-alt"></i>
-                <span>התנתקות</span>
-            </a>
+
+            @if (Session["UserID"] == null)
+            {
+                <!-- קישורים למשתמשים לא מחוברים -->
+                <a href="@Url.Action("Login", "Account")" class="nav-link">
+                    <i class="fas fa-sign-in-alt"></i>
+                    <span>התחברות</span>
+                </a>
+                <a href="@Url.Action("Register", "Account")" class="nav-link">
+                    <i class="fas fa-user-plus"></i>
+                    <span>הרשמה</span>
+                </a>
+            }
+            else
+            {
+                <!-- קישורים למשתמשים מחוברים -->
+                <a href="@Url.Action("Profile", "Account")" class="nav-link">
+                    <i class="fas fa-user-circle"></i>
+                    <span>פרופיל אישי</span>
+                </a>
+                <a href="@Url.Action("Cart", "ShoppingCart")" class="nav-link">
+                    <i class="fas fa-cart-plus"></i>
+                    <span>עגלה</span>
+                </a>
+                <a href="@Url.Action("MyLibrary", "BookManagement")" class="nav-link">
+                    <i class="fas fa-book-reader"></i>
+                    <span>הספרייה שלי</span>
+                </a>
+                <a href="@Url.Action("Index", "Wishlist")" class="nav-link">
+                    <i class="far fa-heart"></i>
+                    <span>הספרים שאהבתי</span>
+                </a>
+
+                if (ViewBag.HasWaitListItems ?? false)
+                {
+                    <a href="@Url.Action("MyWaitList", "BookManagement")" class="nav-link">
+                        <i class="fas fa-list-alt"></i>
+                        <span>רשימת המתנה</span>
+                    </a>
+                }
+
+                <span class="nav-link" id="rateWebsiteBtn">
+                    <i class="fas fa-star"></i>
+                    <span>דרג אותנו</span>
+                </span>
+
+                if (Session["IsAdmin"]?.ToString() == "True")
+                {
+                    <!-- קישורים למנהל -->
+                    <a href="@Url.Action("Dashboard", "Admin")" class="nav-link">
+                        <i class="fas fa-cogs"></i>
+                        <span>לוח ניהול</span>
+                    </a>
+                }
+
+                <a href="@Url.Action("Logout", "Account")" class="nav-link">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span>התנתקות</span>
+                </a>
+            }
         </div>
     </div>
 </nav>
@@ -155,6 +233,159 @@
 
 @Scripts.Render("~/bundles/jquery")
 @Scripts.Render("~/bundles/bootstrap")
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/js/all.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $('#rateWebsiteBtn').on('click', function() {
+            showWebsiteRatingDialog();
+        });
+    });
+
+    function showWebsiteRatingDialog() {
+        $.get('/Reviews/HasUserReviewedWebsite', function(response) {
+            if (response.hasReviewed) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'לא ניתן לדרג',
+                    text: 'כבר דירגת את האתר בעבר',
+                    confirmButtonText: 'אישור'
+                });
+                return;
+            }
+
+            let currentRating = 0;
+
+            Swal.fire({
+                title: 'דרג את האתר',
+                html: `
+                    <div class="rating-container">
+                        <div class="star-rating">
+                            <span class="star" data-rating="1" role="button">★</span>
+                            <span class="star" data-rating="2" role="button">★</span>
+                            <span class="star" data-rating="3" role="button">★</span>
+                            <span class="star" data-rating="4" role="button">★</span>
+                            <span class="star" data-rating="5" role="button">★</span>
+                        </div>
+                        <div id="rating-text">בחר דירוג</div>
+                    </div>
+                    <textarea id="reviewText" class="swal2-textarea" placeholder="נשמח לשמוע את חוות דעתך..." dir="rtl"></textarea>
+                `,
+                showCancelButton: true,
+                confirmButtonText: 'שלח דירוג',
+                cancelButtonText: 'ביטול',
+                didOpen: (popup) => {
+                    const stars = popup.querySelectorAll('.star');
+                    const ratingText = popup.querySelector('#rating-text');
+                    const ratingDescriptions = ['גרוע', 'לא טוב', 'סביר', 'טוב', 'מצוין'];
+
+                    stars.forEach(star => {
+                        star.addEventListener('mouseenter', () => {
+                            const rating = parseInt(star.dataset.rating);
+                            stars.forEach((s, index) => {
+                                if (index < rating) {
+                                    s.classList.add('active');
+                                } else {
+                                    s.classList.remove('active');
+                                }
+                            });
+                            ratingText.textContent = ratingDescriptions[rating - 1];
+                        });
+
+                        star.addEventListener('click', () => {
+                            currentRating = parseInt(star.dataset.rating);
+                            stars.forEach((s, index) => {
+                                if (index < currentRating) {
+                                    s.classList.add('selected');
+                                } else {
+                                    s.classList.remove('selected');
+                                }
+                            });
+                            ratingText.textContent = ratingDescriptions[currentRating - 1];
+                        });
+                    });
+
+                    popup.querySelector('.star-rating').addEventListener('mouseleave', () => {
+                        stars.forEach((s, index) => {
+                            if (index < currentRating) {
+                                s.classList.add('selected');
+                            } else {
+                                s.classList.remove('active', 'selected');
+                            }
+                        });
+                        ratingText.textContent = currentRating ?
+                            ratingDescriptions[currentRating - 1] : 'בחר דירוג';
+                    });
+                }
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    if (currentRating === 0) {
+                        Swal.fire('שגיאה', 'אנא בחר דירוג', 'error');
+                        return;
+                    }
+                    const reviewText = document.getElementById('reviewText').value;
+                    submitWebsiteRating(currentRating, reviewText);
+                }
+            });
+        });
+    }
+
+    function submitWebsiteRating(rating, reviewText) {
+        $.ajax({
+            url: '/Reviews/AddWebsiteReview',
+            type: 'POST',
+            data: {
+                rating: rating,
+                reviewText: reviewText,
+                __RequestVerificationToken: $('input[name="__RequestVerificationToken"]').val()
+            },
+            beforeSend: function() {
+                Swal.showLoading();
+            },
+            success: function(response) {
+                if (response.success) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'תודה!',
+                        text: 'הדירוג נשמר בהצלחה',
+                        confirmButtonText: 'אישור'
+                    });
+                } else {
+                    if (response.message === "יש להתחבר למערכת") {
+                        Swal.fire({
+                            title: 'שגיאה',
+                            text: 'יש להתחבר למערכת כדי לדרג את האתר',
+                            icon: 'error',
+                            confirmButtonText: 'התחבר',
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                window.location.href = '/Account/Login';
+                            }
+                        });
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'שגיאה',
+                            text: response.message || 'אירעה שגיאה בשמירת הדירוג',
+                            confirmButtonText: 'אישור'
+                        });
+                    }
+                }
+            },
+            error: function() {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'שגיאה',
+                    text: 'אירעה שגיאה בשמירת הדירוג',
+                    icon: 'error',
+                    title: 'שגיאה',
+                    text: 'אירעה שגיאה בשמירת הדירוג',
+                    confirmButtonText: 'אישור'
+                });
+            }
+        });
+    }
+</script>
 @RenderSection("scripts", required: false)
 <script>
     (function() {

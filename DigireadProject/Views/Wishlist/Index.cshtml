@@ -1,0 +1,400 @@
+@model IEnumerable<DigireadProject.Wishlist>
+@{
+    ViewBag.Title = "הספרים שאהבתי";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+<main class="wishlist-main">
+    <section class="hero-section">
+        <div class="container text-center">
+            <h2 class="wishlist-title">הספרים שאהבתי</h2>
+        </div>
+    </section>
+
+    <section class="books-gallery-section">
+        <div class="container">
+            @if (!Model.Any())
+            {
+                <div class="empty-wishlist">
+                    <p>עדיין לא הוספת ספרים לרשימת המשאלות שלך</p>
+                    <a href="@Url.Action("Gallery", "BookManagement")" class="btn-back">
+                        חזור לגלריה
+                    </a>
+                </div>
+            }
+            else
+            {
+                <div class="books-grid" id="wishlistContainer">
+                    @foreach (var item in Model)
+                    {
+                        <div class="book-item"
+                             data-title="@item.Books.Title"
+                             data-author="@item.Books.MainAuthor"
+                             data-price="@item.Books.PurchasePrice"
+                             data-original-price="@item.Books.OriginalPrice"
+                             data-year="@item.Books.PublishYear">
+                            <article class="book-card">
+                                <a href="@Url.Action("BookDetails", "BookManagement", new { id = item.BookID })" class="book-link">
+                                    <div class="card">
+                                        <div class="wishlist-heart active" onclick="confirmRemoveFromWishlist(event, @item.WishlistID)">
+                                            <i class="fas fa-heart"></i>
+                                        </div>
+
+                                        @if (!string.IsNullOrEmpty(item.Books.ImageSrc))
+                                        {
+                                            <div class="card-img-container">
+                                                <img src="@item.Books.ImageSrc" class="card-img-top" alt="@item.Books.Title">
+                                            </div>
+                                        }
+
+                                        <div class="card-body">
+                                            <h5 class="card-title">@item.Books.Title</h5>
+                                            <div class="book-details">
+                                                <p class="author">@item.Books.MainAuthor</p>
+                                                <p class="year">@item.Books.PublishYear</p>
+                                                <div class="price-section">
+                                                    @if (item.Books.OriginalPrice > item.Books.PurchasePrice)
+                                                    {
+                                                        <del class="original-price">₪@item.Books.OriginalPrice</del>
+                                                        <span class="sale-price">₪@item.Books.PurchasePrice</span>
+                                                    }
+                                                    else
+                                                    {
+                                                        <span class="regular-price">₪@item.Books.PurchasePrice</span>
+                                                    }
+                                                </div>
+                                                <p class="added-date">נוסף בתאריך: @(item.DateAdded.HasValue ? item.DateAdded.Value.ToString("dd/MM/yyyy") : "")</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </a>
+                            </article>
+                        </div>
+                    }
+                </div>
+            }
+        </div>
+    </section>
+</main>
+
+<style>
+    /* Global Styles */
+    body {
+        background: linear-gradient(135deg, #f5f0ff, #e0d1ff);
+        font-family: 'Segoe UI', Arial, sans-serif;
+        color: #2c1810;
+    }
+
+    .container {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 0 20px;
+    }
+
+    /* Hero Section */
+    .hero-section {
+        padding: 40px 0;
+        background: transparent;
+        margin-bottom: 30px;
+        text-align: center;
+    }
+
+    .wishlist-title {
+        color: #2c1810;
+        font-size: 2.8rem;
+        font-weight: 700;
+        margin: 0;
+        position: relative;
+        display: inline-block;
+        padding-bottom: 15px;
+    }
+
+    .wishlist-title::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 120%;
+        height: 4px;
+        background: linear-gradient(to right, transparent, #6a11cb, transparent);
+        border-radius: 2px;
+    }
+
+    /* Empty Wishlist */
+    .empty-wishlist {
+        text-align: center;
+        padding: 40px;
+        background: white;
+        border-radius: 15px;
+        box-shadow: 0 8px 25px rgba(106, 17, 203, 0.1);
+    }
+
+    .empty-wishlist p {
+        font-size: 1.2rem;
+        color: #666;
+        margin-bottom: 20px;
+    }
+
+    .btn-back {
+        display: inline-block;
+        padding: 12px 24px;
+        background: #6a11cb;
+        color: white;
+        text-decoration: none;
+        border-radius: 25px;
+        transition: all 0.3s ease;
+    }
+
+    .btn-back:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(106, 17, 203, 0.2);
+    }
+
+    /* Books Grid */
+    .books-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: 30px;
+        padding: 20px 0;
+    }
+
+    /* Book Card */
+    .book-card {
+        perspective: 1000px;
+    }
+
+    .card {
+        position: relative;
+        background: white;
+        border-radius: 15px;
+        overflow: hidden;
+        transition: transform 0.3s ease-in-out, box-shadow 0.3s ease;
+        box-shadow: 0 8px 25px rgba(106, 17, 203, 0.1);
+        height: 100%;
+    }
+
+    .book-link {
+        text-decoration: none;
+        color: inherit;
+    }
+
+    .card:hover {
+        transform: translateY(-10px) rotateX(5deg);
+        box-shadow: 0 15px 35px rgba(106, 17, 203, 0.2);
+    }
+
+    .card-img-container {
+        height: 300px;
+        background: linear-gradient(135deg, #FAF7F2, #FFF8EE);
+        padding: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .card-img-top {
+        max-width: 100%;
+        max-height: 100%;
+        object-fit: contain;
+        transition: transform 0.3s ease;
+    }
+
+    .card:hover .card-img-top {
+        transform: scale(1.05);
+    }
+
+    .card-body {
+        padding: 20px;
+    }
+
+    .card-title {
+        font-size: 1.2rem;
+        font-weight: 600;
+        margin-bottom: 10px;
+        color: #2c1810;
+    }
+
+    /* Book Details */
+    .book-details {
+        font-size: 0.95rem;
+    }
+
+    .author, .year {
+        margin: 5px 0;
+        color: #666;
+    }
+
+    .price-section {
+        margin-top: 15px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .original-price {
+        color: #ea5b5b;
+        text-decoration: line-through;
+        font-size: 0.9rem;
+    }
+
+    .sale-price {
+        color: #9cd68a;
+        font-weight: bold;
+        font-size: 1.2rem;
+    }
+
+    .regular-price {
+        font-size: 1.2rem;
+        color: #110919;
+        font-weight: bold;
+    }
+
+    .added-date {
+        color: #666;
+        font-size: 0.9rem;
+        margin-top: 5px;
+    }
+
+    /* Wishlist Heart */
+    .wishlist-heart {
+        position: absolute;
+        top: 15px;
+        left: 15px;
+        z-index: 3;
+        cursor: pointer;
+        background: white;
+        border-radius: 50%;
+        width: 35px;
+        height: 35px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        transition: all 0.3s ease;
+    }
+
+    .wishlist-heart.active i {
+        color: #ff4d4d;
+    }
+
+    .wishlist-heart:hover {
+        transform: scale(1.1);
+    }
+
+    .wishlist-heart i {
+        font-size: 1.2rem;
+        color: #ff4d4d;
+        transition: color 0.3s ease;
+    }
+</style>
+
+<script>
+    function confirmRemoveFromWishlist(event, wishlistId) {
+        event.preventDefault();
+        event.stopPropagation();
+
+        // Custom confirmation dialog
+        const confirmDialog = document.createElement('div');
+        confirmDialog.className = 'custom-confirm-dialog';
+        confirmDialog.innerHTML = `
+        <div class="confirm-content">
+            <p>האם אתה בטוח שברצונך להסיר ספר זה מרשימת המשאלות?</p>
+            <div class="confirm-buttons">
+                <button class="confirm-yes">כן, הסר</button>
+                <button class="confirm-no">בטל</button>
+            </div>
+        </div>
+    `;
+
+        // Add styles for the confirmation dialog
+        const styles = `
+    <style>
+    .custom-confirm-dialog {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0,0,0,0.5);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 1000;
+    }
+    .confirm-content {
+        background: white;
+        padding: 30px;
+        border-radius: 15px;
+        text-align: center;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        max-width: 400px;
+        width: 90%;
+    }
+    .confirm-buttons {
+        display: flex;
+        justify-content: center;
+        gap: 15px;
+        margin-top: 20px;
+    }
+    .confirm-buttons button {
+        padding: 10px 20px;
+        border: none;
+        border-radius: 25px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+    .confirm-yes {
+        background: #6a11cb;
+        color: white;
+    }
+    .confirm-no {
+        background: #f8f5ff;
+        color: #6a11cb;
+        border: 1px solid #6a11cb;
+    }
+    .confirm-buttons button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 15px rgba(106, 17, 203, 0.1);
+    }
+    </style>
+    `;
+
+        // Append styles and dialog to body
+        document.body.insertAdjacentHTML('beforeend', styles);
+        document.body.appendChild(confirmDialog);
+
+        // Yes button handler
+        const yesButton = confirmDialog.querySelector('.confirm-yes');
+        yesButton.addEventListener('click', () => {
+            fetch('/Wishlist/Remove', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ wishlistId: wishlistId })
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        location.reload();
+                    } else {
+                        alert(data.message || 'אירעה שגיאה בהסרת הספר');
+                    }
+                    document.body.removeChild(confirmDialog);
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('אירעה שגיאה בהסרת הספר');
+                    document.body.removeChild(confirmDialog);
+                });
+        });
+
+        // No button handler
+        const noButton = confirmDialog.querySelector('.confirm-no');
+        noButton.addEventListener('click', () => {
+            document.body.removeChild(confirmDialog);
+        });
+    }
+</script>

@@ -375,6 +375,6 @@ C:\Users\tairt\source\DigireadProjectgit\DigireadProject\bin\Antlr3.Runtime.pdb
 C:\Users\tairt\source\DigireadProjectgit\DigireadProject\bin\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.xml
 C:\Users\tairt\source\DigireadProjectgit\DigireadProject\obj\Debug\DigireadProject.csproj.AssemblyReference.cache
 C:\Users\tairt\source\DigireadProjectgit\DigireadProject\obj\Debug\DigireadProject.csproj.CoreCompileInputs.cache
-C:\Users\tairt\source\DigireadProjectgit\DigireadProject\obj\Debug\Digiread.D7DC0D9E.Up2Date
 C:\Users\tairt\source\DigireadProjectgit\DigireadProject\obj\Debug\DigireadProject.dll
 C:\Users\tairt\source\DigireadProjectgit\DigireadProject\obj\Debug\DigireadProject.pdb
+C:\Users\tairt\source\DigireadProjectgit\DigireadProject\obj\Debug\Digiread.D7DC0D9E.Up2Date

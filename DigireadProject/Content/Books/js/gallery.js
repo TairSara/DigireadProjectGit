@@ -26,7 +26,7 @@ function filterByGenre(genre) {
     const books = document.querySelectorAll('.book-item');
     const buttons = document.querySelectorAll('.genre-button');
 
-    // עדכון הכפתור הפעיל
+    // עדכון הכפתור הפעילש
     buttons.forEach(button => {
         if (button.textContent === genre || (button.textContent === 'הכל' && genre === 'all')) {
             button.classList.add('active');
@@ -124,3 +124,5 @@ document.addEventListener('DOMContentLoaded', function() {
     // הפעל את המיון
     sortBooks();
 });
+
+

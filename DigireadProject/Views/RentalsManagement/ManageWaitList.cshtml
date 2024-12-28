@@ -1,0 +1,89 @@
+@model IEnumerable<DigireadProject.Models.ViewModels.WaitListManagementViewModel>
+@{
+    ViewBag.Title = "ניהול רשימת המתנה";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<style>
+    body {
+        background-color: #f0e6ff;
+    }
+    .container {
+        background-color: #fff;
+        padding: 30px;
+        border-radius: 10px;
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    }
+    h2 {
+        color: #6a1b9a;
+    }
+    .table {
+        background-color: #fff;
+    }
+    .table thead th {
+        background-color: #9c4dcc;
+        color: #fff;
+        text-align: center;
+        padding: 12px;
+    }
+    .table tbody td {
+        text-align: center;
+        padding: 12px;
+    }
+    .badge-success {
+        background-color: #4caf50;
+    }
+    .badge-warning {
+        background-color: #ff9800;
+    }
+    .btn-danger {
+        background-color: #d83e44;
+        border-color: #d83e44;
+    }
+</style>
+<div class="container mt-4" dir="rtl">
+    <h2 class="text-center mb-4">ניהול רשימת המתנה</h2>
+    
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th style="width: 15%;">שם משתמש</th>
+            <th style="width: 20%;">אימייל</th>
+            <th style="width: 20%;">שם ספר</th>
+            <th style="width: 10%;">מיקום בתור</th>
+            <th style="width: 15%;">תאריך הוספה</th>
+            <th style="width: 10%;">התראה נשלחה</th>
+            <th style="width: 10%;">פעולות</th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.Username</td>
+                <td>@item.Email</td>
+                <td>@item.BookTitle</td>
+                <td>@item.WaitPosition</td>
+                <td>@item.AddedDate.ToString("dd/MM/yyyy")</td>
+                <td>
+                    <span class="badge @(item.EmailNotificationSent ? "badge-success" : "badge-warning")">
+                        @(item.EmailNotificationSent ? "כן" : "לא")
+                    </span>
+                </td>
+                <td>
+                    <button class="btn btn-danger btn-sm" onclick="confirmRemove()">הסר מרשימת המתנה</button>
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
+</div>
+@section scripts {
+    <script>
+        function confirmRemove() {
+            if (confirm("האם אתה בטוח שברצונך להסיר את המשתמש מרשימת ההמתנה?")) {
+                // TODO: Implement the removal logic here
+                alert("המשתמש הוסר בהצלחה מרשימת ההמתנה.");
+            }
+        }
+    </script>
+}

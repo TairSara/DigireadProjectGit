@@ -3,10 +3,172 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<link rel="stylesheet" href="~/Content/Admin/css/admin-dashboard.css">
 <link rel="stylesheet" href="~/Content/Admin/js/admin.js">
 
+<style>
+    /* Admin Dashboard Layout */
+    .dashboard-container {
+        padding: 2rem;
+        max-width: 1200px;
+        margin: 0 auto;
+        background: linear-gradient(135deg, #FAF7F2, #FFF8EE);
+    }
 
+    /* Header Section */
+    .dashboard-header {
+        text-align: center;
+        margin-bottom: 2rem;
+        background: linear-gradient(135deg, #9c27b0, #673ab7);
+        padding: 1.5rem;
+        border-radius: 10px;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
+
+    .welcome-message {
+        color: #ffffff;
+        margin-bottom: 0.5rem;
+        font-size: 1.8rem;
+        font-weight: 600;
+    }
+
+    .last-login {
+        color: rgba(255,255,255,0.9);
+        font-size: 0.9rem;
+    }
+
+    /* Dashboard Cards Grid */
+    .dashboard-cards {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+    }
+
+    /* Card Styling */
+    .dashboard-card {
+        background: white;
+        border-radius: 15px;
+        box-shadow: 0 4px 6px rgba(156,39,176,0.1);
+        transition: all 0.3s ease;
+        text-align: center;
+        padding: 1.8rem;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-decoration: none;
+        color: inherit;
+        position: relative;
+        overflow: hidden;
+        border: 1px solid rgba(156,39,176,0.1);
+    }
+
+    .dashboard-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: linear-gradient(to right, #9c27b0, #673ab7);
+        transform: scaleX(0);
+        transition: transform 0.3s;
+    }
+
+    .dashboard-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 15px rgba(156,39,176,0.2);
+    }
+
+    .dashboard-card:hover::before {
+        transform: scaleX(1);
+    }
+
+    /* Card Icons */
+    .card-icon {
+        font-size: 2.5rem;
+        margin-bottom: 1rem;
+        color: #9c27b0;
+        transition: all 0.3s ease;
+    }
+
+    .dashboard-card:hover .card-icon {
+        transform: scale(1.1);
+        color: #673ab7;
+    }
+
+    /* Card Content */
+    .card-title {
+        font-size: 1.25rem;
+        margin-bottom: 0.5rem;
+        color: #2c3e50;
+        font-weight: 600;
+    }
+
+    .card-description {
+        color: #666;
+        font-size: 0.9rem;
+        margin-bottom: 1rem;
+        line-height: 1.4;
+    }
+
+    /* Statistics Grid */
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1rem;
+        margin-top: 2rem;
+    }
+
+    /* Statistics Cards */
+    .stat-card {
+        background: white;
+        padding: 1.5rem;
+        border-radius: 15px;
+        text-align: center;
+        box-shadow: 0 4px 6px rgba(156,39,176,0.1);
+        border: 1px solid rgba(156,39,176,0.1);
+        transition: all 0.3s ease;
+    }
+
+    .stat-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 6px 12px rgba(156,39,176,0.15);
+    }
+
+    .stat-value {
+        font-size: 2rem;
+        font-weight: bold;
+        background: linear-gradient(135deg, #9c27b0, #673ab7);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        margin-bottom: 0.5rem;
+    }
+
+    .stat-label {
+        color: #666;
+        font-size: 0.9rem;
+        font-weight: 500;
+    }
+
+ 
+
+    .dashboard-cards {
+        grid-template-columns: 1fr;
+    }
+
+    .stats-grid {
+        grid-template-columns: 1fr;
+        gap: 0.75rem;
+    }
+
+    .card-icon {
+        font-size: 2rem;
+    }
+
+    .stat-value {
+        font-size: 1.75rem;
+    }
+</style>
 <div class="dashboard-container" dir="rtl">
     <div class="dashboard-header">
         <h1 class="welcome-message">ברוך הבא, @User.Identity.Name</h1>
@@ -30,12 +192,20 @@
             <div class="stat-label">ספרים במערכת</div>
         </a>
 
-        <a href="@Url.Action("UserRentals", "BookManagement")" class="dashboard-card">
+        <a href="@Url.Action("ManageRentals", "RentalsManagement")" class="dashboard-card">
             <i class="fas fa-exchange-alt card-icon"></i>
             <h2 class="card-title">ניהול השאלות</h2>
             <p class="card-description">ניהול השאלות ספרים, מעקב והחזרות</p>
             <div class="stat-value">@ViewBag.TotalRentals</div>
             <div class="stat-label">השאלות פעילות</div>
+        </a>
+
+        <a href="@Url.Action("ManageWaitList", "RentalsManagement")" class="dashboard-card">
+            <i class="fas fa-exchange-alt card-icon"></i>
+            <h2 class="card-title">ניהול רשימת המתנה</h2>
+            <p class="card-description">ניהול מערכת ההמתנה , מעקב והחזרות</p>
+            <div class="stat-value">@ViewBag.WaitList</div>
+            <div class="stat-label">המתנות פעילות</div>
         </a>
     </div>
 

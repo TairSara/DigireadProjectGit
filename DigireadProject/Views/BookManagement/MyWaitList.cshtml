@@ -7,11 +7,17 @@
 }
 
 <style>
+    body {
+        background-color: #f3e5f5;
+        font-family: 'Arial', sans-serif;
+    }
+
     .wait-list-container {
         display: flex;
         justify-content: center;
         align-items: center;
         flex-direction: column;
+        margin-top: 30px;
     }
 
     .books-grid {
@@ -26,6 +32,9 @@
     .book-card {
         width: 300px;
         margin: 10px;
+        background-color: #fff;
+        border-radius: 10px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     }
 
     .book-image {
@@ -52,7 +61,7 @@
         display: block;
         width: 100%;
         padding: 10px;
-        background-color: #28a745;
+        background-color: #6a1b9a;
         color: white;
         border: none;
         border-radius: 5px;
@@ -62,9 +71,19 @@
     }
 
     .available-button:hover {
-        background-color: #218838;
+        background-color: #4a0e7a;
         color: white;
         text-decoration: none;
+    }
+
+    .btn-danger {
+        background-color: #c82333;
+        border-color: #bd2130;
+    }
+
+    .btn-danger:hover {
+        background-color: #a71d2a;
+        border-color: #971c24;
     }
 </style>
 
@@ -120,7 +139,6 @@
         </div>
     }
 </div>
-
 
 <script>
     function removeFromWaitList(waitListId) {

@@ -1,4 +1,4 @@
-﻿﻿using System;
+﻿using System;
 using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks;
@@ -84,7 +84,7 @@ namespace DigireadProject.Controllers
                 {
                     Debug.WriteLine("User successfully added to database");
                     TempData["SuccessMessage"] = "ההרשמה בוצעה בהצלחה! אנא התחבר למערכת";
-                    return View();
+                    return RedirectToAction("Login", "Account");
                 }
                 else
                 {
@@ -140,16 +140,17 @@ namespace DigireadProject.Controllers
                 }
                 
                 Session["UserID"] = user.UserID;
+                Session["IsAdmin"] = user.IsAdmin;
 
                 FormsAuthentication.SetAuthCookie(user.Username, model.RememberMe);
-                TempData["SuccessMessage"] = "התחברת בהצלחה!";
+                TempData["SuccessMessage"] = $"ברוך הבא {user.Username}! ברוכים הבאים לאתר DigiRead";
 
                 if ((bool)user.IsAdmin)
                 {
                     return RedirectToAction("Dashboard", "Admin");
                 }
 
-                return RedirectToAction("HomePage", "Home",null);
+                return RedirectToAction("HomePage", "Home");
             }
             catch (Exception ex)
             {
@@ -157,10 +158,12 @@ namespace DigireadProject.Controllers
                 return View(model);
             }
         }
+
         public ActionResult Logout()
         {
             FormsAuthentication.SignOut();
-            Session["UserID"] = null; // הוספת ניקוי ה-Session
+            Session["UserID"] = null;
+            Session["IsAdmin"] = null;
             TempData["SuccessMessage"] = "התנתקת בהצלחה!";
             return RedirectToAction("HomePage", "Home");
         }
@@ -182,9 +185,10 @@ namespace DigireadProject.Controllers
             }
             base.Dispose(disposing);
         }
-
+        
         [Authorize]
-        public new async Task<ActionResult> Profile()        {
+        public new async Task<ActionResult> Profile()
+        {
             var username = User.Identity.Name;
             var user = await db.Users.FirstOrDefaultAsync(u => u.Username == username);
 
@@ -214,20 +218,17 @@ namespace DigireadProject.Controllers
 
                 var userId = (int)Session["UserID"];
 
-                // בדיקה אם כבר קיימת ביקורת על האתר מהמשתמש
                 var existingReview = db.Reviews.FirstOrDefault(r => 
                     r.UserID == userId && r.RatingWeb != null);
 
                 if (existingReview != null)
                 {
-                    // עדכון ביקורת קיימת
                     existingReview.RatingWeb = rating;
                     existingReview.ReviewTextWeb = reviewText;
                     existingReview.ReviewDateWeb = DateTime.Now;
                 }
                 else
                 {
-                    // יצירת ביקורת חדשה
                     var review = new Reviews
                     {
                         UserID = userId,
@@ -254,9 +255,8 @@ namespace DigireadProject.Controllers
         [HttpPost]
         [Authorize]
         [ValidateAntiForgeryToken]
-
         public async Task<ActionResult> UpdateProfile(UserProfileViewModel model,
-    string CurrentPassword, string NewPassword, string ConfirmNewPassword)
+            string CurrentPassword, string NewPassword, string ConfirmNewPassword)
         {
             var user = await db.Users.FirstOrDefaultAsync(u => u.Username == User.Identity.Name);
             if (user == null)
@@ -315,6 +315,7 @@ namespace DigireadProject.Controllers
             TempData["SuccessMessage"] = "אם האימייל קיים במערכת, נשלח אליך קישור לאיפוס סיסמה";
             return RedirectToAction("Login");
         }
+
         public ActionResult ForgotPassword()
         {
             return View();

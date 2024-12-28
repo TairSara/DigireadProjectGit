@@ -92,6 +92,125 @@
         }
     </div>
 </div>
+<style>
+    .payment-container {
+        background-color: #f4ecf7;
+        padding: 2rem;
+        border-radius: 10px;
+        max-width: 800px;
+        margin: 2rem auto;
+    }
+
+    .payment-form-wrapper {
+        background-color: white;
+        padding: 2rem;
+        border-radius: 8px;
+        box-shadow: 0 4px 6px rgba(142, 68, 173, 0.1);
+    }
+
+    .payment-header {
+        color: #8e44ad;
+        margin-bottom: 2rem;
+        text-align: center;
+    }
+
+    .payment-header h2 {
+        font-weight: bold;
+    }
+
+    .book-summary {
+        background-color: #f4ecf7;
+        padding: 1.5rem;
+        border-radius: 8px;
+        margin-bottom: 2rem;
+    }
+
+    .book-info {
+        display: flex;
+        gap: 1.5rem;
+        align-items: center;
+    }
+
+    .book-thumbnail {
+        width: 100px;
+        height: 150px;
+        object-fit: cover;
+        border-radius: 4px;
+    }
+
+    .book-details h3 {
+        color: #8e44ad;
+        margin-bottom: 0.5rem;
+    }
+
+    .total-amount {
+        font-size: 1.25rem;
+        color: #8e44ad;
+        font-weight: bold;
+        margin-top: 1rem;
+    }
+
+    .form-group label {
+        color: #8e44ad;
+        font-weight: 600;
+    }
+
+    .form-control {
+        border: 2px solid #d2b4de;
+        border-radius: 6px;
+        padding: 0.75rem;
+        transition: border-color 0.3s ease;
+    }
+
+    .form-control:focus {
+        border-color: #8e44ad;
+        box-shadow: 0 0 0 0.2rem rgba(142, 68, 173, 0.25);
+    }
+
+    .btn-primary {
+        background-color: #8e44ad;
+        border-color: #8e44ad;
+        padding: 0.75rem 1.5rem;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+
+    .btn-primary:hover {
+        background-color: #9b59b6;
+        border-color: #9b59b6;
+        transform: translateY(-1px);
+    }
+
+    .btn-outline-secondary {
+        color: #8e44ad;
+        border-color: #8e44ad;
+    }
+
+    .btn-outline-secondary:hover {
+        background-color: #f4ecf7;
+        color: #8e44ad;
+    }
+
+    .text-danger {
+        color: #e74c3c;
+        font-size: 0.875rem;
+        margin-top: 0.25rem;
+    }
+
+    .form-actions {
+        margin-top: 2rem;
+    }
+
+    .form-actions .btn {
+        margin-bottom: 1rem;
+    }
+
+
+
+    .shake {
+        animation: shake 0.5s ease-in-out;
+    }
+</style>
 
 @section Styles {
     <link href="~/Content/Order/css/Payment.css" rel="stylesheet" />

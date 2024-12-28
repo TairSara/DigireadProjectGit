@@ -11,8 +11,11 @@
         if (bookIdToDelete !== null) {
             $.ajax({
                 type: 'POST',
-                url: window.deleteBookUrl, // Define this in the view or a global script
-                data: { id: bookIdToDelete },
+                url: window.deleteBookUrl,
+                data: {
+                    id: bookIdToDelete,
+                    __RequestVerificationToken: $('input[name="__RequestVerificationToken"]').val()
+                },
                 success: function (response) {
                     if (response.success) {
                         $('#book-' + bookIdToDelete).remove();
@@ -31,24 +34,4 @@
     $('#cancelDeleteBtn').on('click', function () {
         $('#deleteModal').modal('hide');
     });
-});
-
-$.ajax({
-    type: 'POST',
-    url: window.deleteBookUrl,
-    data: {
-        id: bookIdToDelete,
-        __RequestVerificationToken: $('input[name="__RequestVerificationToken"]').val()
-    },
-    success: function (response) {
-        if (response.success) {
-            $('#book-' + bookIdToDelete).remove();
-            $('#deleteModal').modal('hide');
-        } else {
-            alert(response.message);
-        }
-    },
-    error: function () {
-        alert('שגיאה במחיקת הספר');
-    }
 });

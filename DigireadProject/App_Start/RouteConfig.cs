@@ -38,6 +38,17 @@ namespace DigireadProject
                 url: "Order/PaymentForm",
                 defaults: new { controller = "Order", action = "PaymentForm" }
             );
+            routes.MapRoute(
+                name: "ManageRentals",
+                url: "BookManagement/ManageRentals",
+                defaults: new { controller = "BookManagement", action = "ManageRentals" }
+            );
+
+            routes.MapRoute(
+                name: "ManageWaitList", 
+                url: "BookManagement/ManageWaitList",
+                defaults: new { controller = "BookManagement", action = "ManageWaitList" }
+            );
         }
     }
 }

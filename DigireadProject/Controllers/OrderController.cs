@@ -4,6 +4,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 using DigireadProject.Models.ViewModels; 
+using System.Data.Entity;  
+
 
 namespace DigireadProject.Controllers
 {
@@ -33,7 +35,6 @@ namespace DigireadProject.Controllers
         {
             return RedirectToAction("PaymentForm");
         }
-
         [HttpGet]
         public ActionResult PaymentForm()
         {
@@ -47,6 +48,13 @@ namespace DigireadProject.Controllers
 
                 var cartItems = db.ShoppingCart
                     .Where(c => c.UserID == userId)
+                    .Select(c => new
+                    {
+                        Book = c.Books,   
+                        c.Price,
+                        c.Quantity,
+                        c.IsRental
+                    })
                     .ToList();
 
                 if (!cartItems.Any())
@@ -54,12 +62,19 @@ namespace DigireadProject.Controllers
                     return RedirectToAction("Cart", "ShoppingCart");
                 }
 
+                // נניח שאנחנו מטפלים כרגע בפריט הראשון בסל
+                var firstItem = cartItems.First();
                 var totalAmount = cartItems.Sum(x => x.Price * x.Quantity);
-                ViewBag.TotalAmount = totalAmount;
 
-                System.Diagnostics.Debug.WriteLine($"Loading PaymentForm for user {userId} with total amount {totalAmount}");
+                var viewModel = new PaymentViewModel
+                {
+                    BookId = firstItem.Book.BookID,
+                    BookTitle = firstItem.Book.Title,
+                    BookImageSrc = firstItem.Book.ImageSrc,
+                    Price = totalAmount,
+                    IsRental = firstItem.IsRental ?? false                };
 
-                return View(new PaymentViewModel());
+                return View(viewModel);
             }
             catch (Exception ex)
             {
@@ -67,16 +82,22 @@ namespace DigireadProject.Controllers
                 throw;
             }
         }
-
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> ProcessPayment(PaymentViewModel model)
         {
-            if (!ModelState.IsValid)
+            // הוספת בדיקה בהתחלת המתודה
+            if (model == null || model.BookId == 0)
             {
-                ViewBag.TotalAmount = model.Price;
+                ModelState.AddModelError("", "נתוני הספר חסרים");
                 return View("PaymentForm", model);
             }
+
+            if (!ModelState.IsValid)
+            {
+                return View("PaymentForm", model);
+            }
+           
 
             using (var transaction = db.Database.BeginTransaction())
             {
@@ -227,5 +248,6 @@ namespace DigireadProject.Controllers
             }
         }
     }
+    
 }
 

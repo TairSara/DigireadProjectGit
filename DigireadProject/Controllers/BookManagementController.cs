@@ -277,17 +277,24 @@ namespace DigireadProject.Controllers
         public async Task<ActionResult> Gallery()
         {
             var books = await db.Books.ToListAsync();
-
             var genres = books.Select(b => b.Genre).Distinct().ToList();
 
-            var booksInGenre = await db.Books
-                .Where(b => b.Genre == "ז'אנר ספציפי")  
-                .ToListAsync();
+            // בדיקה אם המשתמש מחובר
+            var userWishlist = new List<int>();
+            if (User.Identity.IsAuthenticated)
+            {
+                var userId = GetCurrentUserId();
+                userWishlist = await db.Wishlist
+                    .Where(w => w.UserID == userId)
+                    .Select(w => w.BookID)
+                    .ToListAsync();
+            }
 
             var viewModel = new GalleryViewModel
             {
                 Genres = genres,
-                Books = books
+                Books = books,
+                UserWishlist = userWishlist // נוסיף את זה למודל
             };
 
             return View(viewModel);
@@ -306,11 +313,23 @@ namespace DigireadProject.Controllers
                 .Distinct()
                 .ToListAsync();
 
+            // בדיקה אם המשתמש מחובר
+            var userWishlist = new List<int>();
+            if (User.Identity.IsAuthenticated)
+            {
+                var userId = GetCurrentUserId();
+                userWishlist = await db.Wishlist
+                    .Where(w => w.UserID == userId)
+                    .Select(w => w.BookID)
+                    .ToListAsync();
+            }
+
             var viewModel = new GalleryViewModel
             {
                 Genres = allGenres,
                 Books = books,
-                SelectedGenre = genre
+                SelectedGenre = genre,
+                UserWishlist = userWishlist // נוסיף את זה גם כאן
             };
 
             return View("Gallery", viewModel);
@@ -978,7 +997,116 @@ namespace DigireadProject.Controllers
             }
             System.Diagnostics.Debug.WriteLine("=== סיום בדיקת רשימת המתנה ===");
         }
-        
+        [HttpPost]
+public async Task<ActionResult> ManageRentalAction(int rentalId, string action)
+{
+    if (!await IsUserAdmin())
+    {
+        return Json(new { success = false, message = "אין הרשאת מנהל" });
+    }
+
+    try 
+    {
+        var rental = await db.Rentals.FindAsync(rentalId);
+        if (rental == null)
+        {
+            return Json(new { success = false, message = "ההשאלה לא נמצאה" });
+        }
+
+        switch (action.ToLower())
+        {
+            case "return":
+                rental.ReturnDate = DateTime.Now;
+                var book = await db.Books.FindAsync(rental.BookID);
+                if (book != null)
+                {
+                    book.StockQuantityRent += 1;
+                    await CheckAndUpdateWaitList(book.BookID);
+                }
+                break;
+
+            case "extend":
+                // הוספת זמן להשאלה, למשל עוד 14 יום
+                rental.RentalDate = rental.RentalDate.Value.AddDays(14);
+                break;
+
+            case "cancel":
+                db.Rentals.Remove(rental);
+                break;
+
+            default:
+                return Json(new { success = false, message = "פעולה לא חוקית" });
+        }
+
+        await db.SaveChangesAsync();
+        return Json(new { success = true, message = $"הפעולה {action} בוצעה בהצלחה" });
+    }
+    catch (Exception ex)
+    {
+        return Json(new { success = false, message = $"אירעה שגיאה: {ex.Message}" });
+    }
+}
+
+[HttpPost]
+public async Task<ActionResult> ManageWaitListAction(int waitListId, string action)
+{
+    if (!await IsUserAdmin())
+    {
+        return Json(new { success = false, message = "אין הרשאת מנהל" });
+    }
+
+    try 
+    {
+        var waitListItem = await db.WaitList.FindAsync(waitListId);
+        if (waitListItem == null)
+        {
+            return Json(new { success = false, message = "הפריט ברשימת ההמתנה לא נמצא" });
+        }
+
+        switch (action.ToLower())
+        {
+            case "remove":
+                // הסרת הפריט מרשימת ההמתנה
+                db.WaitList.Remove(waitListItem);
+                await db.SaveChangesAsync();
+
+                // עדכון מיקומים של שאר הפריטים
+                var remainingUsers = await db.WaitList
+                    .Where(w => w.BookID == waitListItem.BookID)
+                    .OrderBy(w => w.WaitPosition)
+                    .ToListAsync();
+
+                for (int i = 0; i < remainingUsers.Count; i++)
+                {
+                    remainingUsers[i].WaitPosition = i + 1;
+                }
+                break;
+
+            case "sendnotification":
+                // שליחת התראה למשתמש
+                if (waitListItem.Users?.Email != null)
+                {
+                    var book = await db.Books.FindAsync(waitListItem.BookID);
+                    await _emailService.SendBookAvailableNotificationAsync(
+                        waitListItem.Users.Email,
+                        book?.Title ?? "ספר"
+                    );
+                    waitListItem.EmailNotificationSent = true;
+                }
+                break;
+
+            default:
+                return Json(new { success = false, message = "פעולה לא חוקית" });
+        }
+
+        await db.SaveChangesAsync();
+        return Json(new { success = true, message = $"הפעולה {action} בוצעה בהצלחה" });
+    }
+    catch (Exception ex)
+    {
+        return Json(new { success = false, message = $"אירעה שגיאה: {ex.Message}" });
+    }
+}
         public async Task RemoveFromWaitListAfterRental(int bookId, int userId)
         {
             try

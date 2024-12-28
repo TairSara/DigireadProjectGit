@@ -21,7 +21,7 @@ namespace DigireadProject
         public Nullable<System.DateTime> AddedDate { get; set; }
         public Nullable<bool> EmailNotificationSent { get; set; }
         public Nullable<bool> IsRental { get; set; }
-
+    
         public virtual Users Users { get; set; }
         public virtual Books Books { get; set; }
     }

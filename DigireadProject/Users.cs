@@ -22,6 +22,7 @@ namespace DigireadProject
             this.Reviews = new HashSet<Reviews>();
             this.ShoppingCart = new HashSet<ShoppingCart>();
             this.WaitList = new HashSet<WaitList>();
+            this.Wishlist = new HashSet<Wishlist>();
         }
     
         public int UserID { get; set; }
@@ -43,5 +44,7 @@ namespace DigireadProject
         public virtual ICollection<ShoppingCart> ShoppingCart { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<WaitList> WaitList { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Wishlist> Wishlist { get; set; }
     }
 }

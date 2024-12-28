@@ -22,11 +22,13 @@
             <div class="actions">
                 @if (User.Identity.IsAuthenticated)
                 {
+                    <button onclick="bookManager.showDirectPurchaseOptions()" class="btn btn-primary direct-purchase-btn">
+                        <i class="fas fa-bolt"></i>
+                        רכישה מיידית
+                    </button>
+
                     <button onclick="bookManager.showPurchaseOptions()" class="btn btn-add-to-cart">
                         <i class="fas fa-shopping-cart"></i> הוסף לסל
-                    </button>
-                    <button type="button" onclick="bookManager.quickPurchase(@Model.BookID, false)" class="btn btn-quick-purchase">
-                        <i class="fas fa-bolt"></i> קנייה מהירה
                     </button>
                 }
                 else
@@ -42,7 +44,40 @@
             <img src="@Model.ImageSrc" alt="תמונה של @Model.Title" class="book-image rounded-image" data-lightbox="book-image" />
         </div>
     </div>
+    <!-- Direct Purchase Dialog -->
+    <div id="directPurchaseDialog" class="modal">
+        <div class="modal-content">
+            <h3>בחר אפשרות רכישה מיידית</h3>
+            <div class="purchase-options">
+                <!-- אפשרות רכישה -->
+                @if (Model.StockQuantity > 0)
+                {
+                    <a href="@Url.Action("DirectPurchase", "Order", new { bookId = Model.BookID, isRental = false })"
+                       class="btn btn-primary purchase-btn direct-action-btn">
+                        <i class="fas fa-shopping-cart"></i>
+                        רכישה מיידית - ₪@Model.PurchasePrice
+                    </a>
+                }
+                else
+                {
+                    <div class="availability-status not-available">
+                        <text>הספר אינו זמין לרכישה - אין במלאי</text>
+                    </div>
+                }
 
+                <!-- אפשרות השכרה -->
+                @if (Model.IsForRent == true && Model.StockQuantityRent > 0)
+                {
+                    <a href="@Url.Action("DirectPurchase", "Order", new { bookId = Model.BookID, isRental = true })"
+                       class="btn btn-secondary rental-btn direct-action-btn">
+                        <i class="fas fa-clock"></i>
+                        השכרה מיידית - ₪@Model.RentalPrice
+                    </a>
+                }
+            </div>
+            <button onclick="bookManager.closeDirectPurchaseDialog()" class="btn btn-secondary">ביטול</button>
+        </div>
+    </div>
     <div class="reviews-section">
         <h3 class="reviews-title">דירוגים וביקורות</h3>
 
@@ -158,6 +193,7 @@
         <button onclick="bookManager.closeErrorModal()" class="btn btn-secondary">סגור</button>
     </div>
 </div>
+
 <style>
     .book-details {
         padding: 20px;
@@ -232,6 +268,7 @@
 
     .actions {
         display: flex;
+        flex-wrap: wrap;
         gap: 15px;
         margin-top: auto;
     }
@@ -250,6 +287,30 @@
 
     .btn i {
         margin-left: 8px;
+    }
+
+    .direct-purchase-btn {
+        background-color: #6c3dab;
+        color: white;
+        border: none;
+        margin-left: 10px;
+    }
+
+    .direct-purchase-btn:hover {
+        background-color: #58349d;
+        transform: translateY(-2px);
+    }
+
+    .direct-rental-btn {
+        background-color: #9370db;
+        color: white;
+        border: none;
+        margin-left: 10px;
+    }
+
+    .direct-rental-btn:hover {
+        background-color: #8258cb;
+        transform: translateY(-2px);
     }
 
     .btn-add-to-cart {
@@ -307,7 +368,21 @@
     .average-rating {
         text-align: center;
     }
+    .direct-action-btn {
+        width: 100%;
+        margin-bottom: 10px;
+        justify-content: center;
+        padding: 15px;
+        font-size: 1.1em;
+    }
 
+    #directPurchaseDialog .modal-content {
+        max-width: 400px;
+    }
+
+    #directPurchaseDialog .purchase-options {
+        flex-direction: column;
+    }
     .big-rating {
         font-size: 3rem;
         font-weight: bold;
@@ -364,6 +439,7 @@
         font-size: 0.8rem;
         color: #666;
     }
+
     .modal {
         display: none;
         position: fixed;
@@ -374,27 +450,46 @@
         height: 100%;
         background-color: rgba(0,0,0,0.5);
     }
+
     .purchase-options {
         display: flex;
-        justify-content: space-between;  /* או space-around לרווח שווה */
-        gap: 15px;  /* מרווח בין הכפתורים */
+        justify-content: space-between;
+        gap: 15px;
         margin-bottom: 20px;
     }
 
     .purchase-options form {
-        flex: 1;  /* כל טופס תופס מרחב שווה */
+        flex: 1;
     }
 
     .purchase-options button {
         width: 100%;
         padding: 12px;
         margin: 0;
-        white-space: nowrap;  /* מונע שבירת שורות בטקסט */
+        white-space: nowrap;
     }
 
-    /* אם צריך להתאים את גודל הכפתורים */
     .purchase-btn, .rental-btn {
-        min-width: 150px;  /* או כל גודל אחר שתרצי */
+        min-width: 150px;
+    }
+    .rental-btn.direct-action-btn {
+        background-color: #9370db;
+        color: white;
+        border: none;
+        margin-bottom: 15px;
+        width: 100%;
+        text-align: center;
+        font-size: 1.1em;
+        padding: 15px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        transition: all 0.3s ease;
+    }
+
+    .rental-btn.direct-action-btn:hover {
+        background-color: #8258cb;
+        transform: translateY(-2px);
     }
     .modal-content {
         background-color: #fefefe;
@@ -408,6 +503,7 @@
         text-align: right;
         direction: rtl;
     }
+
     .review-comment {
         color: #4a5568;
         line-height: 1.6;
@@ -420,6 +516,7 @@
         font-style: italic;
     }
 </style>
+
 @section Styles {
     <link href="~/Content/Books/css/book-details.css" rel="stylesheet" />
     <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
@@ -430,25 +527,64 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.3/js/lightbox.min.js"></script>
     <script>
-        // Initialize empty bookManager object first
         window.bookManager = {
-            showPurchaseOptions: function() { console.log('Not initialized yet'); },
-            closePurchaseDialog: function() { console.log('Not initialized yet'); },
-            showNoStockMessage: function() { console.log('Not initialized yet'); },
-            closeErrorModal: function() { console.log('Not initialized yet'); },
-            quickPurchase: function() { console.log('Not initialized yet'); }
+            // הפונקציות הקיימות נשארות
+            showPurchaseOptions: function () {
+                const modal = document.getElementById('purchaseDialog');
+                modal.style.display = 'block';
+            },
+
+            closePurchaseDialog: function () {
+                const modal = document.getElementById('purchaseDialog');
+                modal.style.display = 'none';
+            },
+
+            // פונקציות חדשות לרכישה מיידית
+            showDirectPurchaseOptions: function () {
+                const modal = document.getElementById('directPurchaseDialog');
+                modal.style.display = 'block';
+            },
+
+            closeDirectPurchaseDialog: function () {
+                const modal = document.getElementById('directPurchaseDialog');
+                modal.style.display = 'none';
+            },
+
+            handleDirectPurchase: function(bookId, isRental) {
+                Swal.fire({
+                    title: isRental ? 'מעבר להשכרה מיידית' : 'מעבר לרכישה מיידית',
+                    text: 'האם אתה בטוח שברצונך להמשיך?',
+                    icon: 'question',
+                    showCancelButton: true,
+                    confirmButtonColor: '#6c3dab',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'כן, המשך',
+                    cancelButtonText: 'ביטול',
+                    reverseButtons: true
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        window.location.href = `/Order/DirectPurchase?bookId=${bookId}&isRental=${isRental}`;
+                    }
+                });
+            }
         };
 
-        // Wait for the document to be fully loaded
-        document.addEventListener('DOMContentLoaded', function() {
-            // Ensure the book image has the correct Lightbox attributes
-            var bookImage = document.querySelector('.book-image');
-            if (bookImage) {
-                bookImage.setAttribute('data-lightbox', 'book-image');
-                bookImage.setAttribute('href', bookImage.src);
-            }
 
-            // Configure Lightbox options
+        // סגירת המודל כאשר לוחצים מחוץ לתוכן שלו
+        window.onclick = function (event) {
+            const purchaseDialog = document.getElementById('purchaseDialog');
+            const errorModal = document.getElementById('errorModal');
+            if (event.target === purchaseDialog) {
+                bookManager.closePurchaseDialog();
+            }
+            if (event.target === errorModal) {
+                bookManager.closeErrorModal();
+            }
+        };
+
+        // הוספת מאזיני אירועים לכפתורי הרכישה המיידית
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize Lightbox
             lightbox.option({
                 'resizeDuration': 200,
                 'wrapAround': true,
@@ -456,7 +592,33 @@
                 'maxHeight': 800,
                 'albumLabel': 'תמונה %1 מתוך %2'
             });
+
+            // Event listeners for direct purchase buttons
+            const directPurchaseBtn = document.querySelector('.direct-purchase-btn');
+            const directRentalBtn = document.querySelector('.direct-rental-btn');
+
+            if (directPurchaseBtn) {
+                directPurchaseBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const bookId = this.href.split('bookId=')[1].split('&')[0];
+                    bookManager.handleDirectPurchase(bookId, false);
+                });
+            }
+
+            if (directRentalBtn) {
+                directRentalBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const bookId = this.href.split('bookId=')[1].split('&')[0];
+                    bookManager.handleDirectPurchase(bookId, true);
+                });
+            }
+
+            // הגדרת Lightbox לתמונת הספר
+            const bookImage = document.querySelector('.book-image');
+            if (bookImage) {
+                bookImage.setAttribute('data-lightbox', 'book-image');
+                bookImage.setAttribute('href', bookImage.src);
+            }
         });
     </script>
-    <script src="~/Content/Books/js/book-details.js"></script>
 }

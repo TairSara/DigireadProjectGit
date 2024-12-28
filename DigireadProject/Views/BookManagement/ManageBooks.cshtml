@@ -1,140 +1,309 @@
 ﻿@model IEnumerable<DigireadProject.Models.ViewModels.BookViewModel>
-@{ ViewBag.Title = "ניהול ספרייה"; Layout = "~/Views/Shared/_Layout.cshtml"; }
+@{
+    ViewBag.Title = "ניהול ספרייה";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
 @Html.AntiForgeryToken()
 <link rel="stylesheet" href="~/Content/Books/css/library-management.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
-<div class="container mt-4" dir="rtl">
-    <h2 class="text-center mb-4">ניהול ספרייה</h2>
-    <div class="text-center mb-4">
-        <a href="@Url.Action("AddBook", "BookManagement")" class="btn btn-primary">
-            הוסף ספר
-        </a>
-    </div>
-    <div class="table-responsive">
-        <table class="table table-striped">
-            <thead>
-            <tr>
-                <th>תמונה</th>
-                <th>שם הספר</th>
-                <th>מחבר</th>
-                <th>מו"ל</th>
-                <th>שנת הוצאה</th>
-                <th>ז'אנר</th>
-                <th>הגבלת גיל</th>
-                <th>סטטוס</th>
-                <th>פורמטים</th>
-                <th>מחיר</th>
-                <th>תקציר</th>
-                <th>פעולות</th>
-            </tr>
-            </thead>
-            <tbody>
-            @foreach (var book in Model)
-            {
-                <tr id="book-@book.BookID">
-                    <td>
-                        @if (!string.IsNullOrEmpty(book.ImageSrc))
-                        {
-                            <img src="@book.ImageSrc" alt="@book.Title" class="img-thumbnail" style="max-width: 40px;" />
-                        }
-                    </td>
+<style>
+    body {
+        background-color: #f0e6ff;
+        font-family: 'Arial', sans-serif;
+    }
 
-                    <td class="title-display">@book.Title</td>
-                    <td class="author-display">@book.MainAuthor</td>
-                    <td>@book.Publisher</td>
-                    <td>@book.PublishYear</td>
-                    <td>@book.Genre</td>
-                    <td>
-                        @(book.AgeRestriction.HasValue ? book.AgeRestriction.Value.ToString() : "-")
-                    </td>
-                    <td>
-                        <button class="btn @(book.IsAvailable == true ? "btn-success" : "btn-danger") btn-sm">
-                            @(book.IsAvailable == true ? "זמין" : "לא זמין")
-                        </button>
-                        @if (book.IsRented == true)
-                        {
-                            <span class="badge bg-warning ms-1">מושכר</span>
-                        }
-                    </td>
-                    <td>
-                        @if (book.IsEPUBAvailable == true)
-                        {
-                            <span class="badge bg-primary me-1">EPUB</span>
-                        }
-                        @if (book.IsF2BAvailable == true)
-                        {
-                            <span class="badge bg-info me-1">F2B</span>
-                        }
-                        @if (book.IsMobiAvailable == true)
-                        {
-                            <span class="badge bg-success me-1">Mobi</span>
-                        }
-                        @if (book.IsPDFAvailable == true)
-                        {
-                            <span class="badge bg-danger me-1">PDF</span>
-                        }
-                    </td>
+    .container {
+        background-color: #fff;
+        padding: 30px;
+        border-radius: 10px;
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        margin-top: 30px;
+    }
 
-                    <td>
-                        @if (book.DiscountEndDate.HasValue && book.DiscountEndDate.Value >= DateTime.Today)
-                        {
-                            <span class="text-danger">
-                                <s>@book.OriginalPrice ₪</s>
-                            </span>
-                            <span class="ms-1">@book.PurchasePrice ₪</span>
-                        }
-                        else
-                        {
-                            @(book.PurchasePrice.HasValue ? book.PurchasePrice.Value.ToString("N2") + " ₪" : "-")
-                        }
-                        <br />
-                        @if (book.IsForRent == true)
-                        {
-                            <span class="text-muted">השכרה: @book.RentalPrice ₪</span>
-                        }
-                    </td>
+    h2 {
+        color: #6a1b9a;
+        font-weight: bold;
+        margin-bottom: 15px; /* הפחתת המרווח מתחת לכותרת */
+    }
 
-                    <td>@book.Description</td>
+    .table {
+        background-color: #fff;
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
 
-                    <td>
-                        <div class="btn-group">
-                            <a href="@Url.Action("EditBook", "BookManagement", new { id = book.BookID })" class="btn btn-primary btn-sm me-1">
-                                <i class="fas fa-edit"></i>
-                            </a>
-                            <button class="btn btn-danger btn-sm" onclick="confirmDelete(@book.BookID)">
-                                <i class="fas fa-trash"></i>
-                            </button>
-                        </div>
-                    </td>
+    .table thead th {
+        background-color: #9c4dcc;
+        color: #fff;
+        text-align: center;
+        padding: 12px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+    .table thead th:hover {
+        background-color: #7b1fa2;
+    }
+
+    .table tbody td {
+        text-align: center;
+        padding: 12px;
+        vertical-align: middle;
+    }
+
+    .sort-icon {
+        margin-right: 5px;
+        opacity: 0.7;
+    }
+
+    /* Button Styles */
+    .btn-add-book {
+        background-color: #6a1b9a;
+        color: white;
+        border: none;
+        transition: all 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        padding: 10px 20px;
+        border-radius: 8px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        font-weight: bold;
+    }
+
+    .btn-add-book:hover {
+        background-color: #4a0e7a;
+        transform: translateY(-2px);
+        box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+    }
+
+    .btn-add-book i {
+        margin-left: 8px;
+    }
+
+    /* Dropdown Styles */
+    .dropdown-menu {
+        background-color: #f3e5f5;
+        border: none;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .dropdown-item {
+        color: #6a1b9a;
+        transition: background-color 0.3s ease;
+    }
+
+    .dropdown-item:hover {
+        background-color: #e1bee7;
+        color: #4a0e7a;
+    }
+
+
+    .btn-sm {
+        padding: 0.25rem 0.5rem;
+        font-size: 0.75rem;
+    }
+</style>
+
+<section>
+    <div class="container" dir="rtl">
+        <h2 class="text-center mb-4">ניהול ספרייה</h2>
+
+        <div class="d-flex justify-content-between mb-4">
+            <a href="@Url.Action("AddBook", "BookManagement")" class="btn btn-add-book">
+                <i class="fas fa-plus"></i>
+                הוסף ספר חדש
+            </a>
+
+            <br/>
+        </div>
+
+        <div class="table-responsive">
+            <table id="booksTable" class="table table-striped">
+                <thead>
+                <tr>
+                    <th style="width: 5%;">תמונה</th>
+                    <th style="width: 10%;" data-sort="title">
+                        שם הספר
+                        <i class="fas fa-sort sort-icon"></i>
+                    </th>
+                    <th style="width: 10%;" data-sort="author">מחבר</th>
+                    <th style="width: 8%;">מו"ל</th>
+                    <th style="width: 6%;" data-sort="year">שנת הוצאה</th>
+                    <th style="width: 8%;">ז'אנר</th>
+                    <th style="width: 6%;">הגבלת גיל</th>
+                    <th style="width: 8%;" data-sort="availability">
+                        סטטוס
+                        <i class="fas fa-sort sort-icon"></i>
+                    </th>
+                    <th style="width: 8%;">פורמטים</th>
+                    <th style="width: 10%;">מחיר</th>
+                    <th style="width: 15%;">תקציר</th>
+                    <th style="width: 6%;">פעולות</th>
                 </tr>
-            }
-            </tbody>
-        </table>
-    </div>
-</div>
+                </thead>
+                <tbody>
+                @foreach (var book in Model)
+                {
+                    <tr id="book-@book.BookID"
+                        data-availability="@(book.IsAvailable == true ? "available" : "unavailable")">
+                        <td>
+                            @if (!string.IsNullOrEmpty(book.ImageSrc))
+                            {
+                                <img src="@book.ImageSrc" alt="@book.Title" class="img-thumbnail" style="max-width: 40px;" />
+                            }
+                        </td>
 
-<!-- Delete Confirmation Modal -->
-<div class="modal fade" id="deleteModal" tabindex="-1">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">אישור מחיקה</h5>
-                <button type="button" class="btn-close ms-0 me-auto" data-bs-dismiss="modal"></button>
-            </div>
-            <div class="modal-body">
-                האם אתה בטוח שברצונך למחוק ספר זה?
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" id="cancelDeleteBtn" data-bs-dismiss="modal">ביטול</button>
-                <button type="button" class="btn btn-danger" id="confirmDeleteBtn">מחק</button>
-            </div>
+                        <td class="title-display">@book.Title</td>
+                        <td class="author-display">@book.MainAuthor</td>
+                        <td>@book.Publisher</td>
+                        <td>@book.PublishYear</td>
+                        <td>@book.Genre</td>
+                        <td>
+                            @(book.AgeRestriction.HasValue ? book.AgeRestriction.Value.ToString() : "-")
+                        </td>
+                        <td>
+                            <button class="btn @(book.IsAvailable == true ? "btn-success" : "btn-danger") btn-sm">
+                                @(book.IsAvailable == true ? "זמין" : "לא זמין")
+                            </button>
+                            @if (book.IsRented == true)
+                            {
+                                <span class="badge bg-warning ms-1">מושכר</span>
+                            }
+                        </td>
+                        <td>
+                            @if (book.IsEPUBAvailable == true)
+                            {
+                                <span class="badge bg-primary me-1">EPUB</span>
+                            }
+                            @if (book.IsF2BAvailable == true)
+                            {
+                                <span class="badge bg-info me-1">F2B</span>
+                            }
+                            @if (book.IsMobiAvailable == true)
+                            {
+                                <span class="badge bg-success me-1">Mobi</span>
+                            }
+                            @if (book.IsPDFAvailable == true)
+                            {
+                                <span class="badge bg-danger me-1">PDF</span>
+                            }
+                        </td>
+
+                        <td>
+                            @if (book.DiscountEndDate.HasValue && book.DiscountEndDate.Value >= DateTime.Today)
+                            {
+                                <span class="text-danger">
+                                        <s>@book.OriginalPrice ₪</s>
+                                    </span>
+                                <span class="ms-1">@book.PurchasePrice ₪</span>
+                            }
+                            else
+                            {
+                                @(book.PurchasePrice.HasValue ? book.PurchasePrice.Value.ToString("N2") + " ₪" : "-")
+                            }
+                            <br />
+                            @if (book.IsForRent == true)
+                            {
+                                <span class="text-muted">השכרה: @book.RentalPrice ₪</span>
+                            }
+                        </td>
+
+                        <td>@book.Description</td>
+
+                        <td>
+                            <div class="btn-group">
+                                <a href="@Url.Action("EditBook", "BookManagement", new { id = book.BookID })" class="btn btn-primary btn-sm me-1">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                }
+                </tbody>
+            </table>
         </div>
     </div>
-</div>
+</section>
 
-@section scripts {
+@section Scripts {
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        window.deleteBookUrl = '@Url.Action("DeleteBook", "BookManagement")';
+        $(document).ready(function () {
+            // Sorting functionality
+            $('#booksTable thead th[data-sort]').click(function () {
+                var table = $('#booksTable');
+                var rows = table.find('tbody > tr').toArray();
+                var sortColumn = $(this).data('sort');
+                var sortDirection = $(this).data('sort-dir') === 'asc' ? 'desc' : 'asc';
+
+                // Remove existing sort icons
+                table.find('.sort-icon').removeClass('fa-sort-up fa-sort-down');
+
+                // Add sort direction icon
+                var sortIcon = $(this).find('.sort-icon');
+                sortIcon.toggleClass('fa-sort-up', sortDirection === 'asc');
+                sortIcon.toggleClass('fa-sort-down', sortDirection === 'desc');
+
+                rows.sort(function (a, b) {
+                    var aValue, bValue;
+                    switch (sortColumn) {
+                        case 'title':
+                            aValue = $(a).find('.title-display').text().trim();
+                            bValue = $(b).find('.title-display').text().trim();
+                            return sortDirection === 'asc'
+                                ? aValue.localeCompare(bValue, 'he')
+                                : bValue.localeCompare(aValue, 'he');
+                        case 'author':
+                            aValue = $(a).find('.author-display').text().trim();
+                            bValue = $(b).find('.author-display').text().trim();
+                            return sortDirection === 'asc'
+                                ? aValue.localeCompare(bValue, 'he')
+                                : bValue.localeCompare(aValue, 'he');
+                        case 'year':
+                            aValue = parseInt($(a).find('td:nth-child(5)').text()) || 0;
+                            bValue = parseInt($(b).find('td:nth-child(5)').text()) || 0;
+                            return sortDirection === 'asc' ? aValue - bValue : bValue - aValue;
+                        case 'availability':
+                            aValue = $(a).data('availability');
+                            bValue = $(b).data('availability');
+                            return sortDirection === 'asc'
+                                ? (aValue > bValue ? 1 : -1)
+                                : (aValue < bValue ? 1 : -1);
+                    }
+                });
+
+                // Reattach sorted rows
+                table.find('tbody').empty().append(rows);
+
+                // Store sort direction
+                $(this).data('sort-dir', sortDirection);
+            });
+
+            // Filtering functionality
+            $('.dropdown-item[data-filter]').click(function (e) {
+                e.preventDefault();
+                var filterValue = $(this).data('filter');
+                var $rows = $('#booksTable tbody tr');
+                var $dropdownButton = $('#filterDropdown');
+
+                // Reset display of all rows
+                $rows.hide();
+
+                // Show rows based on filter
+                if (filterValue === 'all') {
+                    $rows.show();
+                } else {
+                    $rows.filter(`[data-availability="${filterValue}"]`).show();
+                }
+
+                // Update dropdown button text
+                var buttonText = $(this).text();
+                $dropdownButton.html(buttonText + ' <span class="caret"></span>');
+            });
+        });
     </script>
-    <script src="~/Content/Books/js/library-management.js"></script>
 }

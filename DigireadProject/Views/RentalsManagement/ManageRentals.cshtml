@@ -1,0 +1,86 @@
+@model IEnumerable<DigireadProject.Models.ViewModels.RentalManagementViewModel>
+
+@{
+    ViewBag.Title = "ניהול השאלות";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    body {
+        background-color: #f0e6ff;
+    }
+
+    .container {
+        background-color: #fff;
+        padding: 30px;
+        border-radius: 10px;
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    h2 {
+        color: #6a1b9a;
+    }
+
+    .table {
+        background-color: #fff;
+    }
+
+    .table thead th {
+        background-color: #9c4dcc;
+        color: #fff;
+        text-align: center;
+        padding: 12px;
+    }
+
+    .table tbody td {
+        text-align: center;
+        padding: 12px;
+    }
+
+    .badge-success {
+        background-color: #4caf50;
+    }
+
+    .badge-danger {
+        background-color: #f44336;
+    }
+
+    .badge-secondary {
+        background-color: #6c757d;
+    }
+</style>
+
+<div class="container mt-4" dir="rtl">
+    <h2 class="text-center mb-4">ניהול השאלות</h2>
+
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th style="width: 15%;">שם משתמש</th>
+            <th style="width: 20%;">שם ספר</th>
+            <th style="width: 15%;">תאריך השאלה</th>
+            <th style="width: 15%;">מועד החזרה</th>
+            <th style="width: 10%;">ימים שנותרו</th>
+            <th style="width: 15%;">סטטוס</th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var rental in Model)
+        {
+            <tr>
+                <td>@rental.Username</td>
+                <td>@rental.BookTitle</td>
+                <td>@rental.RentalDate.ToString("dd/MM/yyyy")</td>
+                <td>@rental.ReturnDeadline.ToString("dd/MM/yyyy")</td>
+                <td>@rental.RemainingDays</td>
+                <td>
+                    <span class="badge @(rental.Status == "פעיל" ? "badge-success" :
+                                       rental.Status == "פג תוקף" ? "badge-danger" : "badge-secondary")">
+                        @rental.Status
+                    </span>
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
+</div>

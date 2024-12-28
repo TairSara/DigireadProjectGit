@@ -34,5 +34,6 @@ namespace DigireadProject
         public virtual DbSet<WaitList> WaitList { get; set; }
         public virtual DbSet<database_firewall_rules> database_firewall_rules { get; set; }
         public virtual DbSet<Books> Books { get; set; }
+        public virtual DbSet<Wishlist> Wishlist { get; set; }
     }
 }

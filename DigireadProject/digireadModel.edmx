@@ -74,10 +74,10 @@
           <Property Name="BookID" Type="int" />
           <Property Name="UserID" Type="int" />
           <Property Name="RatingBook" Type="int" />
-          <Property Name="ReviewTextBook" Type="nvarchar" MaxLength="1000" />
+          <Property Name="ReviewTextBook" Type="nvarchar(max)" />
           <Property Name="ReviewDateBook" Type="datetime" />
           <Property Name="RatingWeb" Type="int" />
-          <Property Name="ReviewTextWeb" Type="nvarchar" MaxLength="1000" />
+          <Property Name="ReviewTextWeb" Type="nvarchar(max)" />
           <Property Name="ReviewDateWeb" Type="datetime" />
         </EntityType>
         <EntityType Name="ShoppingCart">
@@ -117,6 +117,16 @@
           <Property Name="WaitPosition" Type="int" />
           <Property Name="AddedDate" Type="datetime" />
           <Property Name="EmailNotificationSent" Type="bit" />
+          <Property Name="IsRental" Type="bit" />
+        </EntityType>
+        <EntityType Name="Wishlist">
+          <Key>
+            <PropertyRef Name="WishlistID" />
+          </Key>
+          <Property Name="WishlistID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="UserID" Type="int" Nullable="false" />
+          <Property Name="BookID" Type="int" Nullable="false" />
+          <Property Name="DateAdded" Type="datetime" />
         </EntityType>
         <!--Errors Found During Generation:
 warning 6002: The table/view 'libraryProject_digiread.sys.database_firewall_rules' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
@@ -184,7 +194,7 @@ warning 6002: The table/view 'libraryProject_digiread.sys.database_firewall_rule
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__Reviews__BookID__02FC7413">
+        <Association Name="FK__Reviews__BookID__1EA48E88">
           <End Role="Books" Type="Self.Books" Multiplicity="0..1" />
           <End Role="Reviews" Type="Self.Reviews" Multiplicity="*" />
           <ReferentialConstraint>
@@ -196,7 +206,7 @@ warning 6002: The table/view 'libraryProject_digiread.sys.database_firewall_rule
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__Reviews__UserID__03F0984C">
+        <Association Name="FK__Reviews__UserID__1DB06A4F">
           <End Role="Users" Type="Self.Users" Multiplicity="0..1" />
           <End Role="Reviews" Type="Self.Reviews" Multiplicity="*" />
           <ReferentialConstraint>
@@ -256,6 +266,30 @@ warning 6002: The table/view 'libraryProject_digiread.sys.database_firewall_rule
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK__Wishlist__BookID__282DF8C2">
+          <End Role="Books" Type="Self.Books" Multiplicity="1" />
+          <End Role="Wishlist" Type="Self.Wishlist" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Books">
+              <PropertyRef Name="BookID" />
+            </Principal>
+            <Dependent Role="Wishlist">
+              <PropertyRef Name="BookID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Wishlist__UserID__2739D489">
+          <End Role="Users" Type="Self.Users" Multiplicity="1" />
+          <End Role="Wishlist" Type="Self.Wishlist" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="UserID" />
+            </Principal>
+            <Dependent Role="Wishlist">
+              <PropertyRef Name="UserID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <EntityContainer Name="libraryProject_digireadModelStoreContainer">
           <EntitySet Name="Books" EntityType="Self.Books" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="PasswordResetTokens" EntityType="Self.PasswordResetTokens" Schema="dbo" store:Type="Tables" />
@@ -265,6 +299,7 @@ warning 6002: The table/view 'libraryProject_digiread.sys.database_firewall_rule
           <EntitySet Name="ShoppingCart" EntityType="Self.ShoppingCart" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Users" EntityType="Self.Users" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="WaitList" EntityType="Self.WaitList" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Wishlist" EntityType="Self.Wishlist" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="database_firewall_rules" EntityType="Self.database_firewall_rules" store:Type="Views" store:Schema="sys">
             <DefiningQuery>SELECT 
     [database_firewall_rules].[id] AS [id], 
@@ -291,11 +326,11 @@ warning 6002: The table/view 'libraryProject_digiread.sys.database_firewall_rule
             <End Role="Users" EntitySet="Users" />
             <End Role="Rentals" EntitySet="Rentals" />
           </AssociationSet>
-          <AssociationSet Name="FK__Reviews__BookID__02FC7413" Association="Self.FK__Reviews__BookID__02FC7413">
+          <AssociationSet Name="FK__Reviews__BookID__1EA48E88" Association="Self.FK__Reviews__BookID__1EA48E88">
             <End Role="Books" EntitySet="Books" />
             <End Role="Reviews" EntitySet="Reviews" />
           </AssociationSet>
-          <AssociationSet Name="FK__Reviews__UserID__03F0984C" Association="Self.FK__Reviews__UserID__03F0984C">
+          <AssociationSet Name="FK__Reviews__UserID__1DB06A4F" Association="Self.FK__Reviews__UserID__1DB06A4F">
             <End Role="Users" EntitySet="Users" />
             <End Role="Reviews" EntitySet="Reviews" />
           </AssociationSet>
@@ -314,6 +349,14 @@ warning 6002: The table/view 'libraryProject_digiread.sys.database_firewall_rule
           <AssociationSet Name="FK__WaitList__UserID__07C12930" Association="Self.FK__WaitList__UserID__07C12930">
             <End Role="Users" EntitySet="Users" />
             <End Role="WaitList" EntitySet="WaitList" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Wishlist__BookID__282DF8C2" Association="Self.FK__Wishlist__BookID__282DF8C2">
+            <End Role="Books" EntitySet="Books" />
+            <End Role="Wishlist" EntitySet="Wishlist" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Wishlist__UserID__2739D489" Association="Self.FK__Wishlist__UserID__2739D489">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="Wishlist" EntitySet="Wishlist" />
           </AssociationSet>
         </EntityContainer>
       </Schema></edmx:StorageModels>
@@ -365,10 +408,10 @@ warning 6002: The table/view 'libraryProject_digiread.sys.database_firewall_rule
           <Property Name="BookID" Type="Int32" />
           <Property Name="UserID" Type="Int32" />
           <Property Name="RatingBook" Type="Int32" />
-          <Property Name="ReviewTextBook" Type="String" MaxLength="1000" FixedLength="false" Unicode="true" />
+          <Property Name="ReviewTextBook" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="ReviewDateBook" Type="DateTime" Precision="3" />
           <Property Name="RatingWeb" Type="Int32" />
-          <Property Name="ReviewTextWeb" Type="String" MaxLength="1000" FixedLength="false" Unicode="true" />
+          <Property Name="ReviewTextWeb" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="ReviewDateWeb" Type="DateTime" Precision="3" />
           <NavigationProperty Name="Users" Relationship="Self.FK__Reviews__UserID__03F0984C" FromRole="Reviews" ToRole="Users" />
           <NavigationProperty Name="Books" Relationship="libraryProject_digireadModel.FK__Reviews__BookID__02FC7413" FromRole="Reviews" ToRole="Books" />
@@ -406,6 +449,7 @@ warning 6002: The table/view 'libraryProject_digiread.sys.database_firewall_rule
           <NavigationProperty Name="Reviews" Relationship="Self.FK__Reviews__UserID__03F0984C" FromRole="Users" ToRole="Reviews" />
           <NavigationProperty Name="ShoppingCart" Relationship="Self.FK__ShoppingC__UserI__04E4BC85" FromRole="Users" ToRole="ShoppingCart" />
           <NavigationProperty Name="WaitList" Relationship="Self.FK__WaitList__UserID__07C12930" FromRole="Users" ToRole="WaitList" />
+          <NavigationProperty Name="Wishlist" Relationship="libraryProject_digireadModel.FK__Wishlist__UserID__2739D489" FromRole="Users" ToRole="Wishlist" />
         </EntityType>
         <EntityType Name="WaitList">
           <Key>
@@ -419,6 +463,7 @@ warning 6002: The table/view 'libraryProject_digiread.sys.database_firewall_rule
           <Property Name="EmailNotificationSent" Type="Boolean" />
           <NavigationProperty Name="Users" Relationship="Self.FK__WaitList__UserID__07C12930" FromRole="WaitList" ToRole="Users" />
           <NavigationProperty Name="Books" Relationship="libraryProject_digireadModel.FK__WaitList__BookID__06CD04F7" FromRole="WaitList" ToRole="Books" />
+          <Property Name="IsRental" Type="Boolean" />
         </EntityType>
         <Association Name="FK__Purchases__UserI__00200768">
           <End Role="Users" Type="Self.Users" Multiplicity="0..1" />
@@ -530,6 +575,15 @@ warning 6002: The table/view 'libraryProject_digiread.sys.database_firewall_rule
             <End Role="Books" EntitySet="Books" />
             <End Role="WaitList" EntitySet="WaitList" />
           </AssociationSet>
+          <EntitySet Name="Wishlist" EntityType="libraryProject_digireadModel.Wishlist" />
+          <AssociationSet Name="FK__Wishlist__BookID__282DF8C2" Association="libraryProject_digireadModel.FK__Wishlist__BookID__282DF8C2">
+            <End Role="Books" EntitySet="Books" />
+            <End Role="Wishlist" EntitySet="Wishlist" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Wishlist__UserID__2739D489" Association="libraryProject_digireadModel.FK__Wishlist__UserID__2739D489">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="Wishlist" EntitySet="Wishlist" />
+          </AssociationSet>
           </EntityContainer>
         <EntityType Name="database_firewall_rules">
           <Key>
@@ -579,6 +633,7 @@ warning 6002: The table/view 'libraryProject_digiread.sys.database_firewall_rule
           <NavigationProperty Name="ShoppingCart" Relationship="libraryProject_digireadModel.FK__ShoppingC__BookI__05D8E0BE" FromRole="Books" ToRole="ShoppingCart" />
           <NavigationProperty Name="WaitList" Relationship="libraryProject_digireadModel.FK__WaitList__BookID__06CD04F7" FromRole="Books" ToRole="WaitList" />
           <Property Name="StockQuantityRent" Type="Int32" />
+          <NavigationProperty Name="Wishlist" Relationship="libraryProject_digireadModel.FK__Wishlist__BookID__282DF8C2" FromRole="Books" ToRole="Wishlist" />
         </EntityType>
         <Association Name="FK__Purchases__BookI__7F2BE32F">
           <End Type="libraryProject_digireadModel.Books" Role="Books" Multiplicity="0..1" />
@@ -637,6 +692,41 @@ warning 6002: The table/view 'libraryProject_digiread.sys.database_firewall_rule
             </Principal>
             <Dependent Role="WaitList">
               <PropertyRef Name="BookID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="Wishlist">
+          <Key>
+            <PropertyRef Name="WishlistID" />
+          </Key>
+          <Property Name="WishlistID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="UserID" Type="Int32" Nullable="false" />
+          <Property Name="BookID" Type="Int32" Nullable="false" />
+          <Property Name="DateAdded" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="Books" Relationship="libraryProject_digireadModel.FK__Wishlist__BookID__282DF8C2" FromRole="Wishlist" ToRole="Books" />
+          <NavigationProperty Name="Users" Relationship="libraryProject_digireadModel.FK__Wishlist__UserID__2739D489" FromRole="Wishlist" ToRole="Users" />
+        </EntityType>
+        <Association Name="FK__Wishlist__BookID__282DF8C2">
+          <End Type="libraryProject_digireadModel.Books" Role="Books" Multiplicity="1" />
+          <End Type="libraryProject_digireadModel.Wishlist" Role="Wishlist" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Books">
+              <PropertyRef Name="BookID" />
+            </Principal>
+            <Dependent Role="Wishlist">
+              <PropertyRef Name="BookID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Wishlist__UserID__2739D489">
+          <End Type="libraryProject_digireadModel.Users" Role="Users" Multiplicity="1" />
+          <End Type="libraryProject_digireadModel.Wishlist" Role="Wishlist" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="UserID" />
+            </Principal>
+            <Dependent Role="Wishlist">
+              <PropertyRef Name="UserID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -729,6 +819,7 @@ warning 6002: The table/view 'libraryProject_digiread.sys.database_firewall_rule
           <EntitySetMapping Name="WaitList">
             <EntityTypeMapping TypeName="libraryProject_digireadModel.WaitList">
               <MappingFragment StoreEntitySet="WaitList">
+                <ScalarProperty Name="IsRental" ColumnName="IsRental" />
                 <ScalarProperty Name="WaitListID" ColumnName="WaitListID" />
                 <ScalarProperty Name="BookID" ColumnName="BookID" />
                 <ScalarProperty Name="UserID" ColumnName="UserID" />
@@ -776,6 +867,16 @@ warning 6002: The table/view 'libraryProject_digiread.sys.database_firewall_rule
                 <ScalarProperty Name="MainAuthor" ColumnName="MainAuthor" />
                 <ScalarProperty Name="Title" ColumnName="Title" />
                 <ScalarProperty Name="BookID" ColumnName="BookID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Wishlist">
+            <EntityTypeMapping TypeName="libraryProject_digireadModel.Wishlist">
+              <MappingFragment StoreEntitySet="Wishlist">
+                <ScalarProperty Name="DateAdded" ColumnName="DateAdded" />
+                <ScalarProperty Name="BookID" ColumnName="BookID" />
+                <ScalarProperty Name="UserID" ColumnName="UserID" />
+                <ScalarProperty Name="WishlistID" ColumnName="WishlistID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

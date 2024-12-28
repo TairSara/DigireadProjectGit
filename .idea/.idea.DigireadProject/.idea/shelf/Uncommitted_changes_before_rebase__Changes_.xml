@@ -1,0 +1,49 @@
+<changelist name="Uncommitted_changes_before_rebase_[Changes]" date="1735385242489" recycled="false" toDelete="true">
+  <option name="PATH" value="$PROJECT_DIR$/.idea/.idea.DigireadProject/.idea/shelf/Uncommitted_changes_before_rebase_[Changes]/shelved.patch" />
+  <option name="DESCRIPTION" value="Uncommitted changes before rebase [Changes]" />
+  <binary>
+    <option name="BEFORE_PATH" value=".vs/slnx.sqlite" />
+    <option name="AFTER_PATH" value=".vs/slnx.sqlite" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/.idea.DigireadProject/.idea/shelf/Uncommitted_changes_before_rebase_[Changes]/slnx.sqlite" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="DigireadProject/obj/Debug/DigireadProject.csproj.CoreCompileInputs.cache" />
+    <option name="AFTER_PATH" value="DigireadProject/obj/Debug/DigireadProject.csproj.CoreCompileInputs.cache" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/.idea.DigireadProject/.idea/shelf/Uncommitted_changes_before_rebase_[Changes]/DigireadProject.csproj.CoreCompileInputs.cache" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="DigireadProject/bin/DigireadProject.pdb" />
+    <option name="AFTER_PATH" value="DigireadProject/bin/DigireadProject.pdb" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/.idea.DigireadProject/.idea/shelf/Uncommitted_changes_before_rebase_[Changes]/DigireadProject.pdb" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="DigireadProject/obj/Debug/DigireadProject.csproj.AssemblyReference.cache" />
+    <option name="AFTER_PATH" value="DigireadProject/obj/Debug/DigireadProject.csproj.AssemblyReference.cache" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/.idea.DigireadProject/.idea/shelf/Uncommitted_changes_before_rebase_[Changes]/DigireadProject.csproj.AssemblyReference.cache" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="DigireadProject/obj/Debug/DigireadProject.pdb" />
+    <option name="AFTER_PATH" value="DigireadProject/obj/Debug/DigireadProject.pdb" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/.idea.DigireadProject/.idea/shelf/Uncommitted_changes_before_rebase_[Changes]/DigireadProject1.pdb" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="DigireadProject/bin/DigireadProject.dll" />
+    <option name="AFTER_PATH" value="DigireadProject/bin/DigireadProject.dll" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/.idea.DigireadProject/.idea/shelf/Uncommitted_changes_before_rebase_[Changes]/DigireadProject.dll" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="DigireadProject/obj/Debug/DesignTimeResolveAssemblyReferencesInput.cache" />
+    <option name="AFTER_PATH" value="DigireadProject/obj/Debug/DesignTimeResolveAssemblyReferencesInput.cache" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/.idea.DigireadProject/.idea/shelf/Uncommitted_changes_before_rebase_[Changes]/DesignTimeResolveAssemblyReferencesInput.cache" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="DigireadProject/obj/Debug/DigireadProject.dll" />
+    <option name="AFTER_PATH" value="DigireadProject/obj/Debug/DigireadProject.dll" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/.idea.DigireadProject/.idea/shelf/Uncommitted_changes_before_rebase_[Changes]/DigireadProject1.dll" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value=".vs/DigireadProject/v16/.suo" />
+    <option name="AFTER_PATH" value=".vs/DigireadProject/v16/.suo" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/.idea.DigireadProject/.idea/shelf/Uncommitted_changes_before_rebase_[Changes]/.suo" />
+  </binary>
+</changelist>

@@ -24,6 +24,9 @@
         <AssociationConnector Association="libraryProject_digireadModel.FK__Reviews__BookID__02FC7413" />
         <AssociationConnector Association="libraryProject_digireadModel.FK__ShoppingC__BookI__05D8E0BE" />
         <AssociationConnector Association="libraryProject_digireadModel.FK__WaitList__BookID__06CD04F7" />
+        <EntityTypeShape EntityType="libraryProject_digireadModel.Wishlist" Width="1.5" PointX="6" PointY="12.75" />
+        <AssociationConnector Association="libraryProject_digireadModel.FK__Wishlist__BookID__282DF8C2" />
+        <AssociationConnector Association="libraryProject_digireadModel.FK__Wishlist__UserID__2739D489" />
         </Diagram>
       <Diagram DiagramId="cef35bf336e743bd868b4ba9e6d54274" Name="Diagram2" />
     </edmx:Diagrams>

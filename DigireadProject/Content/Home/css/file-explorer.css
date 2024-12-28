@@ -45,11 +45,11 @@
 /* סגנונות לסקציית הספרים הפופולריים */
 .popular-books-section {
     padding: 6rem 2rem;
-    background: linear-gradient(135deg, #FAF7F2, #FFF8EE);
     position: relative;
     overflow: hidden;
 }
-.popular-books-section::before {
+.popular-books-section::before {    background: linear-gradient(135deg, #FAF7F2, #FFF8EE);
+
     content: '';
     position: absolute;
     top: 0;

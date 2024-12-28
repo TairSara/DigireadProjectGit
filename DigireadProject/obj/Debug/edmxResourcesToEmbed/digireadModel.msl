@@ -84,6 +84,7 @@
     <EntitySetMapping Name="WaitList">
       <EntityTypeMapping TypeName="libraryProject_digireadModel.WaitList">
         <MappingFragment StoreEntitySet="WaitList">
+          <ScalarProperty Name="IsRental" ColumnName="IsRental" />
           <ScalarProperty Name="WaitListID" ColumnName="WaitListID" />
           <ScalarProperty Name="BookID" ColumnName="BookID" />
           <ScalarProperty Name="UserID" ColumnName="UserID" />
@@ -131,6 +132,16 @@
           <ScalarProperty Name="MainAuthor" ColumnName="MainAuthor" />
           <ScalarProperty Name="Title" ColumnName="Title" />
           <ScalarProperty Name="BookID" ColumnName="BookID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Wishlist">
+      <EntityTypeMapping TypeName="libraryProject_digireadModel.Wishlist">
+        <MappingFragment StoreEntitySet="Wishlist">
+          <ScalarProperty Name="DateAdded" ColumnName="DateAdded" />
+          <ScalarProperty Name="BookID" ColumnName="BookID" />
+          <ScalarProperty Name="UserID" ColumnName="UserID" />
+          <ScalarProperty Name="WishlistID" ColumnName="WishlistID" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>

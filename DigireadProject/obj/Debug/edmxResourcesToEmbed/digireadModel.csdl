@@ -45,10 +45,10 @@
     <Property Name="BookID" Type="Int32" />
     <Property Name="UserID" Type="Int32" />
     <Property Name="RatingBook" Type="Int32" />
-    <Property Name="ReviewTextBook" Type="String" MaxLength="1000" FixedLength="false" Unicode="true" />
+    <Property Name="ReviewTextBook" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
     <Property Name="ReviewDateBook" Type="DateTime" Precision="3" />
     <Property Name="RatingWeb" Type="Int32" />
-    <Property Name="ReviewTextWeb" Type="String" MaxLength="1000" FixedLength="false" Unicode="true" />
+    <Property Name="ReviewTextWeb" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
     <Property Name="ReviewDateWeb" Type="DateTime" Precision="3" />
     <NavigationProperty Name="Users" Relationship="Self.FK__Reviews__UserID__03F0984C" FromRole="Reviews" ToRole="Users" />
     <NavigationProperty Name="Books" Relationship="libraryProject_digireadModel.FK__Reviews__BookID__02FC7413" FromRole="Reviews" ToRole="Books" />
@@ -86,6 +86,7 @@
     <NavigationProperty Name="Reviews" Relationship="Self.FK__Reviews__UserID__03F0984C" FromRole="Users" ToRole="Reviews" />
     <NavigationProperty Name="ShoppingCart" Relationship="Self.FK__ShoppingC__UserI__04E4BC85" FromRole="Users" ToRole="ShoppingCart" />
     <NavigationProperty Name="WaitList" Relationship="Self.FK__WaitList__UserID__07C12930" FromRole="Users" ToRole="WaitList" />
+    <NavigationProperty Name="Wishlist" Relationship="libraryProject_digireadModel.FK__Wishlist__UserID__2739D489" FromRole="Users" ToRole="Wishlist" />
   </EntityType>
   <EntityType Name="WaitList">
     <Key>
@@ -99,6 +100,7 @@
     <Property Name="EmailNotificationSent" Type="Boolean" />
     <NavigationProperty Name="Users" Relationship="Self.FK__WaitList__UserID__07C12930" FromRole="WaitList" ToRole="Users" />
     <NavigationProperty Name="Books" Relationship="libraryProject_digireadModel.FK__WaitList__BookID__06CD04F7" FromRole="WaitList" ToRole="Books" />
+    <Property Name="IsRental" Type="Boolean" />
   </EntityType>
   <Association Name="FK__Purchases__UserI__00200768">
     <End Role="Users" Type="Self.Users" Multiplicity="0..1" />
@@ -210,6 +212,15 @@
       <End Role="Books" EntitySet="Books" />
       <End Role="WaitList" EntitySet="WaitList" />
     </AssociationSet>
+    <EntitySet Name="Wishlist" EntityType="libraryProject_digireadModel.Wishlist" />
+    <AssociationSet Name="FK__Wishlist__BookID__282DF8C2" Association="libraryProject_digireadModel.FK__Wishlist__BookID__282DF8C2">
+      <End Role="Books" EntitySet="Books" />
+      <End Role="Wishlist" EntitySet="Wishlist" />
+    </AssociationSet>
+    <AssociationSet Name="FK__Wishlist__UserID__2739D489" Association="libraryProject_digireadModel.FK__Wishlist__UserID__2739D489">
+      <End Role="Users" EntitySet="Users" />
+      <End Role="Wishlist" EntitySet="Wishlist" />
+    </AssociationSet>
   </EntityContainer>
   <EntityType Name="database_firewall_rules">
     <Key>
@@ -259,6 +270,7 @@
     <NavigationProperty Name="ShoppingCart" Relationship="libraryProject_digireadModel.FK__ShoppingC__BookI__05D8E0BE" FromRole="Books" ToRole="ShoppingCart" />
     <NavigationProperty Name="WaitList" Relationship="libraryProject_digireadModel.FK__WaitList__BookID__06CD04F7" FromRole="Books" ToRole="WaitList" />
     <Property Name="StockQuantityRent" Type="Int32" />
+    <NavigationProperty Name="Wishlist" Relationship="libraryProject_digireadModel.FK__Wishlist__BookID__282DF8C2" FromRole="Books" ToRole="Wishlist" />
   </EntityType>
   <Association Name="FK__Purchases__BookI__7F2BE32F">
     <End Type="libraryProject_digireadModel.Books" Role="Books" Multiplicity="0..1" />
@@ -317,6 +329,41 @@
       </Principal>
       <Dependent Role="WaitList">
         <PropertyRef Name="BookID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityType Name="Wishlist">
+    <Key>
+      <PropertyRef Name="WishlistID" />
+    </Key>
+    <Property Name="WishlistID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="UserID" Type="Int32" Nullable="false" />
+    <Property Name="BookID" Type="Int32" Nullable="false" />
+    <Property Name="DateAdded" Type="DateTime" Precision="3" />
+    <NavigationProperty Name="Books" Relationship="libraryProject_digireadModel.FK__Wishlist__BookID__282DF8C2" FromRole="Wishlist" ToRole="Books" />
+    <NavigationProperty Name="Users" Relationship="libraryProject_digireadModel.FK__Wishlist__UserID__2739D489" FromRole="Wishlist" ToRole="Users" />
+  </EntityType>
+  <Association Name="FK__Wishlist__BookID__282DF8C2">
+    <End Type="libraryProject_digireadModel.Books" Role="Books" Multiplicity="1" />
+    <End Type="libraryProject_digireadModel.Wishlist" Role="Wishlist" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Books">
+        <PropertyRef Name="BookID" />
+      </Principal>
+      <Dependent Role="Wishlist">
+        <PropertyRef Name="BookID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__Wishlist__UserID__2739D489">
+    <End Type="libraryProject_digireadModel.Users" Role="Users" Multiplicity="1" />
+    <End Type="libraryProject_digireadModel.Wishlist" Role="Wishlist" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Users">
+        <PropertyRef Name="UserID" />
+      </Principal>
+      <Dependent Role="Wishlist">
+        <PropertyRef Name="UserID" />
       </Dependent>
     </ReferentialConstraint>
   </Association>

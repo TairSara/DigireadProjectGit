@@ -1,280 +1,223 @@
 * {
     font-family: 'Rubik', 'Assistant', 'Heebo', Arial, sans-serif;
 }
+
 .library-container {
     padding: 20px;
     max-width: 1200px;
     margin: 0 auto;
+    background-color: #fff6f9;
 }
 
 .books-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    gap: 20px;
+    gap: 25px;
     margin-top: 20px;
 }
 
 .book-card {
     background: white;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(149, 128, 255, 0.1);
     overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border: 1px solid #f4ecff;
+}
+
+.book-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(149, 128, 255, 0.2);
 }
 
 .book-image img {
     width: 100%;
     height: 280px;
     object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.book-image img:hover {
+    transform: scale(1.05);
 }
 
 .book-info {
-    padding: 15px;
+    padding: 20px;
+    background: linear-gradient(to bottom, #fff, #f8f5ff);
 }
 
 .book-info h3 {
     margin: 0;
     font-size: 1.1em;
-    margin-bottom: 5px;
-    font-weight: 500;
-    font-family: 'Rubik', 'Assistant', sans-serif;
+    margin-bottom: 10px;
+    font-weight: 600;
+    color: #6c50e8;
 }
 
 .download-btn {
-    background-color: #4CAF50;
+    background-color: #9580ff;
     color: white;
     border: none;
-    padding: 5px 10px;
-    border-radius: 4px;
-    margin-top: 10px;
+    padding: 8px 15px;
+    border-radius: 8px;
+    margin-top: 12px;
     cursor: pointer;
-    font-family: 'Assistant', 'Heebo', sans-serif;
-    transition: background-color 0.3s;
+    transition: all 0.3s ease;
     width: 100%;
-    margin-bottom: 5px;
+    margin-bottom: 8px;
+    box-shadow: 0 4px 15px rgba(149, 128, 255, 0.2);
 }
 
 .download-btn:hover {
-    background-color: #45a049;
+    background-color: #6c50e8;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(149, 128, 255, 0.3);
 }
 
 .book-info p {
-    margin: 5px 0;
-    color: #666;
-    font-family: 'Assistant', 'Heebo', sans-serif;
+    margin: 8px 0;
+    color: #7b6d9e;
 }
 
 .book-type {
     display: inline-block;
-    padding: 3px 8px;
-    background-color: #e3f2fd;
-    color: #1976d2;
-    border-radius: 4px;
+    padding: 5px 12px;
+    background-color: #f4ecff;
+    color: #6c50e8;
+    border-radius: 6px;
     font-size: 0.9em;
-    margin-top: 5px;
-    font-family: 'Assistant', 'Heebo', sans-serif;
+    margin-top: 8px;
     font-weight: 500;
 }
 
 .return-date {
-    margin-top: 5px;
+    margin-top: 8px;
     font-size: 0.9em;
-    color: #666;
-    background-color: #fff3e0;
-    padding: 3px 8px;
-    border-radius: 4px;
-    font-family: 'Assistant', 'Heebo', sans-serif;
+    color: #7b6d9e;
+    background-color: #fff9ec;
+    padding: 5px 12px;
+    border-radius: 6px;
 }
 
 .alert {
     margin-bottom: 20px;
     padding: 15px;
-    border-radius: 4px;
+    border-radius: 8px;
 }
 
 .alert-info {
-    background-color: #e3f2fd;
-    border: 1px solid #bbdefb;
-    color: #0d47a1;
+    background-color: #f4ecff;
+    border: 1px solid #e6e0ff;
+    color: #6c50e8;
 }
 
 .delete-btn {
-    background-color: #dc3545;
+    background-color: #ff80ab;
     color: white;
     border: none;
-    padding: 5px 10px;
-    border-radius: 4px;
-    margin-top: 10px;
+    padding: 8px 15px;
+    border-radius: 8px;
+    margin-top: 12px;
     cursor: pointer;
-    font-family: 'Assistant', 'Heebo', sans-serif;
-    transition: background-color 0.3s;
+    transition: all 0.3s ease;
+    width: 100%;
 }
 
 .delete-btn:hover {
-    background-color: #c82333;
+    background-color: #f06292;
+    transform: translateY(-2px);
 }
 
-.format-dialog {
-    font-family: 'Rubik', 'Assistant', 'Heebo', Arial, sans-serif;
+/* סגנון תפריט הסינון */
+.filter-menu {
+    display: flex;
+    gap: 15px;
+    margin: 20px 0;
+    flex-wrap: wrap;
+    justify-content: center;
 }
 
-.format-options {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 10px;
-    padding: 20px;
-}
-
-.format-btn {
-    background-color: #4CAF50;
-    color: white;
-    border: none;
-    padding: 10px;
-    border-radius: 4px;
+.filter-option {
+    padding: 8px 20px;
+    border-radius: 25px;
+    background-color: white;
+    color: #7b6d9e;
     cursor: pointer;
-    font-family: inherit;
-    transition: background-color 0.3s;
+    transition: all 0.3s ease;
+    border: 1px solid #e6e0ff;
 }
 
-.format-btn:hover {
-    background-color: #45a049;
-}
-
-.days-left {
-    margin-top: 5px;
-    font-size: 0.9em;
-    color: #666;
-    background-color: #e8f5e9;
-    padding: 3px 8px;
-    border-radius: 4px;
-    font-family: 'Assistant', 'Heebo', sans-serif;
-}
-
-.rate-btn {
-    background-color: #ffc107;
+.filter-option:hover,
+.filter-option.active {
+    background-color: #9580ff;
     color: white;
-    border: none;
-    padding: 5px 10px;
-    border-radius: 4px;
-    margin-top: 10px;
-    cursor: pointer;
-    font-family: 'Assistant', 'Heebo', sans-serif;
-    transition: background-color 0.3s;
+    transform: translateY(-2px);
+}
+
+/* סגנון תיבת החיפוש */
+.search-box {
+    background-color: white;
+    border: 2px solid #e6e0ff;
+    border-radius: 25px;
+    padding: 12px 20px;
     width: 100%;
-    margin-bottom: 5px;
+    max-width: 500px;
+    margin: 20px auto;
+    display: block;
+    transition: all 0.3s ease;
+}
+
+.search-box:focus {
+    border-color: #9580ff;
+    box-shadow: 0 0 0 4px rgba(149, 128, 255, 0.1);
+    outline: none;
+}
+
+/* סגנון כפתורי דירוג */
+.rate-btn {
+    background-color: #b39ddb;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 8px;
+    margin-top: 12px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    width: 100%;
+    margin-bottom: 8px;
 }
 
 .rate-btn:hover {
-    background-color: #ffb300;
+    background-color: #9575cd;
+    transform: translateY(-2px);
 }
 
-.rating-stars {
-    font-size: 24px;
-    color: #ffc107;
-    cursor: pointer;
-    direction: ltr;
-    display: inline-block;
+.rate-btn.already-rated {
+    background-color: #d1c4e9;
+    cursor: not-allowed;
+    opacity: 0.7;
 }
 
-.rating-stars .star {
-    padding: 0 5px;
-}
-
-.rating-stars .star:hover,
-.rating-stars .star.active {
-    color: #ffb300;
-}
-
-.rating-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 20px;
-}
-
+/* עיצוב כוכבי דירוג */
 .rating-stars {
     display: flex;
-    gap: 5px;
-}
-
-.rating-stars .star {
-    font-size: 24px;
-    color: #ddd;
-    cursor: pointer;
-    transition: color 0.2s;
-}
-
-.rating-stars .star.hover,
-.rating-stars .star.selected {
-    color: #ffc107;
-}
-
-.rating-text {
-    font-size: 14px;
-    color: #666;
-    min-height: 20px;
-}
-
-.swal2-textarea {
-    min-height: 100px;
-    font-family: 'Assistant', 'Heebo', sans-serif;
-    direction: rtl;
-    padding: 10px;
-}
-
-.star-rating {
-    display: flex;
+    gap: 8px;
     justify-content: center;
-    gap: 10px;
-    margin: 20px 0;
+    margin: 15px 0;
 }
 
 .star {
-    font-size: 30px;
-    color: #ddd;
+    font-size: 24px;
+    color: #e6e0ff;
     cursor: pointer;
-    transition: color 0.2s;
+    transition: all 0.3s ease;
 }
 
 .star:hover,
 .star.active,
 .star.selected {
-    color: #ffd700;
-}
-
-#rating-text {
-    text-align: center;
-    margin-top: 10px;
-    font-size: 16px;
-    color: #666;
-}
-
-.custom-swal-container {
-    direction: rtl;
-}
-
-.custom-swal-popup {
-    font-family: 'Assistant', 'Rubik', sans-serif;
-}
-
-.swal2-textarea {
-    direction: rtl;
-    margin-top: 15px;
-    min-height: 100px;
-    font-family: 'Assistant', 'Rubik', sans-serif;
-}
-
-/* אנימציה לכוכבים */
-.star {
-    transform-origin: center;
-}
-
-.star:hover {
+    color: #9580ff;
     transform: scale(1.2);
-}
-
-.star.selected {
-    animation: pulse 0.3s ease-in-out;
 }
 
 @keyframes pulse {
@@ -283,8 +226,21 @@
     100% { transform: scale(1); }
 }
 
-.rate-btn.already-rated {
-    background-color: #ccc;
-    cursor: not-allowed;
-    opacity: 0.7;
+.star.selected {
+    animation: pulse 0.3s ease-in-out;
+}
+
+/* עיצוב חלון הדירוג */
+.rating-container {
+    text-align: center;
+    padding: 20px;
+    background-color: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(149, 128, 255, 0.15);
+}
+
+.rating-text {
+    color: #7b6d9e;
+    margin: 10px 0;
+    font-size: 0.9em;
 }

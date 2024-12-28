@@ -304,7 +304,25 @@
             font-weight: 700;
         }
 
+        .colored-toast {
+            background: linear-gradient(to right, #E6E6FA, #DDA0DD) !important;
+            color: #4B0082 !important;
+            padding: 1.5rem !important;
+            width: 400px !important;  /* הגדלת רוחב החלון */
+            font-size: 1.2rem !important; /* הגדלת גודל הטקסט */
+        }
 
+        .colored-toast .swal2-title,
+        .colored-toast .swal2-content {
+            color: #4B0082 !important;
+            font-size: 1.4rem !important; /* הגדלת גודל הטקסט בכותרת ובתוכן */
+            margin: 10px 0 !important; /* מרווח נוסף מעל ומתחת */
+        }
+
+        .colored-toast .swal2-timer-progress-bar {
+            height: 0.3rem !important; /* הגדלת גובה שורת ההתקדמות */
+            background-color: #4B0082 !important; /* שינוי צבע שורת ההתקדמות */
+        }
     </style>
 
 </main>
@@ -342,8 +360,26 @@
                 }
             }
         });
+        document.addEventListener('DOMContentLoaded', function() {
+            var successMessage = '@TempData["SuccessMessage"]';
+            if (successMessage && successMessage !== '') {
+                Swal.fire({
+                    text: successMessage,
+                    icon: 'success',
+                    timer: 5000,
+                    showConfirmButton: false,
+                    timerProgressBar: true,
+                    position: 'top',
+                    toast: true,
+                    customClass: {
+                        popup: 'colored-toast'
+                    }
+                });
+            }
+        });
     </script>
 }
 @section Styles {
     <link href="~/Content/Home/css/file-explorer.css" rel="stylesheet" />
 }
+

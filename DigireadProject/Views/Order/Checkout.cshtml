@@ -36,3 +36,100 @@ else
 @section Styles {
     <link href="~/Content/Order/css/Checkout.css" rel="stylesheet" />
 }
+
+<style>
+    * {
+        font-family: 'Rubik', 'Assistant', 'Heebo', Arial, sans-serif;
+    }
+
+    .checkout-success {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 70vh;
+        background: linear-gradient(135deg, #FAF7F2, #FFF8EE);
+    }
+
+    .success-container {
+        background: linear-gradient(135deg, #FAF7F2, #FFF8EE);
+        padding: 3rem;
+        border-radius: 16px;
+        box-shadow: 0 4px 20px rgba(149, 128, 255, 0.15);
+        text-align: center;
+        max-width: 500px;
+        width: 90%;
+    }
+
+    .success-icon {
+        color: #9580ff;
+        font-size: 5rem;
+        margin-bottom: 1.5rem;
+        animation: pulse 2s infinite;
+    }
+
+ 
+
+    .success-message h2 {
+        color: #6c50e8;
+        margin-bottom: 1rem;
+        font-size: 2rem;
+        font-weight: 600;
+    }
+
+    .success-message p {
+        color: #7b6d9e;
+        margin-bottom: 2.5rem;
+        font-size: 1.1rem;
+    }
+
+    .buttons {
+        display: flex;
+        gap: 1.5rem;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+
+    .library-btn, .continue-shopping-btn {
+        padding: 1rem 2rem;
+        border-radius: 8px;
+        text-decoration: none;
+        font-weight: 500;
+        transition: all 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.8rem;
+        font-size: 1.1rem;
+    }
+
+    .library-btn {
+        background-color: #9580ff;
+        color: white;
+        box-shadow: 0 4px 15px rgba(149, 128, 255, 0.3);
+    }
+
+    .continue-shopping-btn {
+        background-color: #b4a4ff;
+        color: white;
+        box-shadow: 0 4px 15px rgba(180, 164, 255, 0.3);
+    }
+
+    .library-btn:hover, .continue-shopping-btn:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 6px 20px rgba(149, 128, 255, 0.4);
+    }
+
+    .fas {
+        font-size: 1.3rem;
+    }
+
+  
+    .buttons {
+        flex-direction: column;
+    }
+
+    .library-btn, .continue-shopping-btn {
+        width: 100%;
+        justify-content: center;
+    }
+    
+</style>

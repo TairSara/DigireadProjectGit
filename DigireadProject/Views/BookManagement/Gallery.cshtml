@@ -3,7 +3,7 @@
     ViewBag.Title = "גלריה";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 <main class="gallery-main">
     <!-- כותרת ראשית -->
     <section class="hero-section">
@@ -82,6 +82,19 @@
                         <article class="book-card">
                             <a href="BookDetails/@book.BookID" class="book-link">
                                 <div class="card @(book.StockQuantity <= 0 ? "out-of-stock" : "")">
+                                    <div class="wishlist-heart @(ViewBag.UserWishlist?.Contains(book.BookID) == true ? "active" : "")"
+                                         onclick="toggleWishlist(event, @book.BookID)">
+                                        <i class="@(ViewBag.UserWishlist?.Contains(book.BookID) == true ? "fas" : "far") fa-heart"></i>
+                                    </div>
+
+                                    <!-- תצוגת גיל חדשה -->
+                                    @if (book.AgeRestriction > 0)
+                                    {
+                                        <div class="age-display-badge">
+                                            <span class="age-display-text">גיל מומלץ: @book.AgeRestriction+</span>
+                                        </div>
+                                    }
+
                                     @if (book.OriginalPrice > book.PurchasePrice)
                                     {
                                         <span class="sale-badge">מבצע</span>
@@ -205,8 +218,6 @@
             box-shadow: 0 0 0 4px rgba(106, 17, 203, 0.1);
             outline: none;
         }
-
-
 
         /* מרכוז הפילטרים */
         .filters-section {
@@ -418,6 +429,26 @@
             z-index: 2;
         }
 
+        .age-display-badge {
+            position: absolute;
+            bottom: 15px;
+            left: 15px;
+            background: rgba(44, 62, 80, 0.8);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 0.9rem;
+            z-index: 2;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .age-display-badge::before {
+            content: '👤';
+            font-size: 1rem;
+        }
+
         /* Book Details */
         .book-details {
             font-size: 0.95rem;
@@ -462,7 +493,6 @@
             filter: grayscale(50%);
         }
 
-
         .books-grid {
             grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
             gap: 20px;
@@ -475,8 +505,74 @@
         .search-filter-section {
             padding: 20px;
         }
+        .wishlist-heart {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            z-index: 3;
+            cursor: pointer;
+            background: white;
+            border-radius: 50%;
+            width: 35px;
+            height: 35px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
 
+        .wishlist-heart.active i {
+            color: #ff4d4d;  /* צבע אדום עבור הלב הפעיל */
+        }
+
+        .wishlist-heart:hover {
+            transform: scale(1.1);
+        }
+
+        .wishlist-heart i {
+            font-size: 1.2rem;
+            color: #666;  /* צבע אפור כאשר הלב אינו פעיל */
+            transition: color 0.3s ease;
+        }
     </style>
 
     <script src="~/Content/Books/js/gallery.js"></script>
 </main>
+
+<script>
+    function toggleWishlist(event, bookId) {
+        event.preventDefault();
+        event.stopPropagation();
+
+        fetch('/Wishlist/Toggle', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ bookId: bookId })
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    const heartDiv = event.currentTarget;
+                    const heartIcon = heartDiv.querySelector('i');
+
+                    // החלף מצב
+                    heartDiv.classList.toggle('active');
+
+                    // שנה סוג האייקון וודא החלפת צבע
+                    if (heartIcon.classList.contains('far')) {
+                        heartIcon.classList.remove('far');
+                        heartIcon.classList.add('fas');
+                    } else {
+                        heartIcon.classList.remove('fas');
+                        heartIcon.classList.add('far');
+                    }
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+    }
+</script>
