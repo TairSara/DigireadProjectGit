@@ -1,44 +1,48 @@
 ﻿@model DigireadProject.Models.ViewModels.BookViewModel
-@section Styles {
-    <link href="~/Content/Books/css/book-details.css" rel="stylesheet" />
-    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
-}
 
 @Html.AntiForgeryToken()
 <div class="book-details">
-    <h2>@Model.Title</h2>
-    <img src="@Model.ImageSrc" alt="תמונה של @Model.Title" class="book-image" />
+    <div class="book-content">
+        <div class="book-details-container">
+            <h2 class="book-title">@Model.Title</h2>
+            
+            <div class="book-info">
+                <p><strong>מחבר ראשי:</strong> @Model.MainAuthor</p>
+                <p><strong>הוצאה לאור:</strong> @Model.Publisher</p>
+                <p><strong>שנת פרסום:</strong> @Model.PublishYear</p>
+                <p><strong>מחיר רכישה:</strong> ₪@Model.PurchasePrice</p>
+                @if (Model.IsForRent == true)
+                {
+                    <p><strong>מחיר השכרה:</strong> ₪@Model.RentalPrice</p>
+                }
+                <p><strong>תיאור:</strong> @Model.Description</p>
+                <p><strong>ז'אנר:</strong> @Model.Genre</p>
+            </div>
 
-    <div class="book-info">
-        <p><strong>מחבר ראשי:</strong> @Model.MainAuthor</p>
-        <p><strong>הוצאה לאור:</strong> @Model.Publisher</p>
-        <p><strong>שנת פרסום:</strong> @Model.PublishYear</p>
-        <p><strong>מחיר רכישה:</strong> ₪@Model.PurchasePrice</p>
-        @if (Model.IsForRent == true)
-        {
-            <p><strong>מחיר השכרה:</strong> ₪@Model.RentalPrice</p>
-        }
-        <p><strong>תיאור:</strong> @Model.Description</p>
-        <p><strong>ז'אנר:</strong> @Model.Genre</p>
+            <div class="actions">
+                @if (User.Identity.IsAuthenticated)
+                {
+                    <button onclick="bookManager.showPurchaseOptions()" class="btn btn-add-to-cart">
+                        <i class="fas fa-shopping-cart"></i> הוסף לסל
+                    </button>
+                    <button type="button" onclick="bookManager.quickPurchase(@Model.BookID, false)" class="btn btn-quick-purchase">
+                        <i class="fas fa-bolt"></i> קנייה מהירה
+                    </button>
+                }
+                else
+                {
+                    <a href="@Url.Action("Login", "Account")" class="btn btn-primary">
+                        התחבר כדי לרכוש
+                    </a>
+                }
+            </div>
+        </div>
+
+        <div class="book-image-container">
+            <img src="@Model.ImageSrc" alt="תמונה של @Model.Title" class="book-image rounded-image" data-lightbox="book-image" />
+        </div>
     </div>
 
-    <div class="actions">
-        @if (User.Identity.IsAuthenticated)
-        {
-            <button onclick="bookManager.showPurchaseOptions()" class="btn btn-add-to-cart">
-                <i class="fas fa-shopping-cart"></i> הוסף לסל
-            </button>
-            <button type="button" onclick="bookManager.quickPurchase(@Model.BookID, false)" class="btn btn-quick-purchase">
-                <i class="fas fa-bolt"></i> קנייה מהירה
-            </button>
-        }
-        else
-        {
-            <a href="@Url.Action("Login", "Account")" class="btn btn-primary">
-                התחבר כדי לרכוש
-            </a>
-        }
-    </div>
     <div class="reviews-section">
         <h3 class="reviews-title">דירוגים וביקורות</h3>
 
@@ -69,7 +73,6 @@
                                 <span class="review-date">@review.ReviewDate.ToString("dd/MM/yyyy")</span>
                             </div>
                             <div class="stars">
-                                @* מציג רק את מספר הכוכבים שווה לדירוג *@
                                 @for (int i = 0; i < review.Rating; i++)
                                 {
                                     <i class="fas fa-star active"></i>
@@ -89,6 +92,7 @@
                 <p class="no-reviews">אין דירוגים עדיין</p>
             }
         </div>
+    </div>
     </div>
 
     <!-- Purchase Dialog -->
@@ -145,7 +149,6 @@
             <button onclick="bookManager.closePurchaseDialog()" class="btn btn-secondary">ביטול</button>
         </div>
     </div>
-</div>
 
 <!-- הוספת Modal להודעת שגיאה -->
 <div id="errorModal" class="modal">
@@ -155,9 +158,277 @@
         <button onclick="bookManager.closeErrorModal()" class="btn btn-secondary">סגור</button>
     </div>
 </div>
+<style>
+    .book-details {
+        padding: 20px;
+        margin: 20px auto;
+        max-width: 1200px;
+        border: 1px solid #ddd;
+        border-radius: 10px;
+        background-color: #f9f9f9;
+        direction: rtl;
+    }
+
+    .book-content {
+        display: flex;
+        gap: 40px;
+        align-items: flex-start;
+    }
+
+    .book-image-container {
+        flex: 1;
+        text-align: center;
+    }
+
+    .book-details-container {
+        flex: 2;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .book-title {
+        color: #2c1810;
+        font-size: 2.8rem;
+        font-weight: 700;
+        margin: 0 0 20px 0;
+        position: relative;
+        display: inline-block;
+        padding-bottom: 15px;
+    }
+
+    .book-title::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 4px;
+        background: linear-gradient(to right, transparent, #6a11cb, transparent);
+        border-radius: 2px;
+    }
+
+    .rounded-image {
+        border-radius: 10px;
+        width: 300px;
+        height: auto;
+        max-height: 450px;
+        object-fit: cover;
+        border: 5px solid #6c3dab;
+        cursor: pointer;
+    }
+
+    .book-info {
+        text-align: right;
+        margin-bottom: 20px;
+    }
+
+    .book-info p {
+        font-size: 16px;
+        line-height: 1.6;
+        margin: 10px 0;
+        padding: 5px 0;
+        border-bottom: 1px solid #eee;
+    }
+
+    .actions {
+        display: flex;
+        gap: 15px;
+        margin-top: auto;
+    }
+
+    .btn {
+        padding: 12px 25px;
+        border-radius: 5px;
+        font-size: 16px;
+        font-weight: 500;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        transition: all 0.3s ease;
+        cursor: pointer;
+    }
+
+    .btn i {
+        margin-left: 8px;
+    }
+
+    .btn-add-to-cart {
+        background-color: #6c3dab;
+        color: white;
+        border: none;
+    }
+
+    .btn-add-to-cart:hover {
+        background-color: #58349d;
+        transform: translateY(-2px);
+    }
+
+    .btn-primary {
+        background-color: #6c3dab;
+        color: white;
+        border: none;
+    }
+
+    .btn-primary:hover {
+        background-color: #58349d;
+        transform: translateY(-2px);
+    }
+
+    .btn-quick-purchase {
+        background-color: #9370db;
+        color: white;
+        border: none;
+    }
+
+    .btn-quick-purchase:hover {
+        background-color: #8258cb;
+        transform: translateY(-2px);
+    }
+
+    .reviews-section {
+        margin-top: 3rem;
+        padding: 2rem;
+        background-color: #f8f9fa;
+        border-radius: 8px;
+    }
+
+    .reviews-title {
+        text-align: center;
+        color: #6c3dab;
+        margin-bottom: 2rem;
+    }
+
+    .ratings-summary {
+        display: flex;
+        justify-content: center;
+        margin-bottom: 2rem;
+    }
+
+    .average-rating {
+        text-align: center;
+    }
+
+    .big-rating {
+        font-size: 3rem;
+        font-weight: bold;
+        color: #6c3dab;
+    }
+
+    .stars {
+        color: #ddd;
+        font-size: 1.2rem;
+        direction: ltr;
+        margin: 0.5rem 0;
+    }
+
+    .stars .fa-star.active {
+        color: #9370db;
+    }
+
+    .total-reviews {
+        font-size: 0.9rem;
+        color: #666;
+    }
+
+    .reviews-list {
+        max-width: 800px;
+        margin: 0 auto;
+    }
+
+    .review-card {
+        background: white;
+        padding: 1.5rem;
+        border-radius: 8px;
+        margin-bottom: 1rem;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .review-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1rem;
+    }
+
+    .reviewer-info {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .reviewer-name {
+        font-weight: bold;
+        color: #6c3dab;
+    }
+
+    .review-date {
+        font-size: 0.8rem;
+        color: #666;
+    }
+    .modal {
+        display: none;
+        position: fixed;
+        z-index: 1000;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0,0,0,0.5);
+    }
+    .purchase-options {
+        display: flex;
+        justify-content: space-between;  /* או space-around לרווח שווה */
+        gap: 15px;  /* מרווח בין הכפתורים */
+        margin-bottom: 20px;
+    }
+
+    .purchase-options form {
+        flex: 1;  /* כל טופס תופס מרחב שווה */
+    }
+
+    .purchase-options button {
+        width: 100%;
+        padding: 12px;
+        margin: 0;
+        white-space: nowrap;  /* מונע שבירת שורות בטקסט */
+    }
+
+    /* אם צריך להתאים את גודל הכפתורים */
+    .purchase-btn, .rental-btn {
+        min-width: 150px;  /* או כל גודל אחר שתרצי */
+    }
+    .modal-content {
+        background-color: #fefefe;
+        margin: 15% auto;
+        padding: 20px;
+        border: 1px solid #888;
+        width: 80%;
+        max-width: 500px;
+        border-radius: 8px;
+        position: relative;
+        text-align: right;
+        direction: rtl;
+    }
+    .review-comment {
+        color: #4a5568;
+        line-height: 1.6;
+        margin: 0;
+    }
+
+    .no-reviews {
+        text-align: center;
+        color: #666;
+        font-style: italic;
+    }
+</style>
+@section Styles {
+    <link href="~/Content/Books/css/book-details.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.3/css/lightbox.min.css" rel="stylesheet">
+}
 
 @section Scripts {
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.3/js/lightbox.min.js"></script>
     <script>
         // Initialize empty bookManager object first
         window.bookManager = {
@@ -167,6 +438,25 @@
             closeErrorModal: function() { console.log('Not initialized yet'); },
             quickPurchase: function() { console.log('Not initialized yet'); }
         };
+
+        // Wait for the document to be fully loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            // Ensure the book image has the correct Lightbox attributes
+            var bookImage = document.querySelector('.book-image');
+            if (bookImage) {
+                bookImage.setAttribute('data-lightbox', 'book-image');
+                bookImage.setAttribute('href', bookImage.src);
+            }
+
+            // Configure Lightbox options
+            lightbox.option({
+                'resizeDuration': 200,
+                'wrapAround': true,
+                'maxWidth': 800,
+                'maxHeight': 800,
+                'albumLabel': 'תמונה %1 מתוך %2'
+            });
+        });
     </script>
     <script src="~/Content/Books/js/book-details.js"></script>
 }

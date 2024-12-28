@@ -184,8 +184,7 @@ namespace DigireadProject.Controllers
         }
 
         [Authorize]
-        public async Task<ActionResult> Profile()
-        {
+        public new async Task<ActionResult> Profile()        {
             var username = User.Identity.Name;
             var user = await db.Users.FirstOrDefaultAsync(u => u.Username == username);
 

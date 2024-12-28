@@ -3,336 +3,347 @@
     ViewBag.Title = "דף הבית";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-@Html.AntiForgeryToken()
-
-@section Styles {
-    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="~/Content/Home/css/file-explorer.css">
-}
-
 <main>
-    <!-- החלק החדש - קטגוריות הספרים -->
-    <div class="welcome-section">
-        <!-- אזור עליון עם התפריט -->
-        <div class="bg-section bg-top">
-            <div class="top-menu">
-                <a href="/ספרים/מומלצים" class="menu-item menu-recommended"></a>
-                <a href="/מבצעים" class="menu-item menu-deals"></a>
-                <a href="אודות" class="menu-item menu-recommended"></a>
-            </div>
-        </div>
-
-        <!-- אזור ספרי הארי פוטר -->
-        <div class="bg-section bg-middle">
-            <div class="books-grid harry-potter-books">
-                <a href="/BookManagement/BookDetails/13" class="book-link"></a>
-                <a href="/BookManagement/BookDetails/15" class="book-link"></a>
-                <a href="/BookManagement/BookDetails/18" class="book-link"></a>
-                <a href="/BookManagement/BookDetails/14" class="book-link"></a>
-                <a href="/BookManagement/BookDetails/17" class="book-link"></a>
-            </div>
-        </div>
-
-        <!-- אזור ספרי רומן -->
-        <div class="bg-section bg-bottom">
-            <div class="books-grid roman-books">
-                <a href="/BookManagement/BookDetails/21" class="book-link"></a>
-                <a href="/BookManagement/BookDetails/22" class="book-link"></a>
-                <a href="BookManagement/BookDetails/301" class="book-link"></a>
-                <a href="/BookManagement/BookDetails/302" class="book-link"></a>
-            </div>
-        </div>
-
-        <!-- אזור ספרי נוער -->
-        <div class="bg-section bg-third">
-            <div class="books-grid young-books">
-                @for(int i = 218; i <= 234; i++)
-                {
-                    <a href="/BookManagement/BookDetails/@i" class="book-link"></a>
-                }
-                <a href="/BookManagement/GenreBooks?genre=ילדים" class="book-link"></a>
-            </div>
-        </div>
-    </div>
-
-    <div id="bring-them-home-ticker"></div>
-
-    <!-- החלק של כותרת האתר ודירוג -->
+    <!-- קודם כל התמונה -->
     <section class="welcome-section">
-        <h1>DigiRead</h1>
-        <h2>חווית קריאה דיגיטלית</h2>
-        <img src="~/Content/Illustrative-Colorful-Library--unscreen.gif" alt="תמונת ספרייה" class="library-poster" />
+        <img src="~/Content/DigiRead/1.png" alt="תמונת ספרייה" class="library-poster" />
 
-        @if (Session["UserID"] != null)
-        {
-            <button id="rateWebsiteBtn" class="rate-website-btn">
-                <i class="fas fa-star"></i> דירוג האתר
-            </button>
-        }
-        else
-        {
-            <a href="@Url.Action("Login", "Account")" class="rate-website-btn">
-                <i class="fas fa-star"></i> דירוג האתר
-            </a>
-        }
     </section>
-
-    <!-- סקציית הספרים הפופולריים -->
+    <!-- מתחת לתמונה - רשימת הספרים -->
     <section class="popular-books-section">
-        <h2 class="text-center">ספרים פופולריים</h2>
+        <h2>ספרים פופולריים</h2>
         <div class="books-grid">
             @foreach (var book in Model.PopularBooks)
             {
                 <div class="book-card">
-                    <a href="@Url.Action("BookDetails", "BookManagement", new { id = book.BookID })">
-                        <div class="book-image">
-                            <img src="@book.ImageSrc" alt="@book.Title" />
+                    <div class="book-image">
+                        <img src="@book.ImageSrc" alt="@book.Title" />
+                    </div>
+                    <div class="book-info">
+                        <h3 class="book-title">@book.Title</h3>
+                        <p class="book-author">@book.MainAuthor</p>
+                        <div class="description-tooltip">
+                            <div class="tooltip-text">@book.Description</div>
                         </div>
-                        <div class="book-info">
-                            <h3 class="book-title">@book.Title</h3>
-                            <p class="book-author">@book.MainAuthor</p>
-                            <div class="book-rating">
-                                <div class="stars">
-                                    @{
-                                        var rating = book.AverageRating;
-                                        var fullStars = Math.Floor(rating);  // מספר הכוכבים המלאים
-                                        var hasHalfStar = (rating - fullStars) >= 0.5m; // שימוש ב-decimal
-                                    }
+                        <div class="book-rating">
+                            <div class="stars">
+                                @{
+                                    var rating = book.AverageRating;
+                                    var fullStars = Math.Floor(rating);
+                                    var hasHalfStar = (rating - fullStars) >= 0.5m;
+                                }
 
-                                    @* כוכבים מלאים *@
-                                    @for (int i = 0; i < fullStars; i++)
-                                    {
-                                        <i class="fas fa-star active"></i>
-                                    }
+                                @for (int i = 0; i < fullStars; i++)
+                                {
+                                    <i class="fa-solid fa-star active"></i>
+                                }
 
-                                    @* חצי כוכב אם נדרש *@
-                                    @if (hasHalfStar)
-                                    {
-                                        <i class="fas fa-star-half-alt active"></i>
-                                    }
+                                @if (hasHalfStar)
+                                {
+                                    <i class="fa-solid fa-star-half-alt active"></i>
+                                }
 
-                                    @* השלמה ל-5 כוכבים ריקים *@
-                                    @for (int i = 0; i < 5 - Math.Ceiling(rating); i++)
-                                    {
-                                        <i class="far fa-star"></i>
-                                    }
-                                </div>
-                                <span class="average-rating">דירוג ממוצע: @rating.ToString("F1")</span>
-                                <a href="@Url.Action("BookDetails", "BookManagement", new { id = book.BookID })" class="view-all-reviews">
-                                    לכל הביקורות לחץ כאן
-                                </a>
+                                @for (int i = 0; i < 5 - Math.Ceiling(rating); i++)
+                                {
+                                    <i class="fa-regular fa-star"></i>
+                                }
                             </div>
+                            <br/>
+                            <span class="average-rating">דירוג ממוצע: @rating.ToString("F1")</span>
                         </div>
-                    </a>
+                    </div>
+                    <!-- Hidden link for book details -->
+                    <a href="@Url.Action("BookDetails", "BookManagement", new { id = book.BookID })" class="book-details-link" style="display:none;"></a>
                 </div>
             }
         </div>
     </section>
 
+    <!-- מתחת לספרים פופולריים - רשימת ספרים במבצע -->
+    <section class="sale-books-section">
+        <h2>ספרים במבצע</h2>
+        <div class="books-grid">
+            @foreach (var book in Model.OnSaleBooks)
+            {
+                <div class="book-card">
+                    <div class="book-image">
+                        <img src="@book.ImageSrc" alt="@book.Title" />
+                    </div>
+                    <div class="book-info">
+                        <h3 class="book-title">@book.Title</h3>
+                        <p class="book-author">@book.MainAuthor</p>
+                        <div class="description-tooltip">
+                            <div class="tooltip-text">@book.Description</div>
+                        </div>
+                        <div class="book-prices">
+                            <span class="original-price">₪@book.OriginalPrice</span>
+                            <span class="purchase-price">₪@book.PurchasePrice</span>
+                        </div>
+                    </div>
+                    <a href="@Url.Action("BookDetails", "BookManagement", new { id = book.BookID })" class="book-details-link" style="display:none;"></a>
+                </div>
+            }
+
+        </div>
+    </section>
+
+    <!-- סקציית סדרות מומלצות -->
+    <section class="recommended-series-section">
+        <h2>סדרות מומלצות</h2>
+
+        <!-- ספרי רומן -->
+        <div class="series-category">
+            <h3>סדרת הלביאה הלוחמת והאריה האגדי</h3>
+            <div class="books-container">
+                <div class="books-grid">
+                    @foreach (var book in Model.RomanceSeries)
+                    {
+                        <div class="book-card">
+                            <div class="book-image">
+                                <img src="@book.ImageSrc" alt="@book.Title" />
+                            </div>
+                            <div class="book-info">
+                                <h3 class="book-title">@book.Title</h3>
+                                <p class="book-author">@book.MainAuthor</p>
+                                <div class="description-tooltip">
+                                    <div class="tooltip-text">@book.Description</div>
+                                </div>
+                            </div>
+                            <a href="@Url.Action("BookDetails", "BookManagement", new { id = book.BookID })" class="book-details-link" style="display:none;"></a>
+                        </div>
+                    }
+                </div>
+                <div class="grid-nav">
+                    <button class="prev">
+                        <i class="fa-solid fa-chevron-left"></i>
+                    </button>
+                    <button class="next">
+                        <i class="fa-solid fa-chevron-right"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ספרי מדע בדיוני -->
+        <div class="series-category">
+            <h3>סדרת הארי פוטר</h3>
+            <div class="books-container">
+                <div class="books-grid">
+                    @foreach (var book in Model.SciFiSeries)
+                    {
+                        <div class="book-card">
+                            <div class="book-image">
+                                <img src="@book.ImageSrc" alt="@book.Title" />
+                            </div>
+                            <div class="book-info">
+                                <h3 class="book-title">@book.Title</h3>
+                                <p class="book-author">@book.MainAuthor</p>
+                                <div class="description-tooltip">
+                                    <div class="tooltip-text">@book.Description</div>
+                                </div>
+                            </div>
+                            <a href="@Url.Action("BookDetails", "BookManagement", new { id = book.BookID })" class="book-details-link" style="display:none;"></a>
+                        </div>
+                    }
+                </div>
+                <div class="grid-nav">
+                    <button class="prev">
+                        <i class="fa-solid fa-chevron-left"></i>
+                    </button>
+                    <button class="next">
+                        <i class="fa-solid fa-chevron-right"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
     <!-- סקציית ביקורות על האתר -->
     <section class="website-reviews-section">
-        <h2 class="text-center">משתמשים מספרים על האתר</h2>
+        <h2>מה המשתמשים חושבים על האתר שלנו</h2>
         <div class="reviews-grid">
             @foreach (var review in Model.WebsiteReviews)
             {
-                <div class="website-review-card">
+                <div class="review-card">
                     <div class="review-header">
-                        <div class="reviewer-info">
-                            <span class="reviewer-name">@review.Username</span>
-                            <small class="review-date">@review.ReviewDate.ToString("dd/MM/yyyy")</small>
+                        <div class="user-info">
+                            <i class="fa-solid fa-user"></i>
+                            <span class="username">@review.Username</span>
                         </div>
-                        <div class="stars">
-                            @for (int i = 1; i <= 5; i++)
+                        <div class="review-rating">
+                            @for (int i = 0; i < review.Rating; i++)
                             {
-                                <i class="fas fa-star @(i <= review.Rating ? "active" : "")"></i>
+                                <i class="fa-solid fa-star active"></i>
+                            }
+                            @for (int i = 0; i < 5 - review.Rating; i++)
+                            {
+                                <i class="fa-regular fa-star"></i>
                             }
                         </div>
                     </div>
-                    <p class="review-text">@review.ReviewText</p>
+                    <div class="review-content">
+                        <p>@review.ReviewText</p>
+                    </div>
+                    <div class="review-date">
+                        <i class="fa-regular fa-calendar"></i>
+                        <span>@review.ReviewDate.ToString("dd/MM/yyyy")</span>
+                    </div>
                 </div>
             }
+            <div class="more-reviews-button-container">
+                <button id="showMoreReviews" class="more-reviews-button">
+                    <i class="fa-solid fa-comments"></i>
+                    הצג את כל הביקורות
+                </button>
+            </div>
         </div>
     </section>
+    <!-- Modal for all reviews -->
+    <div id="reviewsModal" class="reviews-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>כל הביקורות</h3>
+                <button class="close-modal">×</button>
+            </div>
+            <div class="modal-body">
+                @foreach (var review in Model.WebsiteReviews)
+                {
+                    <div class="review-card modal-review">
+                        <div class="review-header">
+                            <div class="user-info">
+                                <i class="fa-solid fa-user"></i>
+                                <span class="username">@review.Username</span>
+                            </div>
+                            <div class="review-rating">
+                                @for (int i = 0; i < review.Rating; i++)
+                                {
+                                    <i class="fa-solid fa-star active"></i>
+                                }
+                                @for (int i = 0; i < 5 - review.Rating; i++)
+                                {
+                                    <i class="fa-regular fa-star"></i>
+                                }
+                            </div>
+                        </div>
+                        <div class="review-content">
+                            <p>@review.ReviewText</p>
+                        </div>
+                        <div class="review-date">
+                            <i class="fa-regular fa-calendar"></i>
+                            <span>@review.ReviewDate.ToString("dd/MM/yyyy")</span>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+
+    <style>
+
+        /* הקטנת הכותרת הראשית */
+        .recommended-series-section h2,
+        .series-section h2 {
+            font-size:3rem !important; /* הקטנת גודל הכותרת */
+            color: #2c3e50;
+            margin-bottom: 2rem;
+            text-align: center;
+            position: relative;
+            font-weight: 800;
+            text-shadow: 2px 2px 4px rgba(255, 255, 255, 0.99);
+        }
+
+        .recommended-series-section h2::after {
+            content: '';
+            position: absolute;
+            bottom: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 150px;
+            height: 4px;
+            background: linear-gradient(to right, #a17bc6, #8154a8);
+            border-radius: 2px;
+        }
+
+        .recommended-series-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 200px;
+            background: linear-gradient(180deg, rgba(0,0,0,0.05) 0%, transparent 100%);
+            pointer-events: none;
+        }
+
+
+
+        .recommended-series-section h2::after {
+            content: '';
+            position: absolute;
+            bottom: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 150px;
+            height: 4px;
+            background: linear-gradient(to right, #a17bc6, #8154a8);
+            border-radius: 2px;
+        }
+
+        .series-category {
+            margin-bottom: 4rem;
+            padding: 3rem 2rem;
+            background: #c7b3d6;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .series-category h3 {
+            color: #2c3e50;
+            margin-bottom: 2rem;
+            text-align: center;
+            position: relative;
+            font-weight: 700;
+        }
+
+
+    </style>
+
 </main>
 
+<head>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
 @section Scripts {
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/js/all.min.js"></script>
+    @Scripts.Render("~/bundles/jqueryval")
     <script src="~/Content/Home/js/file-explorer.js"></script>
-
     <script>
-        $(document).ready(function() {
-            $('#rateWebsiteBtn').on('click', function() {
-                showWebsiteRatingDialog();
-            });
-        });
+        document.addEventListener('DOMContentLoaded', function() {
+            const modal = document.getElementById('reviewsModal');
+            const btn = document.getElementById('showMoreReviews');
+            const closeBtn = document.querySelector('.close-modal');
 
-        function showWebsiteRatingDialog() {
-            // בדיקה האם המשתמש כבר דירג את האתר
-            $.get('/Reviews/HasUserReviewedWebsite', function(response) {
-                if (response.hasReviewed) {
-                    Swal.fire({
-                        icon: 'warning',
-                        title: 'לא ניתן לדרג',
-                        text: 'כבר דירגת את האתר בעבר',
-                        confirmButtonText: 'אישור'
-                    });
-                    return;
-                }
-                
-            let currentRating = 0;
-
-            Swal.fire({
-                title: 'דרג את האתר',
-                html: `
-                    <div class="rating-container">
-                        <div class="star-rating">
-                            <span class="star" data-rating="1" role="button">★</span>
-                            <span class="star" data-rating="2" role="button">★</span>
-                            <span class="star" data-rating="3" role="button">★</span>
-                            <span class="star" data-rating="4" role="button">★</span>
-                            <span class="star" data-rating="5" role="button">★</span>
-                        </div>
-                        <div id="rating-text">בחר דירוג</div>
-                    </div>
-                    <textarea id="reviewText" class="swal2-textarea" placeholder="נשמח לשמוע את חוות דעתך..." dir="rtl"></textarea>
-                `,
-                showCancelButton: true,
-                confirmButtonText: 'שלח דירוג',
-                cancelButtonText: 'ביטול',
-                didOpen: (popup) => {
-                    const stars = popup.querySelectorAll('.star');
-                    const ratingText = popup.querySelector('#rating-text');
-                    const ratingDescriptions = ['גרוע', 'לא טוב', 'סביר', 'טוב', 'מצוין'];
-
-                    stars.forEach(star => {
-                        // טיפול בהובר
-                        star.addEventListener('mouseenter', () => {
-                            const rating = parseInt(star.dataset.rating);
-                            stars.forEach((s, index) => {
-                                if (index < rating) {
-                                    s.classList.add('active');
-                                } else {
-                                    s.classList.remove('active');
-                                }
-                            });
-                            ratingText.textContent = ratingDescriptions[rating - 1];
-                        });
-
-                        // טיפול בלחיצה
-                        star.addEventListener('click', () => {
-                            currentRating = parseInt(star.dataset.rating);
-                            stars.forEach((s, index) => {
-                                if (index < currentRating) {
-                                    s.classList.add('selected');
-                                } else {
-                                    s.classList.remove('selected');
-                                }
-                            });
-                            ratingText.textContent = ratingDescriptions[currentRating - 1];
-                        });
-                    });
-
-                    // טיפול ביציאת העכבר
-                    popup.querySelector('.star-rating').addEventListener('mouseleave', () => {
-                        stars.forEach((s, index) => {
-                            if (index < currentRating) {
-                                s.classList.add('selected');
-                            } else {
-                                s.classList.remove('active', 'selected');
-                            }
-                        });
-                        ratingText.textContent = currentRating ?
-                            ratingDescriptions[currentRating - 1] : 'בחר דירוג';
-                    });
-                }
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    if (currentRating === 0) {
-                        Swal.fire('שגיאה', 'אנא בחר דירוג', 'error');
-                        return;
-                    }
-                    const reviewText = document.getElementById('reviewText').value;
-                    submitWebsiteRating(currentRating, reviewText);
-                }
-            });
-        })
-
-        function submitWebsiteRating(rating, reviewText) {
-            $.ajax({
-                url: '/Reviews/AddWebsiteReview',
-                type: 'POST',
-                data: {
-                    rating: rating,
-                    reviewText: reviewText,
-                    __RequestVerificationToken: $('input[name="__RequestVerificationToken"]').val()
-                },
-                beforeSend: function() {
-                    Swal.showLoading();
-                },
-                success: function(response) {
-                    if (response.success) {
-                        Swal.fire({
-                            icon: 'success',
-                            title: 'תודה!',
-                            text: 'הדירוג נשמר בהצלחה',
-                            confirmButtonText: 'אישור'
-                        });
-                    } else {
-                        if (response.message === "יש להתחבר למערכת") {
-                            Swal.fire({
-                                title: 'שגיאה',
-                                text: 'יש להתחבר למערכת כדי לדרג את האתר',
-                                icon: 'error',
-                                confirmButtonText: 'התחבר',
-                            }).then((result) => {
-                                if (result.isConfirmed) {
-                                    window.location.href = '/Account/Login';
-                                }
-                            });
-                        } else {
-                            Swal.fire({
-                                icon: 'error',
-                                title: 'שגיאה',
-                                text: response.message || 'אירעה שגיאה בשמירת הדירוג',
-                                confirmButtonText: 'אישור'
-                            });
-                        }
-                    }
-                },
-                error: function() {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'שגיאה',
-                        text: 'אירעה שגיאה בשמירת הדירוג',
-                        confirmButtonText: 'אישור'
-                    });
-                }
-            });
-        }
-            function showBookRatingDialog(bookId) {
-                // בדיקה האם המשתמש כבר דירג את הספר
-                $.get('/Reviews/HasUserReviewedBook', { bookId: bookId }, function(response) {
-                    if (response.hasReviewed) {
-                        Swal.fire({
-                            icon: 'warning',
-                            title: 'לא ניתן לדרג',
-                            text: 'כבר דירגת את הספר הזה בעבר',
-                            confirmButtonText: 'אישור'
-                        });
-                        return;
-                    }
-
-                    // המשך הקוד הקיים של הצגת דיאלוג הדירוג
-                    let currentRating = 0;
-
-                    Swal.fire({
-                        // ... הקוד הקיים ...
-                    });
-                });
+            // פתיחת המודאל
+            btn.onclick = function() {
+                modal.style.display = "block";
+                document.body.classList.add('modal-open');
             }
-       }
+
+            // סגירת המודאל
+            closeBtn.onclick = function() {
+                modal.style.display = "none";
+                document.body.classList.remove('modal-open');
+            }
+
+            // סגירת המודאל בלחיצה על הרקע
+            window.onclick = function(event) {
+                if (event.target == modal) {
+                    modal.style.display = "none";
+                    document.body.classList.remove('modal-open');
+                }
+            }
+        });
     </script>
+}
+@section Styles {
+    <link href="~/Content/Home/css/file-explorer.css" rel="stylesheet" />
 }

@@ -9,6 +9,10 @@ namespace DigireadProject.Models.ViewModels
         public string Title { get; set; }
         public string MainAuthor { get; set; }
         public string ImageSrc { get; set; }
+        public string Description { get; set; }  
+        public decimal OriginalPrice { get; set; }
+        public Nullable<decimal> PurchasePrice { get; set; }
+
         public decimal AverageRating { get; set; }  // שינוי מ-decimal? ל-decimal
         public int ReviewCount { get; set; }
         public List<ReviewDetails> Reviews { get; set; }
@@ -29,12 +33,17 @@ namespace DigireadProject.Models.ViewModels
     public class HomeViewModel
     {
         public List<PopularBookViewModel> PopularBooks { get; set; }
+        public List<PopularBookViewModel> OnSaleBooks { get; set; } 
         public List<WebsiteReviewViewModel> WebsiteReviews { get; set; }
+        public List<PopularBookViewModel> RomanceSeries { get; set; }
+        public List<PopularBookViewModel> SciFiSeries { get; set; }
 
         public HomeViewModel()
         {
             PopularBooks = new List<PopularBookViewModel>();
+            OnSaleBooks = new List<PopularBookViewModel>(); 
             WebsiteReviews = new List<WebsiteReviewViewModel>();
+            
         }
     }
 

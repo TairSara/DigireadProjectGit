@@ -73,3 +73,54 @@ function sortBooks() {
     container.innerHTML = '';
     books.forEach(book => container.appendChild(book));
 }
+function sortBooks() {
+    const sortBy = document.getElementById('sortSelect').value;
+    const booksContainer = document.getElementById('booksContainer');
+    const books = Array.from(booksContainer.getElementsByClassName('book-item'));
+
+    books.sort((a, b) => {
+        switch (sortBy) {
+            case 'popularity':
+                // מיון לפי דירוג וכמות ביקורות
+                const ratingA = parseFloat(a.dataset.rating) || 0;
+                const ratingB = parseFloat(b.dataset.rating) || 0;
+                const reviewsA = parseInt(a.dataset.reviews) || 0;
+                const reviewsB = parseInt(b.dataset.reviews) || 0;
+
+                // נוסחה המשקללת דירוג וכמות ביקורות
+                const popularityA = (ratingA * 0.7) + ((reviewsA / Math.max(reviewsA, reviewsB)) * 0.3 * 5);
+                const popularityB = (ratingB * 0.7) + ((reviewsB / Math.max(reviewsA, reviewsB)) * 0.3 * 5);
+                return popularityB - popularityA;
+
+            case 'title':
+                return a.dataset.title.localeCompare(b.dataset.title, 'he');
+
+            case 'priceAsc':
+                return parseFloat(a.dataset.price) - parseFloat(b.dataset.price);
+
+            case 'priceDesc':
+                return parseFloat(b.dataset.price) - parseFloat(a.dataset.price);
+
+            case 'year':
+                return parseInt(b.dataset.year) - parseInt(a.dataset.year);
+
+            case 'author':
+                return a.dataset.author.localeCompare(b.dataset.author, 'he');
+
+            default:
+                return 0;
+        }
+    });
+
+    // סידור מחדש של האלמנטים
+    books.forEach(book => booksContainer.appendChild(book));
+}
+
+// הוספת טעינת ברירת מחדל למיון לפי פופולריות
+document.addEventListener('DOMContentLoaded', function() {
+    const sortSelect = document.getElementById('sortSelect');
+    // קבע את ברירת המחדל לפופולריות
+    sortSelect.value = 'popularity';
+    // הפעל את המיון
+    sortBooks();
+});

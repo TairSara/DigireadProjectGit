@@ -269,9 +269,7 @@
     <Content Include="Content\Account\js\reset-password-validation.js" />
     <Content Include="Content\Admin\css\admin-dashboard.css" />
     <Content Include="Content\Admin\js\admin.js" />
-    <Content Include="Content\Books\css\book-details.css" />
     <Content Include="Content\Books\css\book-management.css" />
-    <Content Include="Content\Books\css\gallery.css" />
     <Content Include="Content\Books\css\GenreCarousel.css" />
     <Content Include="Content\Books\css\library-management.css" />
     <Content Include="Content\Books\css\MyLibrary.css" />
@@ -291,15 +289,6 @@
     <Content Include="Content\Cart\css\cartStyle.css" />
     <Content Include="Content\Cart\js\cartDetailes.js" />
     <Content Include="Content\DigiRead\1.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Content\DigiRead\2.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Content\DigiRead\3.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Content\DigiRead\7.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\DigiRead\main.png">
