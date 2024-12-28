@@ -8,40 +8,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="20f33115-b11b-49e2-bb24-d6ba9c0d48a8" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/DigireadProject/Controllers/ReviewsController.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/DigireadProject/Models/ViewModels/PopularBookViewModel.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.DigireadProject/.idea/dataSources/5128b1bc-301f-4f72-aaf1-ed090f455d6e.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.DigireadProject/.idea/dataSources/5128b1bc-301f-4f72-aaf1-ed090f455d6e.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.DigireadProject/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.DigireadProject/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DigireadProject/App_Start/BundleConfig.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DigireadProject/App_Start/BundleConfig.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DigireadProject/App_Start/RouteConfig.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DigireadProject/App_Start/RouteConfig.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DigireadProject/Content/Account/css/account.css" beforeDir="false" afterPath="$PROJECT_DIR$/DigireadProject/Content/Account/css/account.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DigireadProject/Content/Books/css/MyLibrary.css" beforeDir="false" afterPath="$PROJECT_DIR$/DigireadProject/Content/Books/css/MyLibrary.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DigireadProject/Content/Books/css/book-details.css" beforeDir="false" afterPath="$PROJECT_DIR$/DigireadProject/Content/Books/css/book-details.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DigireadProject/Content/Books/js/MyLibrary.js" beforeDir="false" afterPath="$PROJECT_DIR$/DigireadProject/Content/Books/js/MyLibrary.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DigireadProject/Content/Books/js/book-details.js" beforeDir="false" afterPath="$PROJECT_DIR$/DigireadProject/Content/Books/js/book-details.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DigireadProject/Content/Home/css/file-explorer.css" beforeDir="false" afterPath="$PROJECT_DIR$/DigireadProject/Content/Home/css/file-explorer.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DigireadProject/Content/Home/js/file-explorer.js" beforeDir="false" afterPath="$PROJECT_DIR$/DigireadProject/Content/Home/js/file-explorer.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DigireadProject/Controllers/AccountController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DigireadProject/Controllers/AccountController.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DigireadProject/Controllers/BookManagementController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DigireadProject/Controllers/BookManagementController.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DigireadProject/Controllers/HomeController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DigireadProject/Controllers/HomeController.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DigireadProject/Controllers/OrderController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DigireadProject/Controllers/OrderController.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DigireadProject/DigireadProject.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/DigireadProject/DigireadProject.csproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DigireadProject/Models/ViewModels/BookViewModel.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DigireadProject/Models/ViewModels/BookViewModel.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DigireadProject/Views/Account/ForgotPassword.cshtml" beforeDir="false" afterPath="$PROJECT_DIR$/DigireadProject/Views/Account/ForgotPassword.cshtml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DigireadProject/Views/Account/Login.cshtml" beforeDir="false" afterPath="$PROJECT_DIR$/DigireadProject/Views/Account/Login.cshtml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DigireadProject/Views/Account/Register.cshtml" beforeDir="false" afterPath="$PROJECT_DIR$/DigireadProject/Views/Account/Register.cshtml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DigireadProject/Views/Account/ResetPassword.cshtml" beforeDir="false" afterPath="$PROJECT_DIR$/DigireadProject/Views/Account/ResetPassword.cshtml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DigireadProject/Views/BookManagement/BookDetails.cshtml" beforeDir="false" afterPath="$PROJECT_DIR$/DigireadProject/Views/BookManagement/BookDetails.cshtml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DigireadProject/Views/BookManagement/MyLibrary.cshtml" beforeDir="false" afterPath="$PROJECT_DIR$/DigireadProject/Views/BookManagement/MyLibrary.cshtml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DigireadProject/Views/Home/HomePage.cshtml" beforeDir="false" afterPath="$PROJECT_DIR$/DigireadProject/Views/Home/HomePage.cshtml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DigireadProject/Views/Shared/_Layout.cshtml" beforeDir="false" afterPath="$PROJECT_DIR$/DigireadProject/Views/Shared/_Layout.cshtml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DigireadProject/bin/DigireadProject.dll" beforeDir="false" afterPath="$PROJECT_DIR$/DigireadProject/bin/DigireadProject.dll" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DigireadProject/bin/DigireadProject.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/DigireadProject/bin/DigireadProject.pdb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DigireadProject/obj/Debug/DigireadProject.csproj.AssemblyReference.cache" beforeDir="false" afterPath="$PROJECT_DIR$/DigireadProject/obj/Debug/DigireadProject.csproj.AssemblyReference.cache" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DigireadProject/obj/Debug/DigireadProject.csproj.CoreCompileInputs.cache" beforeDir="false" afterPath="$PROJECT_DIR$/DigireadProject/obj/Debug/DigireadProject.csproj.CoreCompileInputs.cache" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DigireadProject/obj/Debug/DigireadProject.csproj.FileListAbsolute.txt" beforeDir="false" afterPath="$PROJECT_DIR$/DigireadProject/obj/Debug/DigireadProject.csproj.FileListAbsolute.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DigireadProject/obj/Debug/DigireadProject.dll" beforeDir="false" afterPath="$PROJECT_DIR$/DigireadProject/obj/Debug/DigireadProject.dll" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DigireadProject/obj/Debug/DigireadProject.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/DigireadProject/obj/Debug/DigireadProject.pdb" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -131,7 +98,7 @@
       <workItem from="1734612554361" duration="44444000" />
       <workItem from="1734786571971" duration="30928000" />
       <workItem from="1734970685976" duration="414000" />
-      <workItem from="1735041187528" duration="47005000" />
+      <workItem from="1735041187528" duration="47723000" />
     </task>
     <servers />
   </component>
@@ -142,25 +109,6 @@
   <component name="UnityProjectConfiguration" hasMinimizedUI="false" />
   <component name="VcsManagerConfiguration">
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
-  </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/DigireadProject/Controllers/ShoppingCartController.cs</url>
-          <line>162</line>
-          <properties documentPath="C:\Users\noamd\RiderProjects\DigireadProjectGit\DigireadProject\Controllers\ShoppingCartController.cs" containingFunctionPresentation="Method 'Checkout'">
-            <startOffsets>
-              <option value="6983" />
-            </startOffsets>
-            <endOffsets>
-              <option value="7056" />
-            </endOffsets>
-          </properties>
-          <option name="timeStamp" value="4" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

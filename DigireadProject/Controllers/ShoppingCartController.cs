@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 using DigireadProject.Models.ViewModels;
+using DigireadProject.Services;
 
 namespace DigireadProject.Controllers
 {
@@ -12,11 +13,13 @@ namespace DigireadProject.Controllers
     {
         private readonly libraryProject_digireadEntities db;
         private readonly EmailService _emailService;
+        private readonly NotificationScheduler _notificationScheduler;
 
         public ShoppingCartController()
         {
             db = new libraryProject_digireadEntities();
             _emailService = new EmailService();
+            _notificationScheduler = new NotificationScheduler(_emailService, db);
         }
 
         public ActionResult Cart()
@@ -65,7 +68,7 @@ namespace DigireadProject.Controllers
                             UserID = userId,
                             BookID = item.BookID,
                             RentalDate = DateTime.Now,
-                            ReturnDate = null, // תאריך החזרה יהיה null עד שהספר יוחזר
+                            ReturnDate = null,
                             ImageSrc = book.ImageSrc,
                             DaysOverdue = 0
                         };
@@ -102,27 +105,19 @@ namespace DigireadProject.Controllers
                                 System.Diagnostics.Debug.WriteLine($"עדכון מיקום משתמש {remainingItem.UserID} ל-{remainingItem.WaitPosition}");
                             }
 
-                            // בדיקה אם יש מלאי זמין למשתמש הבא בתור
+                            // בדיקה אם יש מלאי זמין למשתמשים ברשימת ההמתנה
                             if (book.StockQuantityRent > 0)
                             {
-                                var nextInLine = remainingItems
+                                await HandleWaitListNotifications(book.BookID, book.Title);
+                                
+                                // עדכון סטטוס EmailNotificationSent עבור שלושת המשתמשים הראשונים
+                                var topThreeUsers = remainingItems
                                     .OrderBy(w => w.WaitPosition)
-                                    .FirstOrDefault();
-
-                                if (nextInLine != null)
+                                    .Take(3);
+                                    
+                                foreach (var waitUser in topThreeUsers)
                                 {
-                                    var nextUser = await db.Users
-                                        .FirstOrDefaultAsync(u => u.UserID == nextInLine.UserID);
-
-                                    if (nextUser?.Email != null)
-                                    {
-                                        System.Diagnostics.Debug.WriteLine($"שולח התראה למשתמש הבא בתור {nextUser.Username}");
-                                        await _emailService.SendBookAvailableNotificationAsync(
-                                            nextUser.Email,
-                                            book.Title
-                                        );
-                                        nextInLine.EmailNotificationSent = true;
-                                    }
+                                    waitUser.EmailNotificationSent = true;
                                 }
                             }
                         }
@@ -330,6 +325,21 @@ namespace DigireadProject.Controllers
             var username = User.Identity.Name;
             var user = db.Users.FirstOrDefault(u => u.Username == username);
             return user?.UserID ?? 0;
+        }
+        
+        private async Task HandleWaitListNotifications(int bookId, string bookTitle)
+        {
+            var waitListUsers = await db.WaitList
+                .Include(w => w.Users)
+                .Where(w => w.BookID == bookId)
+                .OrderBy(w => w.WaitPosition)
+                .Take(3)
+                .ToListAsync();
+
+            if (waitListUsers.Any())
+            {
+                _notificationScheduler.ScheduleNotifications(waitListUsers, bookTitle);
+            }
         }
 
         protected override void Dispose(bool disposing)

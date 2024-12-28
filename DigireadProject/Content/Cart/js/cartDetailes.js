@@ -189,20 +189,6 @@ function showMessage(isSuccess) {
 }
 
 function completePurchase() {
-    var token = $('input[name="__RequestVerificationToken"]').val();
-
-    // הצג אנימציית טעינה או הודעה
-    $('.checkout-btn').prop('disabled', true).text('מבצע רכישה...');
-
-    // שלח את הטופס באופן רגיל (לא Ajax)
-    var form = $('<form>')
-        .attr('method', 'POST')
-        .attr('action', '/Order/CompletePurchase')
-        .append($('<input>')
-            .attr('type', 'hidden')
-            .attr('name', '__RequestVerificationToken')
-            .val(token));
-
-    $('body').append(form);
-    form.submit();
+    window.location.href = '/Order/PaymentForm';
+    
 }

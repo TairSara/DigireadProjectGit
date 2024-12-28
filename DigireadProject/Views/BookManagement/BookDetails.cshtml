@@ -5,7 +5,7 @@
     <div class="book-content">
         <div class="book-details-container">
             <h2 class="book-title">@Model.Title</h2>
-            
+
             <div class="book-info">
                 <p><strong>מחבר ראשי:</strong> @Model.MainAuthor</p>
                 <p><strong>הוצאה לאור:</strong> @Model.Publisher</p>
@@ -93,62 +93,62 @@
             }
         </div>
     </div>
-    </div>
+</div>
 
-    <!-- Purchase Dialog -->
-    <div id="purchaseDialog" class="modal">
-        <div class="modal-content">
-            <h3>בחר אפשרות רכישה</h3>
-            <div class="purchase-options">
-                <!-- אפשרות רכישה - או זמין או לא זמין -->
-                @if (Model.StockQuantity > 0)
-                {
-                    <form method="post" action="@Url.Action("AddToCart", "ShoppingCart")">
-                        @Html.AntiForgeryToken()
-                        @Html.Hidden("bookId", Model.BookID)
-                        @Html.Hidden("isRental", false)
-                        <button type="submit" class="btn btn-primary purchase-btn">
-                            <i class="fas fa-shopping-cart"></i>
-                            רכישה - ₪@Model.PurchasePrice
+<!-- Purchase Dialog -->
+<div id="purchaseDialog" class="modal">
+    <div class="modal-content">
+        <h3>בחר אפשרות רכישה</h3>
+        <div class="purchase-options">
+            <!-- אפשרות רכישה - או זמין או לא זמין -->
+            @if (Model.StockQuantity > 0)
+            {
+                <form method="post" action="@Url.Action("AddToCart", "ShoppingCart")">
+                    @Html.AntiForgeryToken()
+                    @Html.Hidden("bookId", Model.BookID)
+                    @Html.Hidden("isRental", false)
+                    <button type="submit" class="btn btn-primary purchase-btn">
+                        <i class="fas fa-shopping-cart"></i>
+                        רכישה - ₪@Model.PurchasePrice
+                    </button>
+                </form>
+            }
+            else
+            {
+                <div class="availability-status not-available">
+                    <text>הספר אינו זמין לרכישה - אין במלאי</text>
+                </div>
+            }
+
+            <!-- אפשרות השאלה - כולל אפשרות להצטרף לרשימת המתנה -->
+            @if (Model.IsForRent == true)
+            {
+                <form method="post" action="@(Model.StockQuantityRent > 0 ?
+                                            Url.Action("AddToCart", "ShoppingCart") :
+                                            Url.Action("AddToWaitList", "BookManagement"))">
+                    @Html.AntiForgeryToken()
+                    @Html.Hidden("bookId", Model.BookID)
+                    @Html.Hidden("isRental", true)
+                    @if (Model.StockQuantityRent > 0)
+                    {
+                        <button type="submit" class="btn btn-primary rental-btn">
+                            <i class="fas fa-clock"></i>
+                            השכרה - ₪@Model.RentalPrice
                         </button>
-                    </form>
-                }
-                else
-                {
-                    <div class="availability-status not-available">
-                        <text>הספר אינו זמין לרכישה - אין במלאי</text>
-                    </div>
-                }
-
-                <!-- אפשרות השאלה - כולל אפשרות להצטרף לרשימת המתנה -->
-                @if (Model.IsForRent == true)
-                {
-                    <form method="post" action="@(Model.StockQuantityRent > 0 ?
-                                                Url.Action("AddToCart", "ShoppingCart") :
-                                                Url.Action("AddToWaitList", "BookManagement"))">
-                        @Html.AntiForgeryToken()
-                        @Html.Hidden("bookId", Model.BookID)
-                        @Html.Hidden("isRental", true)
-                        @if (Model.StockQuantityRent > 0)
-                        {
-                            <button type="submit" class="btn btn-primary rental-btn">
-                                <i class="fas fa-clock"></i>
-                                השכרה - ₪@Model.RentalPrice
-                            </button>
-                        }
-                        else
-                        {
-                            <button type="submit" class="btn btn-secondary">
-                                <i class="fas fa-clock"></i>
-                                הצטרף לרשימת המתנה להשאלה
-                            </button>
-                        }
-                    </form>
-                }
-            </div>
-            <button onclick="bookManager.closePurchaseDialog()" class="btn btn-secondary">ביטול</button>
+                    }
+                    else
+                    {
+                        <button type="submit" class="btn btn-secondary">
+                            <i class="fas fa-clock"></i>
+                            הצטרף לרשימת המתנה להשאלה
+                        </button>
+                    }
+                </form>
+            }
         </div>
+        <button onclick="bookManager.closePurchaseDialog()" class="btn btn-secondary">ביטול</button>
     </div>
+</div>
 
 <!-- הוספת Modal להודעת שגיאה -->
 <div id="errorModal" class="modal">
