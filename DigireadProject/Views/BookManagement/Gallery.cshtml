@@ -82,12 +82,14 @@
                         <article class="book-card">
                             <a href="BookDetails/@book.BookID" class="book-link">
                                 <div class="card @(book.StockQuantity <= 0 ? "out-of-stock" : "")">
-                                    <div class="wishlist-heart @(ViewBag.UserWishlist?.Contains(book.BookID) == true ? "active" : "")"
-                                         onclick="toggleWishlist(event, @book.BookID)">
-                                        <i class="@(ViewBag.UserWishlist?.Contains(book.BookID) == true ? "fas" : "far") fa-heart"></i>
-                                    </div>
+                                    @if (User.Identity.IsAuthenticated)
+                                    {
+                                        <div class="wishlist-heart @(ViewBag.UserWishlist?.Contains(book.BookID) == true ? "active" : "")"
+                                             onclick="toggleWishlist(event, @book.BookID)">
+                                            <i class="@(ViewBag.UserWishlist?.Contains(book.BookID) == true ? "fas" : "far") fa-heart"></i>
+                                        </div>
+                                    }
 
-                                    <!-- תצוגת גיל חדשה -->
                                     @if (book.AgeRestriction > 0)
                                     {
                                         <div class="age-display-badge">
@@ -107,18 +109,13 @@
                                         </div>
                                     }
 
-                                    @if (book.AgeRestriction > 0)
-                                    {
-                                        <span class="age-restricted-badge">@book.AgeRestriction +</span>
-                                    }
-
                                     <div class="card-body">
                                         <h5 class="card-title">@book.Title</h5>
                                         <div class="book-details">
                                             <p class="author">@book.MainAuthor</p>
                                             <p class="year">@book.PublishYear</p>
                                             <div class="price-section">
-                                                @if (book.OriginalPrice > 0 && book.PurchasePrice > 0 && book.PurchasePrice < book.OriginalPrice)
+                                                @if (book.OriginalPrice > book.PurchasePrice)
                                                 {
                                                     <del class="original-price">₪@book.OriginalPrice</del>
                                                     <span class="sale-price">₪@book.PurchasePrice</span>
@@ -138,7 +135,6 @@
             </div>
         </div>
     </section>
-
     <style>
         /* Global Styles */
         body {
@@ -505,10 +501,11 @@
         .search-filter-section {
             padding: 20px;
         }
+        /* תיקון העיצוב של הלב */
         .wishlist-heart {
             position: absolute;
             top: 15px;
-            left: 15px;
+            left: 15px;  /* מיקום בצד שמאל */
             z-index: 3;
             cursor: pointer;
             background: white;
@@ -518,22 +515,44 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 15px rgba(106, 17, 203, 0.15);  /* צל משופר */
             transition: all 0.3s ease;
-        }
-
-        .wishlist-heart.active i {
-            color: #ff4d4d;  /* צבע אדום עבור הלב הפעיל */
-        }
-
-        .wishlist-heart:hover {
-            transform: scale(1.1);
         }
 
         .wishlist-heart i {
             font-size: 1.2rem;
-            color: #666;  /* צבע אפור כאשר הלב אינו פעיל */
-            transition: color 0.3s ease;
+            color: #666;
+            transition: all 0.3s ease;
+        }
+
+        .wishlist-heart:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 20px rgba(106, 17, 203, 0.2);  /* צל משופר במצב hover */
+        }
+
+        .wishlist-heart.active {
+            background: #fff5f5;  /* רקע קל בצבע אדום כשפעיל */
+        }
+
+        .wishlist-heart.active i {
+            color: #ff4d4d !important;
+        }
+
+        /* מיקום מחדש של תגית הגיל אם יש התנגשות */
+        .age-restricted-badge {
+            position: absolute;
+            top: 15px;
+            left: 60px;  /* הזזה ימינה כדי לא להתנגש עם הלב */
+            background: #2c3e50;
+            color: white;
+            width: 35px;
+            height: 35px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            font-weight: bold;
+            z-index: 2;
         }
     </style>
 
@@ -545,6 +564,9 @@
         event.preventDefault();
         event.stopPropagation();
 
+        const heartIcon = event.target;
+        const heartContainer = heartIcon.closest('.wishlist-heart');
+
         fetch('/Wishlist/Toggle', {
             method: 'POST',
             headers: {
@@ -552,27 +574,33 @@
             },
             body: JSON.stringify({ bookId: bookId })
         })
-            .then(response => response.json())
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
             .then(data => {
                 if (data.success) {
-                    const heartDiv = event.currentTarget;
-                    const heartIcon = heartDiv.querySelector('i');
+                    // Toggle classes for the icon
+                    heartIcon.classList.toggle('far');
+                    heartIcon.classList.toggle('fas');
+                    heartIcon.classList.toggle('active-heart');
 
-                    // החלף מצב
-                    heartDiv.classList.toggle('active');
-
-                    // שנה סוג האייקון וודא החלפת צבע
-                    if (heartIcon.classList.contains('far')) {
-                        heartIcon.classList.remove('far');
-                        heartIcon.classList.add('fas');
+                    // Update the color explicitly
+                    if (heartIcon.classList.contains('fas')) {
+                        heartIcon.style.color = '#ff4d4d';
                     } else {
-                        heartIcon.classList.remove('fas');
-                        heartIcon.classList.add('far');
+                        heartIcon.style.color = '#666';
                     }
+                } else {
+                    console.error('Toggle was not successful:', data.message);
                 }
             })
             .catch(error => {
                 console.error('Error:', error);
             });
     }
+
+
 </script>

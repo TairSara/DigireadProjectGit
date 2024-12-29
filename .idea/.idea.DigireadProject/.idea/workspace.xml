@@ -8,77 +8,26 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="20f33115-b11b-49e2-bb24-d6ba9c0d48a8" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/DigireadProject/Controllers/RentalsManagementController.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/DigireadProject/Controllers/WishlistController.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/DigireadProject/Models/ViewModels/PurchaseHistoryViewModel.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/DigireadProject/Models/ViewModels/RentalManagementViewModel.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/DigireadProject/Models/ViewModels/WaitListManagementViewModel.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/DigireadProject/Views/RentalsManagement/ManageRentals.cshtml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/DigireadProject/Views/RentalsManagement/ManageWaitList.cshtml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/DigireadProject/Views/Wishlist/Index.cshtml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.DigireadProject/.idea/dataSources.local.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.DigireadProject/.idea/dataSources.local.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.DigireadProject/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.DigireadProject/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/config/applicationhost.config" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/config/applicationhost.config" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.vs/DigireadProject/config/applicationhost.config" beforeDir="false" afterPath="$PROJECT_DIR$/.vs/DigireadProject/config/applicationhost.config" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.vs/DigireadProject/v16/.suo" beforeDir="false" afterPath="$PROJECT_DIR$/.vs/DigireadProject/v16/.suo" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.vs/DigireadProjectgit/v16/.suo" beforeDir="false" afterPath="$PROJECT_DIR$/.vs/DigireadProjectgit/v16/.suo" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.vs/VSWorkspaceState.json" beforeDir="false" afterPath="$PROJECT_DIR$/.vs/VSWorkspaceState.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.vs/slnx.sqlite" beforeDir="false" afterPath="$PROJECT_DIR$/.vs/slnx.sqlite" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DigireadProject.zip" beforeDir="false" afterPath="$PROJECT_DIR$/DigireadProject.zip" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DigireadProject/App_Start/RouteConfig.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DigireadProject/App_Start/RouteConfig.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DigireadProject/Books.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DigireadProject/Books.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DigireadProject/Content/Admin/css/admin-dashboard.css" beforeDir="false" afterPath="$PROJECT_DIR$/DigireadProject/Content/Admin/css/admin-dashboard.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DigireadProject/Content/Admin/js/admin.js" beforeDir="false" afterPath="$PROJECT_DIR$/DigireadProject/Content/Admin/js/admin.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DigireadProject/Content/Books/css/MyLibrary.css" beforeDir="false" afterPath="$PROJECT_DIR$/DigireadProject/Content/Books/css/MyLibrary.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DigireadProject/Content/Books/js/gallery.js" beforeDir="false" afterPath="$PROJECT_DIR$/DigireadProject/Content/Books/js/gallery.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DigireadProject/Content/Books/js/library-management.js" beforeDir="false" afterPath="$PROJECT_DIR$/DigireadProject/Content/Books/js/library-management.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DigireadProject/Content/Cart/css/cartStyle.css" beforeDir="false" afterPath="$PROJECT_DIR$/DigireadProject/Content/Cart/css/cartStyle.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DigireadProject/Content/Cart/js/cartDetailes.js" beforeDir="false" afterPath="$PROJECT_DIR$/DigireadProject/Content/Cart/js/cartDetailes.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DigireadProject/Content/Order/css/Checkout.css" beforeDir="false" afterPath="$PROJECT_DIR$/DigireadProject/Content/Order/css/Checkout.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DigireadProject/Content/Order/js/payment.js" beforeDir="false" afterPath="$PROJECT_DIR$/DigireadProject/Content/Order/js/payment.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DigireadProject/Controllers/AccountController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DigireadProject/Controllers/AccountController.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DigireadProject/Controllers/AdminController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DigireadProject/Controllers/AdminController.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/DigireadProject/Controllers/BookManagementController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DigireadProject/Controllers/BookManagementController.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DigireadProject/Controllers/OrderController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DigireadProject/Controllers/OrderController.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/DigireadProject/DigireadProject.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/DigireadProject/DigireadProject.csproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DigireadProject/Models/ViewModels/GalleryViewModel.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DigireadProject/Models/ViewModels/GalleryViewModel.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DigireadProject/Models/ViewModels/PaymentViewModel.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DigireadProject/Models/ViewModels/PaymentViewModel.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DigireadProject/Users.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DigireadProject/Users.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DigireadProject/Views/Account/Login.cshtml" beforeDir="false" afterPath="$PROJECT_DIR$/DigireadProject/Views/Account/Login.cshtml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DigireadProject/Views/Admin/Dashboard.cshtml" beforeDir="false" afterPath="$PROJECT_DIR$/DigireadProject/Views/Admin/Dashboard.cshtml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DigireadProject/DigireadProject.csproj.user" beforeDir="false" afterPath="$PROJECT_DIR$/DigireadProject/DigireadProject.csproj.user" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/DigireadProject/Views/BookManagement/AddBook.cshtml" beforeDir="false" afterPath="$PROJECT_DIR$/DigireadProject/Views/BookManagement/AddBook.cshtml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DigireadProject/Views/BookManagement/BookDetails.cshtml" beforeDir="false" afterPath="$PROJECT_DIR$/DigireadProject/Views/BookManagement/BookDetails.cshtml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DigireadProject/Views/BookManagement/EditBook.cshtml" beforeDir="false" afterPath="$PROJECT_DIR$/DigireadProject/Views/BookManagement/EditBook.cshtml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/DigireadProject/Views/BookManagement/Gallery.cshtml" beforeDir="false" afterPath="$PROJECT_DIR$/DigireadProject/Views/BookManagement/Gallery.cshtml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DigireadProject/Views/BookManagement/ManageBooks.cshtml" beforeDir="false" afterPath="$PROJECT_DIR$/DigireadProject/Views/BookManagement/ManageBooks.cshtml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DigireadProject/Views/BookManagement/MyLibrary.cshtml" beforeDir="false" afterPath="$PROJECT_DIR$/DigireadProject/Views/BookManagement/MyLibrary.cshtml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DigireadProject/Views/BookManagement/MyWaitList.cshtml" beforeDir="false" afterPath="$PROJECT_DIR$/DigireadProject/Views/BookManagement/MyWaitList.cshtml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DigireadProject/Views/Home/HomePage.cshtml" beforeDir="false" afterPath="$PROJECT_DIR$/DigireadProject/Views/Home/HomePage.cshtml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DigireadProject/Views/Order/Checkout.cshtml" beforeDir="false" afterPath="$PROJECT_DIR$/DigireadProject/Views/Order/Checkout.cshtml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DigireadProject/Views/Order/PaymentForm.cshtml" beforeDir="false" afterPath="$PROJECT_DIR$/DigireadProject/Views/Order/PaymentForm.cshtml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DigireadProject/Views/Shared/_Layout.cshtml" beforeDir="false" afterPath="$PROJECT_DIR$/DigireadProject/Views/Shared/_Layout.cshtml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DigireadProject/Views/UserManagement/Index.cshtml" beforeDir="false" afterPath="$PROJECT_DIR$/DigireadProject/Views/UserManagement/Index.cshtml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DigireadProject/WaitList.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DigireadProject/WaitList.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DigireadProject/Views/Wishlist/Index.cshtml" beforeDir="false" afterPath="$PROJECT_DIR$/DigireadProject/Views/Wishlist/Index.cshtml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/DigireadProject/bin/DigireadProject.dll" beforeDir="false" afterPath="$PROJECT_DIR$/DigireadProject/bin/DigireadProject.dll" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DigireadProject/bin/DigireadProject.dll.config" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/DigireadProject/bin/DigireadProject.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/DigireadProject/bin/DigireadProject.pdb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DigireadProject/digireadModel.Context.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DigireadProject/digireadModel.Context.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DigireadProject/digireadModel.Designer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DigireadProject/digireadModel.Designer.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DigireadProject/digireadModel.edmx" beforeDir="false" afterPath="$PROJECT_DIR$/DigireadProject/digireadModel.edmx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DigireadProject/digireadModel.edmx.diagram" beforeDir="false" afterPath="$PROJECT_DIR$/DigireadProject/digireadModel.edmx.diagram" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DigireadProject/obj/Debug/DesignTimeResolveAssemblyReferences.cache" beforeDir="false" afterPath="$PROJECT_DIR$/DigireadProject/obj/Debug/DesignTimeResolveAssemblyReferences.cache" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/DigireadProject/obj/Debug/DesignTimeResolveAssemblyReferencesInput.cache" beforeDir="false" afterPath="$PROJECT_DIR$/DigireadProject/obj/Debug/DesignTimeResolveAssemblyReferencesInput.cache" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DigireadProject/obj/Debug/Digiread.D7DC0D9E.Up2Date" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/DigireadProject/obj/Debug/DigireadProject.csproj.AssemblyReference.cache" beforeDir="false" afterPath="$PROJECT_DIR$/DigireadProject/obj/Debug/DigireadProject.csproj.AssemblyReference.cache" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DigireadProject/obj/Debug/DigireadProject.csproj.CopyComplete" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/DigireadProject/obj/Debug/DigireadProject.csproj.CoreCompileInputs.cache" beforeDir="false" afterPath="$PROJECT_DIR$/DigireadProject/obj/Debug/DigireadProject.csproj.CoreCompileInputs.cache" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DigireadProject/obj/Debug/DigireadProject.csproj.FileListAbsolute.txt" beforeDir="false" afterPath="$PROJECT_DIR$/DigireadProject/obj/Debug/DigireadProject.csproj.FileListAbsolute.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/DigireadProject/obj/Debug/DigireadProject.dll" beforeDir="false" afterPath="$PROJECT_DIR$/DigireadProject/obj/Debug/DigireadProject.dll" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/DigireadProject/obj/Debug/DigireadProject.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/DigireadProject/obj/Debug/DigireadProject.pdb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DigireadProject/obj/Debug/TempPE/digireadModel.Designer.cs.dll" beforeDir="false" afterPath="$PROJECT_DIR$/DigireadProject/obj/Debug/TempPE/digireadModel.Designer.cs.dll" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DigireadProject/obj/Debug/TempPE/digireadModel.cs.dll" beforeDir="false" afterPath="$PROJECT_DIR$/DigireadProject/obj/Debug/TempPE/digireadModel.cs.dll" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DigireadProject/obj/Debug/edmxResourcesToEmbed/digireadModel.csdl" beforeDir="false" afterPath="$PROJECT_DIR$/DigireadProject/obj/Debug/edmxResourcesToEmbed/digireadModel.csdl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DigireadProject/obj/Debug/edmxResourcesToEmbed/digireadModel.msl" beforeDir="false" afterPath="$PROJECT_DIR$/DigireadProject/obj/Debug/edmxResourcesToEmbed/digireadModel.msl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DigireadProject/obj/Debug/edmxResourcesToEmbed/digireadModel.ssdl" beforeDir="false" afterPath="$PROJECT_DIR$/DigireadProject/obj/Debug/edmxResourcesToEmbed/digireadModel.ssdl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/source/repos/DigireadProject/obj/Debug/DigireadProject.csproj.AssemblyReference.cache" beforeDir="false" afterPath="$PROJECT_DIR$/source/repos/DigireadProject/obj/Debug/DigireadProject.csproj.AssemblyReference.cache" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -241,9 +190,9 @@
 }</component>
   <component name="RunManager">
     <configuration name="DigireadProject - IIS Express" type="DotNetProject" factoryName=".NET Project">
-      <option name="EXE_PATH" value="" />
-      <option name="PROGRAM_PARAMETERS" value="" />
-      <option name="WORKING_DIRECTORY" value="" />
+      <option name="EXE_PATH" value="$PROJECT_DIR$/../../../../Program Files (x86)/IIS Express/iisexpress.exe" />
+      <option name="PROGRAM_PARAMETERS" value="/config:$PROJECT_DIR$/.idea/config/applicationhost.config /site:DigireadProject /apppool:Clr4IntegratedAppPool" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/../../../../Program Files (x86)/IIS Express" />
       <option name="PASS_PARENT_ENVS" value="1" />
       <option name="USE_EXTERNAL_CONSOLE" value="0" />
       <option name="USE_MONO" value="0" />
@@ -253,8 +202,8 @@
       <option name="PROJECT_ARGUMENTS_TRACKING" value="1" />
       <option name="PROJECT_WORKING_DIRECTORY_TRACKING" value="1" />
       <option name="PROJECT_KIND" value="Web" />
-      <option name="PROJECT_TFM" value="" />
-      <browser url="http://localhost:50605/" start="true" />
+      <option name="PROJECT_TFM" value=".NETFramework,Version=v4.7.2" />
+      <browser url="https://localhost:44300/" start="true" />
       <method v="2">
         <option name="Build" />
       </method>
@@ -274,7 +223,11 @@
       <workItem from="1734786571971" duration="30928000" />
       <workItem from="1734970685976" duration="414000" />
       <workItem from="1735041187528" duration="47723000" />
-      <workItem from="1735415169201" duration="4935000" />
+      <workItem from="1735415169201" duration="5507000" />
+      <workItem from="1735428610448" duration="4085000" />
+      <workItem from="1735432747573" duration="393000" />
+      <workItem from="1735465073001" duration="3360000" />
+      <workItem from="1735468828458" duration="1505000" />
     </task>
     <servers />
   </component>

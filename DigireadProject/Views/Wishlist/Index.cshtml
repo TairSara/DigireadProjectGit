@@ -35,12 +35,13 @@
                              data-original-price="@item.Books.OriginalPrice"
                              data-year="@item.Books.PublishYear">
                             <article class="book-card">
-                                <a href="@Url.Action("BookDetails", "BookManagement", new { id = item.BookID })" class="book-link">
-                                    <div class="card">
-                                        <div class="wishlist-heart active" onclick="confirmRemoveFromWishlist(event, @item.WishlistID)">
-                                            <i class="fas fa-heart"></i>
-                                        </div>
+                                <div class="card">
+                                    <button class="remove-btn" onclick="confirmRemoveFromWishlist(event, @item.WishlistID)">
+                                        <i class="fas fa-times"></i>
+                                        הסר מהרשימה
+                                    </button>
 
+                                    <a href="@Url.Action("BookDetails", "BookManagement", new { id = item.BookID })" class="book-link">
                                         @if (!string.IsNullOrEmpty(item.Books.ImageSrc))
                                         {
                                             <div class="card-img-container">
@@ -67,8 +68,8 @@
                                                 <p class="added-date">נוסף בתאריך: @(item.DateAdded.HasValue ? item.DateAdded.Value.ToString("dd/MM/yyyy") : "")</p>
                                             </div>
                                         </div>
-                                    </div>
-                                </a>
+                                    </a>
+                                </div>
                             </article>
                         </div>
                     }
@@ -120,6 +121,45 @@
         height: 4px;
         background: linear-gradient(to right, transparent, #6a11cb, transparent);
         border-radius: 2px;
+    }
+
+    /* Remove Button */
+    .remove-btn {
+        position: absolute;
+        top: 15px;
+        left: 15px;
+        z-index: 3;
+        cursor: pointer;
+        background: #ff4d4d;
+        color: white;
+        border: none;
+        border-radius: 20px;
+        padding: 8px 16px;
+        font-size: 0.9rem;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        box-shadow: 0 4px 15px rgba(255, 77, 77, 0.2);
+        transition: all 0.3s ease;
+        opacity: 0;
+    }
+
+    .card:hover .remove-btn {
+        opacity: 1;
+    }
+
+    .remove-btn:hover {
+        transform: translateY(-2px);
+        background: #ff3333;
+        box-shadow: 0 6px 20px rgba(255, 77, 77, 0.3);
+    }
+
+    .remove-btn:active {
+        transform: translateY(0);
+    }
+
+    .remove-btn i {
+        font-size: 0.9rem;
     }
 
     /* Empty Wishlist */
@@ -178,6 +218,7 @@
     .book-link {
         text-decoration: none;
         color: inherit;
+        display: block;
     }
 
     .card:hover {
@@ -257,60 +298,7 @@
         margin-top: 5px;
     }
 
-    /* Wishlist Heart */
-    .wishlist-heart {
-        position: absolute;
-        top: 15px;
-        left: 15px;
-        z-index: 3;
-        cursor: pointer;
-        background: white;
-        border-radius: 50%;
-        width: 35px;
-        height: 35px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        transition: all 0.3s ease;
-    }
-
-    .wishlist-heart.active i {
-        color: #ff4d4d;
-    }
-
-    .wishlist-heart:hover {
-        transform: scale(1.1);
-    }
-
-    .wishlist-heart i {
-        font-size: 1.2rem;
-        color: #ff4d4d;
-        transition: color 0.3s ease;
-    }
-</style>
-
-<script>
-    function confirmRemoveFromWishlist(event, wishlistId) {
-        event.preventDefault();
-        event.stopPropagation();
-
-        // Custom confirmation dialog
-        const confirmDialog = document.createElement('div');
-        confirmDialog.className = 'custom-confirm-dialog';
-        confirmDialog.innerHTML = `
-        <div class="confirm-content">
-            <p>האם אתה בטוח שברצונך להסיר ספר זה מרשימת המשאלות?</p>
-            <div class="confirm-buttons">
-                <button class="confirm-yes">כן, הסר</button>
-                <button class="confirm-no">בטל</button>
-            </div>
-        </div>
-    `;
-
-        // Add styles for the confirmation dialog
-        const styles = `
-    <style>
+    /* Confirmation Dialog */
     .custom-confirm-dialog {
         position: fixed;
         top: 0;
@@ -323,6 +311,7 @@
         align-items: center;
         z-index: 1000;
     }
+
     .confirm-content {
         background: white;
         padding: 30px;
@@ -332,40 +321,67 @@
         max-width: 400px;
         width: 90%;
     }
+
     .confirm-buttons {
         display: flex;
         justify-content: center;
         gap: 15px;
         margin-top: 20px;
     }
-    .confirm-buttons button {
+
+    .confirm-yes, .confirm-no {
         padding: 10px 20px;
         border: none;
         border-radius: 25px;
+        font-size: 1rem;
         cursor: pointer;
         transition: all 0.3s ease;
     }
+
     .confirm-yes {
-        background: #6a11cb;
+        background: #ff4d4d;
         color: white;
     }
+
     .confirm-no {
-        background: #f8f5ff;
-        color: #6a11cb;
-        border: 1px solid #6a11cb;
+        background: #e0e0e0;
+        color: #333;
     }
-    .confirm-buttons button:hover {
+
+    .confirm-yes:hover, .confirm-no:hover {
         transform: translateY(-2px);
-        box-shadow: 0 4px 15px rgba(106, 17, 203, 0.1);
     }
-    </style>
+
+    .confirm-yes:hover {
+        background: #ff3333;
+        box-shadow: 0 4px 15px rgba(255, 77, 77, 0.2);
+    }
+
+    .confirm-no:hover {
+        background: #d0d0d0;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    }
+</style>
+
+<script>
+    function confirmRemoveFromWishlist(event, wishlistId) {
+        event.preventDefault();
+        event.stopPropagation();
+
+        const confirmDialog = document.createElement('div');
+        confirmDialog.className = 'custom-confirm-dialog';
+        confirmDialog.innerHTML = `
+        <div class="confirm-content">
+            <p>האם אתה בטוח שברצונך להסיר ספר זה מרשימת המשאלות?</p>
+            <div class="confirm-buttons">
+                <button class="confirm-yes">כן, הסר</button>
+                <button class="confirm-no">בטל</button>
+            </div>
+        </div>
     `;
 
-        // Append styles and dialog to body
-        document.body.insertAdjacentHTML('beforeend', styles);
         document.body.appendChild(confirmDialog);
 
-        // Yes button handler
         const yesButton = confirmDialog.querySelector('.confirm-yes');
         yesButton.addEventListener('click', () => {
             fetch('/Wishlist/Remove', {
@@ -378,7 +394,16 @@
                 .then(response => response.json())
                 .then(data => {
                     if (data.success) {
-                        location.reload();
+                        const bookItem = event.target.closest('.book-item');
+                        if (bookItem) {
+                            bookItem.style.opacity = '0';
+                            setTimeout(() => {
+                                bookItem.remove();
+                                if (document.querySelectorAll('.book-item').length === 0) {
+                                    location.reload();
+                                }
+                            }, 300);
+                        }
                     } else {
                         alert(data.message || 'אירעה שגיאה בהסרת הספר');
                     }
@@ -391,7 +416,6 @@
                 });
         });
 
-        // No button handler
         const noButton = confirmDialog.querySelector('.confirm-no');
         noButton.addEventListener('click', () => {
             document.body.removeChild(confirmDialog);

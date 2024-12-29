@@ -97,6 +97,7 @@
                             <div class="col-md-6 mb-3">
                                 @Html.LabelFor(m => m.Title, new { @class = "form-label" })
                                 @Html.TextBoxFor(m => m.Title, new { @class = "form-control" })
+                                <div id="titleError" class="text-danger" style="display: none;">ספר זה כבר קיים במערכת</div>
                                 @Html.ValidationMessageFor(m => m.Title, "", new { @class = "text-danger" })
                             </div>
                             <div class="col-md-6 mb-3">
@@ -241,8 +242,75 @@
         </div>
     </div>
 </div>
-
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
     <script src="~/Content/Books/js/book-management.js"></script>
+    <script>
+        $(document).ready(function () {
+            let typingTimer;
+            const doneTypingInterval = 500;
+            let isBookExists = false;
+
+            // בדיקת שם הספר בזמן הקלדה
+            $('#Title').on('keyup', function () {
+                const title = $(this).val().trim();
+                clearTimeout(typingTimer);
+                
+                if (title) {
+                    typingTimer = setTimeout(function() {
+                        checkBookExists(title);
+                    }, doneTypingInterval);
+                } else {
+                    $('#titleError').hide();
+                    $(this).removeClass('is-invalid');
+                    isBookExists = false;
+                }
+            });
+
+            // פונקציה לבדיקת קיום הספר
+            function checkBookExists(title) {
+                $.ajax({
+                    url: '@Url.Action("CheckBookExists", "BookManagement")',
+                    type: 'GET',
+                    data: { title: title },
+                    success: function (exists) {
+                        if (exists) {
+                            $('#titleError').show();
+                            $('#Title').addClass('is-invalid');
+                            isBookExists = true;
+                        } else {
+                            $('#titleError').hide();
+                            $('#Title').removeClass('is-invalid');
+                            isBookExists = false;
+                        }
+                    }
+                });
+            }
+
+            // הגשת הטופס
+            $('#addBookForm').on('submit', function (e) {
+                e.preventDefault();
+                
+                // אם הספר קיים, מונע שליחה
+                if (isBookExists) {
+                    return false;
+                }
+
+                // שליחת הטופס רק אם הספר לא קיים
+                $.ajax({
+                    url: $(this).attr('action'),
+                    type: 'POST',
+                    data: $(this).serialize(),
+                    success: function (response) {
+                        if (response.success) {
+                            window.location.href = '@Url.Action("ManageBooks", "BookManagement")';
+                        }
+                    },
+                    error: function () {
+                        alert('אירעה שגיאה בהוספת הספר');
+                    }
+                });
+            });
+        });
+    </script>
 }

@@ -49,53 +49,64 @@ namespace DigireadProject.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> AddBook(BookViewModel viewModel)
+
+public async Task<ActionResult> AddBook(BookViewModel viewModel)
+{
+    if (!await IsUserAdmin())
+    {
+        return Json(new { success = false, message = "אין הרשאת מנהל" });
+    }
+
+    if (ModelState.IsValid)
+    {
+        try
         {
-            if (!await IsUserAdmin())
+            // בדיקה אם כבר קיים ספר עם אותו שם וסופר
+            var existingBook = await db.Books
+                .FirstOrDefaultAsync(b => b.Title.ToLower() == viewModel.Title.ToLower() 
+                                     && b.MainAuthor.ToLower() == viewModel.MainAuthor.ToLower());
+            
+            if (existingBook != null)
             {
-                return Json(new { success = false, message = "אין הרשאת מנהל" });
+                return Json(new { success = false, message = "ספר זה כבר קיים במערכת" });
             }
 
-            if (ModelState.IsValid)
+            var book = new Books
             {
-                try
-                {
-                    var book = new Books
-                    {
-                        Title = viewModel.Title,
-                        MainAuthor = viewModel.MainAuthor,
-                        Publisher = viewModel.Publisher,
-                        PublishYear = viewModel.PublishYear,
-                        RentalPrice = viewModel.RentalPrice,
-                        PurchasePrice = viewModel.PurchasePrice,
-                        AgeRestriction = viewModel.AgeRestriction,
-                        Genre = viewModel.Genre,
-                        IsAvailable = viewModel.IsAvailable.GetValueOrDefault(),
-                        IsForRent = viewModel.IsForRent.GetValueOrDefault(),
-                        OriginalPrice = viewModel.OriginalPrice,
-                        DiscountEndDate = viewModel.DiscountEndDate,
-                        IsEPUBAvailable = viewModel.IsEPUBAvailable.GetValueOrDefault(),
-                        IsF2BAvailable = viewModel.IsF2BAvailable.GetValueOrDefault(),
-                        IsMobiAvailable = viewModel.IsMobiAvailable.GetValueOrDefault(),
-                        IsPDFAvailable = viewModel.IsPDFAvailable.GetValueOrDefault(),
-                        CreatedDate = DateTime.Now,
-                        StockQuantity = viewModel.IsAvailable == true ? viewModel.StockQuantity : 0,
-                        ImageSrc = viewModel.ImageSrc,
-                        Description=viewModel.Description
-                    };
+                Title = viewModel.Title,
+                MainAuthor = viewModel.MainAuthor,
+                Publisher = viewModel.Publisher,
+                PublishYear = viewModel.PublishYear,
+                RentalPrice = viewModel.RentalPrice,
+                PurchasePrice = viewModel.PurchasePrice,
+                AgeRestriction = viewModel.AgeRestriction,
+                Genre = viewModel.Genre,
+                IsAvailable = viewModel.IsAvailable.GetValueOrDefault(),
+                IsForRent = viewModel.IsForRent.GetValueOrDefault(),
+                OriginalPrice = viewModel.OriginalPrice,
+                DiscountEndDate = viewModel.DiscountEndDate,
+                IsEPUBAvailable = viewModel.IsEPUBAvailable.GetValueOrDefault(),
+                IsF2BAvailable = viewModel.IsF2BAvailable.GetValueOrDefault(),
+                IsMobiAvailable = viewModel.IsMobiAvailable.GetValueOrDefault(),
+                IsPDFAvailable = viewModel.IsPDFAvailable.GetValueOrDefault(),
+                CreatedDate = DateTime.Now,
+                StockQuantity = viewModel.IsAvailable == true ? viewModel.StockQuantity : 0,
+                ImageSrc = viewModel.ImageSrc,
+                Description = viewModel.Description
+            };
 
-                    db.Books.Add(book);
-                    await db.SaveChangesAsync();
-                    return Json(new { success = true, bookId = book.BookID });
-                }
-                catch (Exception ex)
-                {
-                    return Json(new { success = false, message = "אירעה שגיאה בשמירת הספר: " + ex.Message });
-                }
-            }
-
-            return Json(new { success = false, message = "נתונים לא תקינים" });
+            db.Books.Add(book);
+            await db.SaveChangesAsync();
+            return Json(new { success = true, bookId = book.BookID });
         }
+        catch (Exception ex)
+        {
+            return Json(new { success = false, message = "אירעה שגיאה בשמירת הספר: " + ex.Message });
+        }
+    }
+
+    return Json(new { success = false, message = "נתונים לא תקינים" });
+}
 
         [HttpGet]
         public async Task<ActionResult> EditBook(int id)
