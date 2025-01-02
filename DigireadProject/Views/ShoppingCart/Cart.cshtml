@@ -1,122 +1,150 @@
 ﻿@model IEnumerable<DigireadProject.ShoppingCart>
 
-    @section Styles {
-        <link href="~/Content/Cart/css/cartStyle.css" rel="stylesheet" />
-    }
+@section Styles {
+    <link href="~/Content/Cart/css/cartStyle.css" rel="stylesheet" />
+}
 
-    @{
-        ViewBag.Title = "עגלת קניות";
-    }
-    <div id="cartContainer">
-        @Html.AntiForgeryToken()
+@{
+    ViewBag.Title = "עגלת קניות";
+}
+<div id="cartContainer">
+    @Html.AntiForgeryToken()
 
-        <div class="cart-container">
-            <div class="cart-header">
-                <h2><i class="fas fa-shopping-cart"></i> עגלת קניות</h2>
-                <span class="items-count">@Model.Sum(item => item.Quantity) פריטים</span>
-            </div>
+    <div class="cart-container">
+        <div class="cart-header">
+            <h2><i class="fas fa-shopping-cart"></i> עגלת קניות</h2>
+            <span class="items-count">@Model.Sum(item => item.Quantity) פריטים</span>
+        </div>
 
-            <div class="cart-content">
-                <div class="cart-items">
-                    @foreach (var item in Model)
-                    {
-                        <div class="cart-item" id="cart-row-@item.CartID">
-                            <div class="item-image">
-                                @if (!string.IsNullOrEmpty(item.Books.ImageSrc))
-                                {
-                                    <img src="@Url.Content(item.Books.ImageSrc)"
-                                         alt="@item.Books.Title"
-                                         class="book-thumbnail" />
-                                }
-                                else
-                                {
-                                    <img src="@Url.Content("~/Content/Images/default-book.jpg")"
-                                         alt="תמונה לא זמינה"
-                                         class="book-thumbnail" />
-                                }
-                            </div>
-                            <div class="item-details">
-                                <h3 class="item-title">@item.Books.Title</h3>
-                                <div class="item-type">@(item.IsRental.GetValueOrDefault() ? "השכרה" : "קנייה")</div>
-                                <div class="item-quantity">
-                                    <span>כמות:</span>
-                                    <div class="quantity-controls">
-                                        <button type="button" class="quantity-btn"
-                                                onclick="decreaseQuantity(@item.CartID, @item.Quantity)">-</button>
-                                        <span id="quantity-@item.CartID">@item.Quantity</span>
-                                        <button type="button" class="quantity-btn"
-                                                onclick="increaseQuantity(@item.CartID, @item.Quantity, @item.Books.StockQuantity)">+</button>
-                                    </div>
+        <div class="cart-content">
+            <div class="cart-items">
+                @foreach (var item in Model)
+                {
+                    <div class="cart-item" id="cart-row-@item.CartID">
+                        <div class="item-image">
+                            @if (!string.IsNullOrEmpty(item.Books.ImageSrc))
+                            {
+                                <img src="@Url.Content(item.Books.ImageSrc)"
+                                     alt="@item.Books.Title"
+                                     class="book-thumbnail" />
+                            }
+                            else
+                            {
+                                <img src="@Url.Content("~/Content/Images/default-book.jpg")"
+                                     alt="תמונה לא זמינה"
+                                     class="book-thumbnail" />
+                            }
+                        </div>
+                        <div class="item-details">
+                            <h3 class="item-title">@item.Books.Title</h3>
+                            <div class="item-type">@(item.IsRental.GetValueOrDefault() ? "השכרה" : "קנייה")</div>
+                            <div class="item-quantity">
+                                <span>כמות:</span>
+                                <div class="quantity-controls">
+                                    <button type="button" class="quantity-btn"
+                                            onclick="decreaseQuantity(@item.CartID, @item.Quantity)">-</button>
+                                    <span id="quantity-@item.CartID">@item.Quantity</span>
+                                    <button type="button" class="quantity-btn"
+                                            onclick="increaseQuantity(@item.CartID, @item.Quantity, @item.Books.StockQuantity)">+</button>
                                 </div>
                             </div>
-                            <div class="item-price">
-                                <div class="price">@item.Price.Value.ToString("C")</div>
-                                <div class="total">סה"כ: @((item.Price * item.Quantity).Value.ToString("C"))</div>
-                            </div>
-                            <button type="button" onclick="removeFromCart(@item.CartID)" class="remove-btn">
-                                <i class="fas fa-trash"></i>
-                            </button>
                         </div>
+                        <div class="item-price">
+                            <div class="price">@item.Price.Value.ToString("C")</div>
+                            <div class="total">סה"כ: @((item.Price * item.Quantity).Value.ToString("C"))</div>
+                        </div>
+                        <button type="button" onclick="removeFromCart(@item.CartID)" class="remove-btn">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                }
+            </div>
+
+            <div class="cart-summary">
+                <div class="summary-header">
+                    <h3>סיכום הזמנה</h3>
+                </div>
+                <div class="summary-content">
+                    <div class="summary-row">
+                        <span>סה"כ פריטים</span>
+                        <span>@Model.Sum(item => item.Quantity)</span>
+                    </div>
+                    <div class="summary-row total">
+                        <span>סה"כ לתשלום</span>
+                        <span>@Model.Sum(x => x.Price * x.Quantity).Value.ToString("C")</span>
+                    </div>
+                    @if (Model.Any())
+                    {
+                        <button type="button" onclick="completePurchase()" class="checkout-btn">
+                            <i class="fas fa-lock"></i>
+                            המשך לתשלום מאובטח
+                        </button>
+                        <div id="paypal-button-container"></div>
                     }
                 </div>
+            </div>
+        </div>
+    </div>
+</div>
 
-                <div class="cart-summary">
-                    <div class="summary-header">
-                        <h3>סיכום הזמנה</h3>
-                    </div>
-                    <div class="summary-content">
-                        <div class="summary-row">
-                            <span>סה"כ פריטים</span>
-                            <span>@Model.Sum(item => item.Quantity)</span>
-                        </div>
-                        <div class="summary-row total">
-                            <span>סה"כ לתשלום</span>
-                            <span>@Model.Sum(x => x.Price * x.Quantity).Value.ToString("C")</span>
-                        </div>
-                        @if (Model.Any())
-                        {
-                            <button type="button" onclick="completePurchase()" class="checkout-btn">
-                                <i class="fas fa-lock"></i>
-                                המשך לתשלום מאובטח
-                            </button>
+<!-- Modal for delete confirmation -->
+<div class="modal" id="confirmDeleteModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+           
+            <div class="modal-body">
+                האם אתה בטוח שברצונך להסיר ספר זה מהסל?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary close-modal">ביטול</button>
+                <button type="button" class="btn btn-danger" id="confirmDelete">מחק</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="successMessage" class="message success-message">
+    <i class="fas fa-check-circle"></i>
+    <span class="message-text">הפעולה בוצעה בהצלחה!</span>
+</div>
+
+<div id="errorMessage" class="message error-message">
+    <i class="fas fa-exclamation-circle"></i>
+    <span class="message-text">אירעה שגיאה בביצוע הפעולה</span>
+</div>
+
+@section Scripts {
+    <script src="https://www.paypal.com/sdk/js?client-id=@ViewBag.PaypalClientId&currency=ILS"></script>
+    <script src="~/Content/Cart/js/cartDetailes.js"></script>
+    <script>
+        paypal.Buttons({
+            createOrder: function(data, actions) {
+                return actions.order.create({
+                    purchase_units: [{
+                        amount: {
+                            value: '@Model.Sum(x => x.Price * x.Quantity).Value.ToString("0.00", System.Globalization.CultureInfo.InvariantCulture)',
+                            currency_code: 'ILS'
                         }
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+                    }]
+                });
+            },
+            onApprove: function(data, actions) {
+                return fetch('/ShoppingCart/Checkout', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'RequestVerificationToken': $('input[name="__RequestVerificationToken"]').val()
+                    }
+                })
+                    .then(response => {
+                        if (response.ok) {
+                            window.location.href = "/Order/Success";
+                        } else {
+                            alert('אירעה שגיאה בעיבוד התשלום');
+                        }
+                    });
+            }
+        }).render('#paypal-button-container');
+    </script>
 
-    <!-- Modal for delete confirmation -->
-    <div class="modal" id="confirmDeleteModal" tabindex="-1">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">אישור מחיקה</h5>
-                    <button type="button" class="close-modal" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    האם אתה בטוח שברצונך להסיר ספר זה מהסל?
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary close-modal">ביטול</button>
-                    <button type="button" class="btn btn-danger" id="confirmDelete">מחק</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div id="successMessage" class="message success-message">
-        <i class="fas fa-check-circle"></i>
-        <span class="message-text">הפעולה בוצעה בהצלחה!</span>
-    </div>
-
-    <div id="errorMessage" class="message error-message">
-        <i class="fas fa-exclamation-circle"></i>
-        <span class="message-text">אירעה שגיאה בביצוע הפעולה</span>
-    </div>
-
-    @section Scripts {
-        <script src="~/Content/Cart/js/cartDetailes.js"></script>
 }

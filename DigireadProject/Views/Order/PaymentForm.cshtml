@@ -12,15 +12,20 @@
 
         <!-- הוספת אזור פרטי הספר -->
         <div class="book-summary">
-            <div class="book-info">
-                <img src="@Model.BookImageSrc" alt="@Model.BookTitle" class="book-thumbnail" />
-                <div class="book-details">
-                    <h3>@Model.BookTitle</h3>
-                    <p class="transaction-type">@(Model.IsRental ? "השכרה" : "רכישה")</p>
-                    <div class="total-amount">
-                        סה"כ לתשלום: ₪@Model.Price
+            @foreach (var item in Model.CartItems)
+            {
+                <div class="cart-item">
+                    <img src="@item.BookImageSrc" alt="@item.BookTitle" class="book-thumbnail" />
+                    <div class="book-details">
+                        <h3>@item.BookTitle</h3>
+                        <p class="transaction-type">@(item.IsRental ? "השכרה" : "רכישה")</p>
+                        <p>כמות: @item.Quantity</p>
+                        <p class="price">₪@item.Price</p>
                     </div>
                 </div>
+            }
+            <div class="total-amount">
+                סה"כ לתשלום: ₪@Model.Price
             </div>
         </div>
 
@@ -119,12 +124,20 @@
     }
 
     .book-summary {
-        background-color: #f4ecf7;
         padding: 1.5rem;
-        border-radius: 8px;
-        margin-bottom: 2rem;
+        text-align: right;
     }
 
+    .cart-item {
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        gap: 15px;
+        padding: 10px;
+        margin-bottom: 10px;
+        border-bottom: 1px solid #eee;
+    }
+    
     .book-info {
         display: flex;
         gap: 1.5rem;
@@ -132,10 +145,8 @@
     }
 
     .book-thumbnail {
-        width: 100px;
-        height: 150px;
-        object-fit: cover;
-        border-radius: 4px;
+        width: 80px;
+        height: auto;
     }
 
     .book-details h3 {
@@ -143,11 +154,20 @@
         margin-bottom: 0.5rem;
     }
 
-    .total-amount {
-        font-size: 1.25rem;
+    .book-details {
+        text-align: right;
+    }
+
+    .price {
         color: #8e44ad;
         font-weight: bold;
-        margin-top: 1rem;
+    }
+
+    .total-amount {
+        margin-top: 20px;
+        font-size: 1.2rem;
+        color: #8e44ad;
+        text-align: right;
     }
 
     .form-group label {
@@ -165,6 +185,11 @@
     .form-control:focus {
         border-color: #8e44ad;
         box-shadow: 0 0 0 0.2rem rgba(142, 68, 173, 0.25);
+    }
+
+    .transaction-type {
+        color: #666;
+        font-size: 0.9rem;
     }
 
     .btn-primary {

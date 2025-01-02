@@ -1,4 +1,4 @@
-using System; // חשוב להוסיף את זה בראש הקובץ!
+using System; 
 
 namespace DigireadProject.Models.ViewModels
 {

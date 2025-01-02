@@ -71,14 +71,24 @@
             <div class="books-grid" id="booksContainer">
                 @foreach (var book in Model.Books)
                 {
+                    var averageRating = book.Reviews?.Where(r => r.RatingBook.HasValue)
+                        .Select(r => r.RatingBook.Value)
+                        .DefaultIfEmpty(0)
+                        .Average() ?? 0;
+
+                    var reviewCount = book.Reviews?.Count(r => r.RatingBook.HasValue) ?? 0;
+
                     <div class="book-item"
+                         data-db-order="@book.BookID"
                          data-title="@book.Title"
                          data-author="@book.MainAuthor"
                          data-publisher="@book.Publisher"
                          data-price="@book.PurchasePrice"
                          data-original-price="@book.OriginalPrice"
                          data-year="@book.PublishYear"
-                         data-genre="@book.Genre">
+                         data-genre="@book.Genre"
+                         data-rating="@averageRating"
+                         data-review-count="@reviewCount">
                         <article class="book-card">
                             <a href="BookDetails/@book.BookID" class="book-link">
                                 <div class="card @(book.StockQuantity <= 0 ? "out-of-stock" : "")">

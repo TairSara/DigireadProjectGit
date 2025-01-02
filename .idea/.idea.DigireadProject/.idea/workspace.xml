@@ -8,24 +8,37 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="20f33115-b11b-49e2-bb24-d6ba9c0d48a8" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/DigireadProject/Controllers/CheckoutController.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/DigireadProject/Models/ViewModels/CartItemViewModel.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/DigireadProject/Views/Home/About.cshtml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.DigireadProject/.idea/dataSources.local.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.DigireadProject/.idea/dataSources.local.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.DigireadProject/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.DigireadProject/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/config/applicationhost.config" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/config/applicationhost.config" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.vs/DigireadProject/config/applicationhost.config" beforeDir="false" afterPath="$PROJECT_DIR$/.vs/DigireadProject/config/applicationhost.config" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.vs/DigireadProject/v16/.suo" beforeDir="false" afterPath="$PROJECT_DIR$/.vs/DigireadProject/v16/.suo" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.vs/DigireadProjectgit/v16/.suo" beforeDir="false" afterPath="$PROJECT_DIR$/.vs/DigireadProjectgit/v16/.suo" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.vs/VSWorkspaceState.json" beforeDir="false" afterPath="$PROJECT_DIR$/.vs/VSWorkspaceState.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.vs/slnx.sqlite" beforeDir="false" afterPath="$PROJECT_DIR$/.vs/slnx.sqlite" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DigireadProject/Content/Books/js/gallery.js" beforeDir="false" afterPath="$PROJECT_DIR$/DigireadProject/Content/Books/js/gallery.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DigireadProject/Content/Cart/js/cartDetailes.js" beforeDir="false" afterPath="$PROJECT_DIR$/DigireadProject/Content/Cart/js/cartDetailes.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DigireadProject/Content/Order/js/payment.js" beforeDir="false" afterPath="$PROJECT_DIR$/DigireadProject/Content/Order/js/payment.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/DigireadProject/Controllers/BookManagementController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DigireadProject/Controllers/BookManagementController.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DigireadProject/Controllers/HomeController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DigireadProject/Controllers/HomeController.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DigireadProject/Controllers/OrderController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DigireadProject/Controllers/OrderController.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DigireadProject/Controllers/ShoppingCartController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DigireadProject/Controllers/ShoppingCartController.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/DigireadProject/DigireadProject.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/DigireadProject/DigireadProject.csproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DigireadProject/DigireadProject.csproj.user" beforeDir="false" afterPath="$PROJECT_DIR$/DigireadProject/DigireadProject.csproj.user" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DigireadProject/Views/BookManagement/AddBook.cshtml" beforeDir="false" afterPath="$PROJECT_DIR$/DigireadProject/Views/BookManagement/AddBook.cshtml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DigireadProject/Models/ViewModels/GalleryViewModel.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DigireadProject/Models/ViewModels/GalleryViewModel.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DigireadProject/Models/ViewModels/MyLibraryViewModel.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DigireadProject/Models/ViewModels/MyLibraryViewModel.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DigireadProject/Models/ViewModels/PaymentViewModel.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DigireadProject/Models/ViewModels/PaymentViewModel.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DigireadProject/Views/BookManagement/BookDetails.cshtml" beforeDir="false" afterPath="$PROJECT_DIR$/DigireadProject/Views/BookManagement/BookDetails.cshtml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/DigireadProject/Views/BookManagement/Gallery.cshtml" beforeDir="false" afterPath="$PROJECT_DIR$/DigireadProject/Views/BookManagement/Gallery.cshtml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DigireadProject/Views/Wishlist/Index.cshtml" beforeDir="false" afterPath="$PROJECT_DIR$/DigireadProject/Views/Wishlist/Index.cshtml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DigireadProject/Views/BookManagement/MyLibrary.cshtml" beforeDir="false" afterPath="$PROJECT_DIR$/DigireadProject/Views/BookManagement/MyLibrary.cshtml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DigireadProject/Views/BookManagement/MyWaitList.cshtml" beforeDir="false" afterPath="$PROJECT_DIR$/DigireadProject/Views/BookManagement/MyWaitList.cshtml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DigireadProject/Views/Order/PaymentForm.cshtml" beforeDir="false" afterPath="$PROJECT_DIR$/DigireadProject/Views/Order/PaymentForm.cshtml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DigireadProject/Views/Shared/_Layout.cshtml" beforeDir="false" afterPath="$PROJECT_DIR$/DigireadProject/Views/Shared/_Layout.cshtml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DigireadProject/Views/ShoppingCart/Cart.cshtml" beforeDir="false" afterPath="$PROJECT_DIR$/DigireadProject/Views/ShoppingCart/Cart.cshtml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DigireadProject/Web.config" beforeDir="false" afterPath="$PROJECT_DIR$/DigireadProject/Web.config" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DigireadProject/appsettings.json" beforeDir="false" afterPath="$PROJECT_DIR$/DigireadProject/appsettings.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/DigireadProject/bin/DigireadProject.dll" beforeDir="false" afterPath="$PROJECT_DIR$/DigireadProject/bin/DigireadProject.dll" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/DigireadProject/bin/DigireadProject.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/DigireadProject/bin/DigireadProject.pdb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DigireadProject/obj/Debug/DesignTimeResolveAssemblyReferences.cache" beforeDir="false" afterPath="$PROJECT_DIR$/DigireadProject/obj/Debug/DesignTimeResolveAssemblyReferences.cache" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DigireadProject/obj/Debug/DesignTimeResolveAssemblyReferencesInput.cache" beforeDir="false" afterPath="$PROJECT_DIR$/DigireadProject/obj/Debug/DesignTimeResolveAssemblyReferencesInput.cache" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/DigireadProject/obj/Debug/DigireadProject.csproj.AssemblyReference.cache" beforeDir="false" afterPath="$PROJECT_DIR$/DigireadProject/obj/Debug/DigireadProject.csproj.AssemblyReference.cache" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DigireadProject/obj/Debug/DigireadProject.csproj.CoreCompileInputs.cache" beforeDir="false" afterPath="$PROJECT_DIR$/DigireadProject/obj/Debug/DigireadProject.csproj.CoreCompileInputs.cache" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DigireadProject/obj/Debug/DigireadProject.csproj.FileListAbsolute.txt" beforeDir="false" afterPath="$PROJECT_DIR$/DigireadProject/obj/Debug/DigireadProject.csproj.FileListAbsolute.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/DigireadProject/obj/Debug/DigireadProject.dll" beforeDir="false" afterPath="$PROJECT_DIR$/DigireadProject/obj/Debug/DigireadProject.dll" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/DigireadProject/obj/Debug/DigireadProject.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/DigireadProject/obj/Debug/DigireadProject.pdb" afterDir="false" />
     </list>
@@ -68,93 +81,8 @@
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="HighlightingSettingsPerFile">
-    <setting file="mock://C:/Users/tairt/source/DigireadProjectgit/DigireadProject/Controllers/BookManagementController.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/tairt/source/DigireadProjectgit/DigireadProject/Controllers/BookManagementController.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/tairt/source/DigireadProjectgit/DigireadProject/Controllers/HomeController.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/tairt/source/DigireadProjectgit/DigireadProject/Controllers/HomeController.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/tairt/source/DigireadProjectgit/DigireadProject/Controllers/HomeController.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/tairt/source/DigireadProjectgit/DigireadProject/Controllers/HomeController.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/tairt/source/DigireadProjectgit/DigireadProject/Models/ViewModels/GalleryViewModel.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/tairt/source/DigireadProjectgit/DigireadProject/Models/ViewModels/GalleryViewModel.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/tairt/source/DigireadProjectgit/DigireadProject/Models/ViewModels/GalleryViewModel.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/tairt/source/DigireadProjectgit/DigireadProject/Models/ViewModels/GalleryViewModel.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/tairt/source/DigireadProjectgit/DigireadProject/Models/ViewModels/GalleryViewModel.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/tairt/source/DigireadProjectgit/DigireadProject/Models/ViewModels/PopularBookViewModel.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/tairt/source/DigireadProjectgit/DigireadProject/Models/ViewModels/PopularBookViewModel.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/tairt/source/DigireadProjectgit/DigireadProject/Models/ViewModels/PopularBookViewModel.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/tairt/source/DigireadProjectgit/DigireadProject/Models/ViewModels/PopularBookViewModel.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/tairt/source/DigireadProjectgit/DigireadProject/Models/ViewModels/PopularBookViewModel.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/tairt/source/DigireadProjectgit/DigireadProject/Views/Account/Profile.cshtml" root0="FORCE_HIGHLIGHTING" root1="FORCE_HIGHLIGHTING" root2="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/tairt/source/DigireadProjectgit/DigireadProject/Views/Account/Profile.cshtml" root0="FORCE_HIGHLIGHTING" root1="FORCE_HIGHLIGHTING" root2="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/tairt/source/DigireadProjectgit/DigireadProject/Views/Account/Profile.cshtml" root0="FORCE_HIGHLIGHTING" root1="FORCE_HIGHLIGHTING" root2="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/tairt/source/DigireadProjectgit/DigireadProject/Views/BookManagement/BookDetails.cshtml" root0="FORCE_HIGHLIGHTING" root1="FORCE_HIGHLIGHTING" root2="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/tairt/source/DigireadProjectgit/DigireadProject/Views/BookManagement/BookDetails.cshtml" root0="FORCE_HIGHLIGHTING" root1="FORCE_HIGHLIGHTING" root2="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/tairt/source/DigireadProjectgit/DigireadProject/Views/BookManagement/BookDetails.cshtml" root0="FORCE_HIGHLIGHTING" root1="FORCE_HIGHLIGHTING" root2="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/tairt/source/DigireadProjectgit/DigireadProject/Views/BookManagement/BookDetails.cshtml" root0="FORCE_HIGHLIGHTING" root1="FORCE_HIGHLIGHTING" root2="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/tairt/source/DigireadProjectgit/DigireadProject/Views/BookManagement/BookDetails.cshtml" root0="FORCE_HIGHLIGHTING" root1="FORCE_HIGHLIGHTING" root2="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/tairt/source/DigireadProjectgit/DigireadProject/Views/BookManagement/BookDetails.cshtml" root0="FORCE_HIGHLIGHTING" root1="FORCE_HIGHLIGHTING" root2="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/tairt/source/DigireadProjectgit/DigireadProject/Views/BookManagement/BookDetails.cshtml" root0="FORCE_HIGHLIGHTING" root1="FORCE_HIGHLIGHTING" root2="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/tairt/source/DigireadProjectgit/DigireadProject/Views/BookManagement/BookDetails.cshtml" root0="FORCE_HIGHLIGHTING" root1="FORCE_HIGHLIGHTING" root2="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/tairt/source/DigireadProjectgit/DigireadProject/Views/BookManagement/BookDetails.cshtml" root0="FORCE_HIGHLIGHTING" root1="FORCE_HIGHLIGHTING" root2="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/tairt/source/DigireadProjectgit/DigireadProject/Views/BookManagement/BookDetails.cshtml" root0="FORCE_HIGHLIGHTING" root1="FORCE_HIGHLIGHTING" root2="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/tairt/source/DigireadProjectgit/DigireadProject/Views/BookManagement/BookDetails.cshtml" root0="FORCE_HIGHLIGHTING" root1="FORCE_HIGHLIGHTING" root2="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/tairt/source/DigireadProjectgit/DigireadProject/Views/BookManagement/BookDetails.cshtml" root0="FORCE_HIGHLIGHTING" root1="FORCE_HIGHLIGHTING" root2="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/tairt/source/DigireadProjectgit/DigireadProject/Views/BookManagement/BookDetails.cshtml" root0="FORCE_HIGHLIGHTING" root1="FORCE_HIGHLIGHTING" root2="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/tairt/source/DigireadProjectgit/DigireadProject/Views/BookManagement/BookDetails.cshtml" root0="FORCE_HIGHLIGHTING" root1="FORCE_HIGHLIGHTING" root2="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/tairt/source/DigireadProjectgit/DigireadProject/Views/BookManagement/BookDetails.cshtml" root0="FORCE_HIGHLIGHTING" root1="FORCE_HIGHLIGHTING" root2="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/tairt/source/DigireadProjectgit/DigireadProject/Views/BookManagement/BookDetails.cshtml" root0="FORCE_HIGHLIGHTING" root1="FORCE_HIGHLIGHTING" root2="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/tairt/source/DigireadProjectgit/DigireadProject/Views/BookManagement/BookDetails.cshtml" root0="FORCE_HIGHLIGHTING" root1="FORCE_HIGHLIGHTING" root2="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/tairt/source/DigireadProjectgit/DigireadProject/Views/BookManagement/BookDetails.cshtml" root0="FORCE_HIGHLIGHTING" root1="FORCE_HIGHLIGHTING" root2="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/tairt/source/DigireadProjectgit/DigireadProject/Views/BookManagement/BookDetails.cshtml" root0="FORCE_HIGHLIGHTING" root1="FORCE_HIGHLIGHTING" root2="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/tairt/source/DigireadProjectgit/DigireadProject/Views/BookManagement/BookDetails.cshtml" root0="FORCE_HIGHLIGHTING" root1="FORCE_HIGHLIGHTING" root2="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/tairt/source/DigireadProjectgit/DigireadProject/Views/BookManagement/BookDetails.cshtml" root0="FORCE_HIGHLIGHTING" root1="FORCE_HIGHLIGHTING" root2="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/tairt/source/DigireadProjectgit/DigireadProject/Views/BookManagement/BookDetails.cshtml" root0="FORCE_HIGHLIGHTING" root1="FORCE_HIGHLIGHTING" root2="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/tairt/source/DigireadProjectgit/DigireadProject/Views/BookManagement/BookDetails.cshtml" root0="FORCE_HIGHLIGHTING" root1="FORCE_HIGHLIGHTING" root2="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/tairt/source/DigireadProjectgit/DigireadProject/Views/BookManagement/BookDetails.cshtml" root0="FORCE_HIGHLIGHTING" root1="FORCE_HIGHLIGHTING" root2="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/tairt/source/DigireadProjectgit/DigireadProject/Views/BookManagement/BookDetails.cshtml" root0="FORCE_HIGHLIGHTING" root1="FORCE_HIGHLIGHTING" root2="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/tairt/source/DigireadProjectgit/DigireadProject/Views/BookManagement/BookDetails.cshtml" root0="FORCE_HIGHLIGHTING" root1="FORCE_HIGHLIGHTING" root2="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/tairt/source/DigireadProjectgit/DigireadProject/Views/BookManagement/BookDetails.cshtml" root0="FORCE_HIGHLIGHTING" root1="FORCE_HIGHLIGHTING" root2="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/tairt/source/DigireadProjectgit/DigireadProject/Views/BookManagement/BookDetails.cshtml" root0="FORCE_HIGHLIGHTING" root1="FORCE_HIGHLIGHTING" root2="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/tairt/source/DigireadProjectgit/DigireadProject/Views/BookManagement/BookDetails.cshtml" root0="FORCE_HIGHLIGHTING" root1="FORCE_HIGHLIGHTING" root2="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/tairt/source/DigireadProjectgit/DigireadProject/Views/BookManagement/BookDetails.cshtml" root0="FORCE_HIGHLIGHTING" root1="FORCE_HIGHLIGHTING" root2="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/tairt/source/DigireadProjectgit/DigireadProject/Views/BookManagement/BookDetails.cshtml" root0="FORCE_HIGHLIGHTING" root1="FORCE_HIGHLIGHTING" root2="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/tairt/source/DigireadProjectgit/DigireadProject/Views/BookManagement/BookDetails.cshtml" root0="FORCE_HIGHLIGHTING" root1="FORCE_HIGHLIGHTING" root2="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/tairt/source/DigireadProjectgit/DigireadProject/Views/BookManagement/BookDetails.cshtml" root0="FORCE_HIGHLIGHTING" root1="FORCE_HIGHLIGHTING" root2="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/tairt/source/DigireadProjectgit/DigireadProject/Views/BookManagement/BookDetails.cshtml" root0="FORCE_HIGHLIGHTING" root1="FORCE_HIGHLIGHTING" root2="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/tairt/source/DigireadProjectgit/DigireadProject/Views/BookManagement/Gallery.cshtml" root0="FORCE_HIGHLIGHTING" root1="FORCE_HIGHLIGHTING" root2="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/tairt/source/DigireadProjectgit/DigireadProject/Views/BookManagement/Gallery.cshtml" root0="FORCE_HIGHLIGHTING" root1="FORCE_HIGHLIGHTING" root2="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/tairt/source/DigireadProjectgit/DigireadProject/Views/BookManagement/MainGallery.cshtml" root0="FORCE_HIGHLIGHTING" root1="FORCE_HIGHLIGHTING" root2="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/tairt/source/DigireadProjectgit/DigireadProject/Views/BookManagement/MainGallery.cshtml" root0="FORCE_HIGHLIGHTING" root1="FORCE_HIGHLIGHTING" root2="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/tairt/source/DigireadProjectgit/DigireadProject/Views/BookManagement/MainGallery.cshtml" root0="FORCE_HIGHLIGHTING" root1="FORCE_HIGHLIGHTING" root2="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/tairt/source/DigireadProjectgit/DigireadProject/Views/BookManagement/MainGallery.cshtml" root0="FORCE_HIGHLIGHTING" root1="FORCE_HIGHLIGHTING" root2="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/tairt/source/DigireadProjectgit/DigireadProject/Views/BookManagement/MainGallery.cshtml" root0="FORCE_HIGHLIGHTING" root1="FORCE_HIGHLIGHTING" root2="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/tairt/source/DigireadProjectgit/DigireadProject/Views/BookManagement/MainGallery.cshtml" root0="FORCE_HIGHLIGHTING" root1="FORCE_HIGHLIGHTING" root2="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/tairt/source/DigireadProjectgit/DigireadProject/Views/BookManagement/MainGallery.cshtml" root0="FORCE_HIGHLIGHTING" root1="FORCE_HIGHLIGHTING" root2="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/tairt/source/DigireadProjectgit/DigireadProject/Views/BookManagement/MainGallery.cshtml" root0="FORCE_HIGHLIGHTING" root1="FORCE_HIGHLIGHTING" root2="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/tairt/source/DigireadProjectgit/DigireadProject/Views/BookManagement/MainGallery.cshtml" root0="FORCE_HIGHLIGHTING" root1="FORCE_HIGHLIGHTING" root2="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/tairt/source/DigireadProjectgit/DigireadProject/Views/BookManagement/MainGallery.cshtml" root0="FORCE_HIGHLIGHTING" root1="FORCE_HIGHLIGHTING" root2="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/tairt/source/DigireadProjectgit/DigireadProject/Views/BookManagement/MainGallery.cshtml" root0="FORCE_HIGHLIGHTING" root1="FORCE_HIGHLIGHTING" root2="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/tairt/source/DigireadProjectgit/DigireadProject/Views/BookManagement/MainGallery.cshtml" root0="FORCE_HIGHLIGHTING" root1="FORCE_HIGHLIGHTING" root2="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/tairt/source/DigireadProjectgit/DigireadProject/Views/BookManagement/MainGallery.cshtml" root0="FORCE_HIGHLIGHTING" root1="FORCE_HIGHLIGHTING" root2="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/tairt/source/DigireadProjectgit/DigireadProject/Views/BookManagement/MainGallery.cshtml" root0="FORCE_HIGHLIGHTING" root1="FORCE_HIGHLIGHTING" root2="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/tairt/source/DigireadProjectgit/DigireadProject/Views/BookManagement/MainGallery.cshtml" root0="FORCE_HIGHLIGHTING" root1="FORCE_HIGHLIGHTING" root2="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/tairt/source/DigireadProjectgit/DigireadProject/Views/BookManagement/MainGallery.cshtml" root0="FORCE_HIGHLIGHTING" root1="FORCE_HIGHLIGHTING" root2="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/tairt/source/DigireadProjectgit/DigireadProject/Views/BookManagement/MainGallery.cshtml" root0="FORCE_HIGHLIGHTING" root1="FORCE_HIGHLIGHTING" root2="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/tairt/source/DigireadProjectgit/DigireadProject/Views/BookManagement/MainGallery.cshtml" root0="FORCE_HIGHLIGHTING" root1="FORCE_HIGHLIGHTING" root2="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/tairt/source/DigireadProjectgit/DigireadProject/Views/BookManagement/MainGallery.cshtml" root0="FORCE_HIGHLIGHTING" root1="FORCE_HIGHLIGHTING" root2="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/tairt/source/DigireadProjectgit/DigireadProject/Views/Home/HomePage.cshtml" root0="FORCE_HIGHLIGHTING" root1="FORCE_HIGHLIGHTING" root2="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/tairt/source/DigireadProjectgit/DigireadProject/Views/Home/HomePage.cshtml" root0="FORCE_HIGHLIGHTING" root1="FORCE_HIGHLIGHTING" root2="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/tairt/source/DigireadProjectgit/DigireadProject/Views/Home/HomePage.cshtml" root0="FORCE_HIGHLIGHTING" root1="FORCE_HIGHLIGHTING" root2="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/tairt/source/DigireadProjectgit/DigireadProject/Views/Shared/_Layout.cshtml" root0="FORCE_HIGHLIGHTING" root1="FORCE_HIGHLIGHTING" root2="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/tairt/source/DigireadProjectgit/DigireadProject/Views/Shared/_Layout.cshtml" root0="FORCE_HIGHLIGHTING" root1="FORCE_HIGHLIGHTING" root2="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/tairt/source/DigireadProjectgit/DigireadProject/Views/Shared/_Layout.cshtml" root0="FORCE_HIGHLIGHTING" root1="FORCE_HIGHLIGHTING" root2="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/tairt/source/DigireadProjectgit/DigireadProject/Views/Shared/_Layout.cshtml" root0="FORCE_HIGHLIGHTING" root1="FORCE_HIGHLIGHTING" root2="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/tairt/source/DigireadProjectgit/DigireadProject/Views/Shared/_Layout.cshtml" root0="FORCE_HIGHLIGHTING" root1="FORCE_HIGHLIGHTING" root2="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/tairt/source/DigireadProjectgit/DigireadProject/Views/Shared/_Layout.cshtml" root0="FORCE_HIGHLIGHTING" root1="FORCE_HIGHLIGHTING" root2="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/tairt/source/DigireadProjectgit/DigireadProject/Views/Shared/_Layout.cshtml" root0="FORCE_HIGHLIGHTING" root1="FORCE_HIGHLIGHTING" root2="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/tairt/source/DigireadProjectgit/DigireadProject/Views/Shared/_Layout.cshtml" root0="FORCE_HIGHLIGHTING" root1="FORCE_HIGHLIGHTING" root2="SKIP_HIGHLIGHTING" />
-    <setting file="mock://diff.cshtml" root0="FORCE_HIGHLIGHTING" root1="FORCE_HIGHLIGHTING" root2="SKIP_HIGHLIGHTING" />
-    <setting file="mock://diff.cshtml" root0="FORCE_HIGHLIGHTING" root1="FORCE_HIGHLIGHTING" root2="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/noamd/RiderProjects/DigireadProjectGit/DigireadProject/Views/BookManagement/Gallery.cshtml" root0="FORCE_HIGHLIGHTING" root1="FORCE_HIGHLIGHTING" root2="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/noamd/RiderProjects/DigireadProjectGit/DigireadProject/Views/BookManagement/Gallery.cshtml" root0="FORCE_HIGHLIGHTING" root1="FORCE_HIGHLIGHTING" root2="SKIP_HIGHLIGHTING" />
   </component>
   <component name="MetaFilesCheckinStateConfiguration" checkMetaFiles="true" />
   <component name="ProblemsViewState">
@@ -228,6 +156,10 @@
       <workItem from="1735432747573" duration="393000" />
       <workItem from="1735465073001" duration="3360000" />
       <workItem from="1735468828458" duration="1505000" />
+      <workItem from="1735489479106" duration="3022000" />
+      <workItem from="1735549636636" duration="2450000" />
+      <workItem from="1735576986033" duration="35867000" />
+      <workItem from="1735860733812" duration="631000" />
     </task>
     <servers />
   </component>

@@ -7,17 +7,11 @@
 }
 
 <style>
-    body {
-        background-color: #f3e5f5;
-        font-family: 'Arial', sans-serif;
-    }
-
     .wait-list-container {
         display: flex;
         justify-content: center;
         align-items: center;
         flex-direction: column;
-        margin-top: 30px;
     }
 
     .books-grid {
@@ -32,9 +26,6 @@
     .book-card {
         width: 300px;
         margin: 10px;
-        background-color: #fff;
-        border-radius: 10px;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     }
 
     .book-image {
@@ -61,7 +52,7 @@
         display: block;
         width: 100%;
         padding: 10px;
-        background-color: #6a1b9a;
+        background-color: #28a745;
         color: white;
         border: none;
         border-radius: 5px;
@@ -71,19 +62,9 @@
     }
 
     .available-button:hover {
-        background-color: #4a0e7a;
+        background-color: #218838;
         color: white;
         text-decoration: none;
-    }
-
-    .btn-danger {
-        background-color: #c82333;
-        border-color: #bd2130;
-    }
-
-    .btn-danger:hover {
-        background-color: #a71d2a;
-        border-color: #971c24;
     }
 </style>
 
@@ -127,7 +108,7 @@
                                     <text>הספר אינו זמין להשאלה</text>
                                 </div>
                             }
-                            
+
 
                             <button class="btn btn-danger mt-3 w-100" onclick="removeFromWaitList(@item.WaitListID)">
                                 הסר מהרשימה
@@ -140,27 +121,51 @@
     }
 </div>
 
+
 <script>
     function removeFromWaitList(waitListId) {
-        if (confirm('האם אתה בטוח שברצונך להסיר ספר זה מרשימת ההמתנה?')) {
-            $.ajax({
-                url: '@Url.Action("RemoveFromWaitList", "BookManagement")',
-                type: 'POST',
-                data: {
-                    waitListId: waitListId,
-                    __RequestVerificationToken: $('input[name="__RequestVerificationToken"]').val()
-                },
-                success: function (result) {
-                    if (result.success) {
-                        location.reload();
-                    } else {
-                        alert(result.message || 'אירעה שגיאה בהסרת הספר מרשימת ההמתנה');
+        Swal.fire({
+            title: 'האם אתה בטוח?',
+            text: 'האם אתה בטוח שברצונך להסיר ספר זה מרשימת ההמתנה?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#6c3dab',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'כן, הסר',
+            cancelButtonText: 'ביטול',
+            reverseButtons: true
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    url: '@Url.Action("RemoveFromWaitList", "BookManagement")',
+                    type: 'POST',
+                    data: {
+                        waitListId: waitListId,
+                        __RequestVerificationToken: $('input[name="__RequestVerificationToken"]').val()
+                    },
+                    success: function(result) {
+                        if (result.success) {
+                            location.reload();
+                        } else {
+                            Swal.fire({
+                                title: 'שגיאה',
+                                text: result.message || 'אירעה שגיאה בהסרת הספר מרשימת ההמתנה',
+                                icon: 'error',
+                                confirmButtonColor: '#6c3dab'
+                            });
+                        }
+                    },
+                    error: function() {
+                        Swal.fire({
+                            title: 'שגיאה',
+                            text: 'אירעה שגיאה בהסרת הספר מרשימת ההמתנה',
+                            icon: 'error',
+                            confirmButtonColor: '#6c3dab'
+                        });
                     }
-                },
-                error: function () {
-                    alert('אירעה שגיאה בהסרת הספר מרשימת ההמתנה');
-                }
-            });
-        }
+                });
+            }
+        });
     }
+    
 </script>

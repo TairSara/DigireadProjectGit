@@ -29,6 +29,7 @@ namespace DigireadProject.Controllers
                 .Include(s => s.Books)
                 .Where(s => s.UserID == userId)
                 .ToList();
+            ViewBag.PaypalClientId = System.Configuration.ConfigurationManager.AppSettings["PayPal:ClientId"];
             return View(cartItems);
         }
 
@@ -349,6 +350,21 @@ namespace DigireadProject.Controllers
                 db?.Dispose();
             }
             base.Dispose(disposing);
+        }
+        
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<JsonResult> ProcessPayment()
+        {
+            try
+            {
+                await Checkout();
+                return Json(new { success = true });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, error = ex.Message });
+            }
         }
     }
 }

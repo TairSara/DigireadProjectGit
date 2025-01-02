@@ -190,18 +190,33 @@ function showMessage(isSuccess) {
 
 function completePurchase() {
     var token = $('input[name="__RequestVerificationToken"]').val();
-
-    // הצג אנימציית טעינה או הודעה
     $('.checkout-btn').prop('disabled', true).text('מבצע רכישה...');
 
-    // שלח את הטופס באופן רגיל (לא Ajax)
     var form = $('<form>')
         .attr('method', 'POST')
-        .attr('action', '/Order/CompletePurchase')
-        .append($('<input>')
+        .attr('action', '/Order/CompletePurchase');
+
+    // טוקן אבטחה
+    form.append($('<input>')
+        .attr('type', 'hidden')
+        .attr('name', '__RequestVerificationToken')
+        .val(token));
+
+    // הוספת פריטי העגלה
+    $('.cart-item').each(function(index) {
+        var cartId = $(this).attr('id').replace('cart-row-', '');
+        var quantity = parseInt($(`#quantity-${cartId}`).text());
+
+        form.append($('<input>')
             .attr('type', 'hidden')
-            .attr('name', '__RequestVerificationToken')
-            .val(token));
+            .attr('name', `Items[${index}].CartId`)
+            .val(cartId));
+
+        form.append($('<input>')
+            .attr('type', 'hidden')
+            .attr('name', `Items[${index}].Quantity`)
+            .val(quantity));
+    });
 
     $('body').append(form);
     form.submit();

@@ -138,15 +138,10 @@
             <!-- אפשרות רכישה - או זמין או לא זמין -->
             @if (Model.StockQuantity > 0)
             {
-                <form method="post" action="@Url.Action("AddToCart", "ShoppingCart")">
-                    @Html.AntiForgeryToken()
-                    @Html.Hidden("bookId", Model.BookID)
-                    @Html.Hidden("isRental", false)
-                    <button type="submit" class="btn btn-primary purchase-btn">
-                        <i class="fas fa-shopping-cart"></i>
-                        רכישה - ₪@Model.PurchasePrice
-                    </button>
-                </form>
+                <button onclick="bookManager.handleAddToCart(@Model.BookID, false)" class="btn btn-primary purchase-btn">
+                    <i class="fas fa-shopping-cart"></i>
+                    רכישה - ₪@Model.PurchasePrice
+                </button>
             }
             else
             {
@@ -156,29 +151,23 @@
             }
 
             <!-- אפשרות השאלה - כולל אפשרות להצטרף לרשימת המתנה -->
+            <!-- Replace the existing form with this -->
             @if (Model.IsForRent == true)
             {
-                <form method="post" action="@(Model.StockQuantityRent > 0 ?
-                                            Url.Action("AddToCart", "ShoppingCart") :
-                                            Url.Action("AddToWaitList", "BookManagement"))">
-                    @Html.AntiForgeryToken()
-                    @Html.Hidden("bookId", Model.BookID)
-                    @Html.Hidden("isRental", true)
-                    @if (Model.StockQuantityRent > 0)
-                    {
-                        <button type="submit" class="btn btn-primary rental-btn">
-                            <i class="fas fa-clock"></i>
-                            השכרה - ₪@Model.RentalPrice
-                        </button>
-                    }
-                    else
-                    {
-                        <button type="submit" class="btn btn-secondary">
-                            <i class="fas fa-clock"></i>
-                            הצטרף לרשימת המתנה להשאלה
-                        </button>
-                    }
-                </form>
+                if (Model.StockQuantityRent > 0)
+                {
+                    <button onclick="bookManager.handleAddToCart(@Model.BookID, true)" class="btn btn-primary rental-btn">
+                        <i class="fas fa-clock"></i>
+                        השכרה - ₪@Model.RentalPrice
+                    </button>
+                }
+                else
+                {
+                    <button onclick="bookManager.addToWaitList(@Model.BookID, true)" class="btn btn-secondary">
+                        <i class="fas fa-clock"></i>
+                        הצטרף לרשימת המתנה להשאלה
+                    </button>
+                }
             }
         </div>
         <button onclick="bookManager.closePurchaseDialog()" class="btn btn-secondary">ביטול</button>
@@ -528,7 +517,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.3/js/lightbox.min.js"></script>
     <script>
         window.bookManager = {
-            // הפונקציות הקיימות נשארות
             showPurchaseOptions: function () {
                 const modal = document.getElementById('purchaseDialog');
                 modal.style.display = 'block';
@@ -538,8 +526,7 @@
                 const modal = document.getElementById('purchaseDialog');
                 modal.style.display = 'none';
             },
-
-            // פונקציות חדשות לרכישה מיידית
+            
             showDirectPurchaseOptions: function () {
                 const modal = document.getElementById('directPurchaseDialog');
                 modal.style.display = 'block';
@@ -564,6 +551,83 @@
                 }).then((result) => {
                     if (result.isConfirmed) {
                         window.location.href = `/Order/DirectPurchase?bookId=${bookId}&isRental=${isRental}`;
+                    }
+                });
+            },
+
+            handleAddToCart: function(bookId, isRental) {
+                $.ajax({
+                    url: '/ShoppingCart/AddToCart',  // שינוי כאן - הוספת שם הקונטרולר
+                    type: 'POST',
+                    data: {
+                        bookId: bookId,
+                        isRental: isRental,
+                        __RequestVerificationToken: $('input[name="__RequestVerificationToken"]').val()
+                    },
+                    success: function(result) {
+                        if (result.success) {
+                            Swal.fire({
+                                title: 'הצלחה!',
+                                text: isRental ? 'הספר נוסף להשאלה בהצלחה' : 'הספר נוסף לסל הקניות בהצלחה',
+                                icon: 'success',
+                                confirmButtonColor: '#6c3dab'
+                            });
+                            bookManager.closePurchaseDialog();
+                        } else {
+                            Swal.fire({
+                                title: 'שגיאה',
+                                text: result.message,
+                                icon: 'error',
+                                confirmButtonColor: '#6c3dab'
+                            });
+                        }
+                    },
+                    error: function() {
+                        Swal.fire({
+                            title: 'שגיאה',
+                            text: 'אירעה שגיאה בהוספת הספר',
+                            icon: 'error',
+                            confirmButtonColor: '#6c3dab'
+                        });
+                    }
+                });
+            },
+            
+            addToWaitList: function(bookId, isRental) {
+                $.ajax({
+                    url: '/BookManagement/AddToWaitList',
+                    type: 'POST',
+                    data: {
+                        bookId: bookId,
+                        isRental: isRental,
+                        __RequestVerificationToken: $('input[name="__RequestVerificationToken"]').val()
+                    },
+                    success: function(result) {
+                        if (result.success) {
+                            Swal.fire({
+                                title: 'הצלחה!',
+                                text: 'הספר נוסף בהצלחה לרשימת ההמתנה',
+                                icon: 'success',
+                                confirmButtonColor: '#6c3dab'
+                            }).then(() => {
+                                location.reload();
+                            });
+                        } else {
+                            Swal.fire({
+                                title: 'שגיאה',
+                                text: result.message || 'אירעה שגיאה בהוספת הספר לרשימת ההמתנה',
+                                icon: 'error',
+                                confirmButtonColor: '#6c3dab'
+                            });
+                        }
+                    },
+                    error: function() {
+                        Swal.fire({
+                            title: 'שגיאה',
+                            text: 'אירעה שגיאה בהוספת הספר לרשימת ההמתנה',
+                            icon: 'error',
+                            confirmButtonColor: '#6c3dab'
+                        });
                     }
                 });
             }
@@ -620,5 +684,6 @@
                 bookImage.setAttribute('href', bookImage.src);
             }
         });
+        
     </script>
 }

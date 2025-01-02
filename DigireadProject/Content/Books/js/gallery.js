@@ -46,7 +46,7 @@ function sortBooks() {
     const value = select.value;
 
     if (!value) {
-        return; // אם לא נבחרה קטגוריה, לא עושים כלום
+        return; 
     }
 
     const books = Array.from(document.querySelectorAll('.book-item'));
@@ -78,51 +78,76 @@ function sortBooks() {
     const booksContainer = document.getElementById('booksContainer');
     const books = Array.from(booksContainer.getElementsByClassName('book-item'));
 
-    books.sort((a, b) => {
-        switch (sortBy) {
-            case 'popularity':
-                // מיון לפי דירוג וכמות ביקורות
-                const ratingA = parseFloat(a.dataset.rating) || 0;
-                const ratingB = parseFloat(b.dataset.rating) || 0;
-                const reviewsA = parseInt(a.dataset.reviews) || 0;
-                const reviewsB = parseInt(b.dataset.reviews) || 0;
+    // אם לא נבחרה אופציית מיון, החזר את הספרים לסדר המקורי לפי ה-DB
+    if (!sortBy) {
+        books.sort((a, b) => {
+            return parseInt(a.getAttribute('data-db-order')) - parseInt(b.getAttribute('data-db-order'));
+        });
+    } else {
+        books.sort((a, b) => {
+            switch (sortBy) {
+                case 'title':
+                    const titleA = a.getAttribute('data-title').trim().replace(/^['"](.*?)['"]$/, '$1');
+                    const titleB = b.getAttribute('data-title').trim().replace(/^['"](.*?)['"]$/, '$1');
 
-                // נוסחה המשקללת דירוג וכמות ביקורות
-                const popularityA = (ratingA * 0.7) + ((reviewsA / Math.max(reviewsA, reviewsB)) * 0.3 * 5);
-                const popularityB = (ratingB * 0.7) + ((reviewsB / Math.max(reviewsA, reviewsB)) * 0.3 * 5);
-                return popularityB - popularityA;
+                    // מספרים בתחילת הכותרת
+                    const numA = titleA.match(/^\d+/);
+                    const numB = titleB.match(/^\d+/);
 
-            case 'title':
-                return a.dataset.title.localeCompare(b.dataset.title, 'he');
+                    if (numA && numB) {
+                        return parseInt(numA[0]) - parseInt(numB[0]);
+                    } else if (numA) {
+                        return -1;
+                    } else if (numB) {
+                        return 1;
+                    }
 
-            case 'priceAsc':
-                return parseFloat(a.dataset.price) - parseFloat(b.dataset.price);
+                    // מיון אלפביתי בעברית עם התעלמות מתווים מיוחדים
+                    return titleA.localeCompare(titleB, 'he', {
+                        sensitivity: 'base',
+                        ignorePunctuation: true
+                    });
 
-            case 'priceDesc':
-                return parseFloat(b.dataset.price) - parseFloat(a.dataset.price);
+                case 'popularity':
+                    const ratingA = parseFloat(a.getAttribute('data-rating')) || 0;
+                    const ratingB = parseFloat(b.getAttribute('data-rating')) || 0;
+                    if (ratingA !== ratingB) return ratingB - ratingA;
 
-            case 'year':
-                return parseInt(b.dataset.year) - parseInt(a.dataset.year);
+                    const reviewCountA = parseInt(a.getAttribute('data-review-count')) || 0;
+                    const reviewCountB = parseInt(b.getAttribute('data-review-count')) || 0;
+                    return reviewCountB - reviewCountA;
 
-            case 'author':
-                return a.dataset.author.localeCompare(b.dataset.author, 'he');
+                case 'priceAsc':
+                    return parseFloat(a.getAttribute('data-price')) - parseFloat(b.getAttribute('data-price'));
 
-            default:
-                return 0;
-        }
-    });
+                case 'priceDesc':
+                    return parseFloat(b.getAttribute('data-price')) - parseFloat(a.getAttribute('data-price'));
 
-    // סידור מחדש של האלמנטים
+                case 'year':
+                    return parseInt(b.getAttribute('data-year')) - parseInt(a.getAttribute('data-year'));
+
+                case 'author':
+                    return a.getAttribute('data-author')
+                        .localeCompare(b.getAttribute('data-author'), 'he', {
+                            sensitivity: 'base',
+                            ignorePunctuation: true
+                        });
+
+                default:
+                    return 0;
+            }
+        });
+    }
+
+    while (booksContainer.firstChild) {
+        booksContainer.removeChild(booksContainer.firstChild);
+    }
     books.forEach(book => booksContainer.appendChild(book));
 }
 
-// הוספת טעינת ברירת מחדל למיון לפי פופולריות
 document.addEventListener('DOMContentLoaded', function() {
     const sortSelect = document.getElementById('sortSelect');
-    // קבע את ברירת המחדל לפופולריות
-    sortSelect.value = 'popularity';
-    // הפעל את המיון
-    sortBooks();
+    sortSelect.value = '';
 });
 
 

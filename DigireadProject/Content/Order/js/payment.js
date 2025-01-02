@@ -29,13 +29,27 @@ $(document).ready(function() {
         if (!value.match(/^(0[1-9]|1[0-2])\/([0-9]{2})$/)) return false;
 
         const [month, year] = value.split('/');
-        const expDate = new Date(2000 + parseInt(year), parseInt(month) - 1);
         const currentDate = new Date();
+        const currentYear = currentDate.getFullYear() % 100;
+        const currentMonth = currentDate.getMonth() + 1;
 
-        return expDate > currentDate;
+        const expYear = parseInt(year);
+        const expMonth = parseInt(month);
+
+        // בדיקה אם התאריך עבר
+        if (expYear < currentYear || (expYear === currentYear && expMonth < currentMonth)) {
+            return false;
+        }
+
+        // בדיקה אם התאריך רחוק מדי בעתיד (למשל, מעל 10 שנים)
+        if (expYear > currentYear + 10) {
+            return false;
+        }
+
+        return true;
     }
 
-    // פורמט והגבלות למספר כרטיס אשראי
+  
     $('#CardNumber').on('input', function() {
         let value = $(this).val().replace(/\D/g, '');
         let formattedValue = '';

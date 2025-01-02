@@ -267,7 +267,6 @@
                         const ratingText = popup.querySelector('#rating-text');
 
                         stars.forEach(star => {
-                            // טיפול באירוע hover
                             star.addEventListener('mouseenter', () => {
                                 const rating = parseInt(star.dataset.rating);
                                 stars.forEach((s, index) => {
@@ -292,8 +291,7 @@
                                 });
                             });
                         });
-
-                        // טיפול ביציאת העכבר מאזור הכוכבים
+                        
                         const container = popup.querySelector('.star-rating');
                         container.addEventListener('mouseleave', () => {
                             stars.forEach((s, index) => {

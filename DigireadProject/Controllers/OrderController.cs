@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks;
@@ -12,7 +13,7 @@ namespace DigireadProject.Controllers
     [Authorize]
     public class OrderController : Controller
     {
-        private readonly libraryProject_digireadEntities db;
+        private readonly libraryProject_digireadEntities db = new libraryProject_digireadEntities();
 
         public OrderController()
         {
@@ -31,10 +32,19 @@ namespace DigireadProject.Controllers
         
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult CompletePurchase()
+        public ActionResult CompletePurchase(List<CartItemViewModel> Items)
         {
+            if (Items == null || !Items.Any())
+            {
+                return RedirectToAction("Cart", "ShoppingCart");
+            }
+
+            var userId = GetCurrentUserId();
+            TempData["CartItems"] = Items;
             return RedirectToAction("PaymentForm");
         }
+
+        
         [HttpGet]
         public ActionResult PaymentForm()
         {
@@ -46,33 +56,36 @@ namespace DigireadProject.Controllers
                     return RedirectToAction("Login", "Account");
                 }
 
-                var cartItems = db.ShoppingCart
+                var userCart = db.ShoppingCart
+                    .Include(c => c.Books)
                     .Where(c => c.UserID == userId)
-                    .Select(c => new
+                    .Select(c => new CartItemViewModel
                     {
-                        Book = c.Books,   
-                        c.Price,
-                        c.Quantity,
-                        c.IsRental
+                        BookId = c.Books.BookID,
+                        BookTitle = c.Books.Title,
+                        BookImageSrc = c.Books.ImageSrc,  // הוספת שדה התמונה
+                        Price = c.Price ?? 0,
+                        Quantity = c.Quantity ?? 1,
+                        IsRental = c.IsRental ?? false
                     })
                     .ToList();
 
-                if (!cartItems.Any())
+                if (!userCart.Any())
                 {
                     return RedirectToAction("Cart", "ShoppingCart");
                 }
 
-                // נניח שאנחנו מטפלים כרגע בפריט הראשון בסל
-                var firstItem = cartItems.First();
-                var totalAmount = cartItems.Sum(x => x.Price * x.Quantity);
+                decimal totalAmount = userCart.Sum(x => x.Price * x.Quantity);
 
                 var viewModel = new PaymentViewModel
                 {
-                    BookId = firstItem.Book.BookID,
-                    BookTitle = firstItem.Book.Title,
-                    BookImageSrc = firstItem.Book.ImageSrc,
+                    BookId = userCart.First().BookId,
+                    BookTitle = userCart.First().BookTitle,
+                    BookImageSrc = db.Books.Find(userCart.First().BookId)?.ImageSrc,
                     Price = totalAmount,
-                    IsRental = firstItem.IsRental ?? false                };
+                    IsRental = userCart.First().IsRental,
+                    CartItems = userCart
+                };
 
                 return View(viewModel);
             }
@@ -82,6 +95,7 @@ namespace DigireadProject.Controllers
                 throw;
             }
         }
+        
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> ProcessPayment(PaymentViewModel model)
@@ -227,6 +241,16 @@ namespace DigireadProject.Controllers
                         return RedirectToAction("BookDetails", "BookManagement", new { id = bookId });
                     }
                 }
+                
+                var cartItem = new CartItemViewModel
+                {
+                    BookId = book.BookID,
+                    BookTitle = book.Title,
+                    BookImageSrc = book.ImageSrc,
+                    Price = isRental ? book.RentalPrice ?? 0 : book.PurchasePrice ?? 0,
+                    Quantity = 1,
+                    IsRental = isRental
+                };
 
                 var viewModel = new PaymentViewModel
                 {
@@ -234,7 +258,8 @@ namespace DigireadProject.Controllers
                     BookTitle = book.Title,
                     BookImageSrc = book.ImageSrc,
                     Price = isRental ? book.RentalPrice ?? 0 : book.PurchasePrice ?? 0,
-                    IsRental = isRental
+                    IsRental = isRental,
+                    CartItems = new List<CartItemViewModel> { cartItem }  
                 };
 
                 ViewBag.TotalAmount = viewModel.Price;

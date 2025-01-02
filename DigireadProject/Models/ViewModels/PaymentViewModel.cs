@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace DigireadProject.Models.ViewModels
@@ -23,6 +24,9 @@ namespace DigireadProject.Models.ViewModels
         public string BookTitle { get; set; }
         public string BookImageSrc { get; set; }
         public decimal? Price { get; set; }
-        public bool IsRental { get; set; }  
+        public bool IsRental { get; set; }
+        public List<CartItemViewModel> CartItems { get; set; }
+        
     }
+   
 }
