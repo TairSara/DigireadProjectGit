@@ -5,6 +5,11 @@ namespace DigireadProject.Models.ViewModels
 {
     public class PaymentViewModel
     {
+        public PaymentViewModel()
+        {
+            CartItems = new List<CartItemViewModel>(); 
+        }
+        
         [Required(ErrorMessage = "נא להזין מספר כרטיס אשראי")]
         [RegularExpression(@"^\d{16}$", ErrorMessage = "מספר כרטיס אשראי לא תקין")]
         public string CardNumber { get; set; }
@@ -26,6 +31,7 @@ namespace DigireadProject.Models.ViewModels
         public decimal? Price { get; set; }
         public bool IsRental { get; set; }
         public List<CartItemViewModel> CartItems { get; set; }
+      
         
     }
    

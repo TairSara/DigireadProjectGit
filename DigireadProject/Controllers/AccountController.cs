@@ -7,6 +7,7 @@ using System.Text;
 using System.Security.Cryptography;
 using System.Web.Security;
 using System.Diagnostics;
+using DigireadProject.Models.Services;
 using DigireadProject.Models.ViewModels;
 
 namespace DigireadProject.Controllers

@@ -511,7 +511,6 @@
 </style>
 
 @section Styles {
-    <link href="~/Content/Books/css/book-details.css" rel="stylesheet" />
     <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.3/css/lightbox.min.css" rel="stylesheet">
 }
@@ -560,6 +559,16 @@
             },
 
             handleAddToCart: function(bookId, isRental) {
+                var token = $('input[name="__RequestVerificationToken"]').val();
+                if (!token) {
+                    Swal.fire({
+                        title: 'שגיאה',
+                        text: 'אירעה שגיאה באימות הפעולה, נא לרענן את הדף ולנסות שוב',
+                        icon: 'error',
+                        confirmButtonColor: '#6c3dab'
+                    });
+                    return;
+                }
                 $.ajax({
                     url: '/ShoppingCart/AddToCart',  // שינוי כאן - הוספת שם הקונטרולר
                     type: 'POST',

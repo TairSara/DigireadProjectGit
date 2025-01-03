@@ -3,29 +3,29 @@ using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Mvc;
-using DigireadProject.Models.ViewModels;
-using DigireadProject.Services;
+using DigireadProject.Models.Services;
 
 namespace DigireadProject.Controllers
 {
     [Authorize]
     public class ShoppingCartController : Controller
     {
-        private readonly libraryProject_digireadEntities db;
+        private readonly libraryProject_digireadEntities _db;
         private readonly EmailService _emailService;
-        private readonly NotificationScheduler _notificationScheduler;
+        private readonly WaitListService _waitListService;
+
 
         public ShoppingCartController()
         {
-            db = new libraryProject_digireadEntities();
+            _db = new libraryProject_digireadEntities();
             _emailService = new EmailService();
-            _notificationScheduler = new NotificationScheduler(_emailService, db);
+            _waitListService = new WaitListService(_db, _emailService);
         }
 
         public ActionResult Cart()
         {
             int userId = GetCurrentUserId();
-            var cartItems = db.ShoppingCart
+            var cartItems = _db.ShoppingCart
                 .Include(s => s.Books)
                 .Where(s => s.UserID == userId)
                 .ToList();
@@ -42,7 +42,7 @@ namespace DigireadProject.Controllers
                 int userId = GetCurrentUserId();
                 System.Diagnostics.Debug.WriteLine($"התחלת תהליך Checkout עבור משתמש {userId}");
 
-                var cartItems = await db.ShoppingCart
+                var cartItems = await _db.ShoppingCart
                     .Include(s => s.Books)
                     .Where(s => s.UserID == userId)
                     .ToListAsync();
@@ -74,11 +74,13 @@ namespace DigireadProject.Controllers
                             DaysOverdue = 0
                         };
 
-                        db.Rentals.Add(rental);
+                        _db.Rentals.Add(rental);
                         book.StockQuantityRent -= item.Quantity ?? 1;
+                        
+                        await _waitListService.RemoveFromWaitListAfterSuccessfulRental(book.BookID, userId);
 
                         // מחיקת המשתמש מרשימת ההמתנה אם הוא נמצא בה
-                        var waitListItem = await db.WaitList
+                        var waitListItem = await _db.WaitList
                             .FirstOrDefaultAsync(w => w.BookID == item.BookID && w.UserID == userId);
 
                         if (waitListItem != null)
@@ -90,10 +92,10 @@ namespace DigireadProject.Controllers
                             System.Diagnostics.Debug.WriteLine($"מיקום נוכחי ברשימת ההמתנה: {deletedPosition}");
 
                             // מחיקת הפריט מרשימת ההמתנה
-                            db.WaitList.Remove(waitListItem);
+                            _db.WaitList.Remove(waitListItem);
 
                             // עדכון המיקומים של שאר המשתמשים
-                            var remainingItems = await db.WaitList
+                            var remainingItems = await _db.WaitList
                                 .Where(w => w.BookID == item.BookID && w.WaitPosition > deletedPosition)
                                 .ToListAsync();
 
@@ -142,14 +144,14 @@ namespace DigireadProject.Controllers
                             PaymentMethod = "כרטיס אשראי"
                         };
 
-                        db.Purchases.Add(purchase);
+                        _db.Purchases.Add(purchase);
                         book.StockQuantity -= item.Quantity ?? 1;
                     }
 
-                    db.ShoppingCart.Remove(item);
+                    _db.ShoppingCart.Remove(item);
                 }
 
-                await db.SaveChangesAsync();
+                await _db.SaveChangesAsync();
                 System.Diagnostics.Debug.WriteLine("תהליך הרכישה הושלם בהצלחה");
 
                 return RedirectToAction("Success", "Order");
@@ -173,12 +175,12 @@ namespace DigireadProject.Controllers
                 
                 if (isRental)
                 {
-                    var activeRentals = db.Rentals
+                    var activeRentals = _db.Rentals
                         .Count(r => r.UserID == userId && 
                                     r.ReturnDate == null && 
                                     DbFunctions.AddDays(r.RentalDate, 30) >= DateTime.Now);
                            
-                    var cartRentals = db.ShoppingCart
+                    var cartRentals = _db.ShoppingCart
                         .Count(s => s.UserID == userId && s.IsRental == true);
                            
                     if (activeRentals + cartRentals >= 3)
@@ -191,7 +193,7 @@ namespace DigireadProject.Controllers
                     }
                 }
                 
-                var book = db.Books.Find(bookId);
+                var book = _db.Books.Find(bookId);
                 if (book == null)
                     return Json(new { success = false, message = "הספר לא נמצא" });
 
@@ -199,7 +201,7 @@ namespace DigireadProject.Controllers
                     (book.StockQuantityRent ?? 0) : 
                     (book.StockQuantity ?? 0);
 
-                var existingItem = db.ShoppingCart
+                var existingItem = _db.ShoppingCart
                     .FirstOrDefault(s => s.UserID == userId && s.BookID == bookId && s.IsRental == isRental);
 
                 if (existingItem != null)
@@ -227,10 +229,10 @@ namespace DigireadProject.Controllers
                         IsRental = isRental,
                         ImageSrc = book.ImageSrc
                     };
-                    db.ShoppingCart.Add(cartItem);
+                    _db.ShoppingCart.Add(cartItem);
                 }
 
-                db.SaveChanges();
+                _db.SaveChanges();
                 return Json(new { success = true });
             }
             catch (Exception ex)
@@ -246,14 +248,14 @@ namespace DigireadProject.Controllers
             try
             {
                 int userId = GetCurrentUserId();
-                var cartItem = db.ShoppingCart
+                var cartItem = _db.ShoppingCart
                     .FirstOrDefault(c => c.CartID == cartId && c.UserID == userId);
 
                 if (cartItem == null)
                     return Json(new { success = false, message = "פריט לא נמצא" });
 
-                db.ShoppingCart.Remove(cartItem);
-                db.SaveChanges();
+                _db.ShoppingCart.Remove(cartItem);
+                _db.SaveChanges();
 
                 return Json(new { success = true });
             }
@@ -270,7 +272,7 @@ namespace DigireadProject.Controllers
             try
             {
                 int userId = GetCurrentUserId();
-                var cartItem = db.ShoppingCart
+                var cartItem = _db.ShoppingCart
                     .Include(s => s.Books)
                     .FirstOrDefault(c => c.CartID == cartId && c.UserID == userId);
 
@@ -279,11 +281,11 @@ namespace DigireadProject.Controllers
                 
                 if (cartItem.IsRental == true)
                 {
-                    var activeRentals = db.Rentals
+                    var activeRentals = _db.Rentals
                         .Count(r => r.UserID == userId && 
                                     r.ReturnDate == null);
                            
-                    var otherCartRentals = db.ShoppingCart
+                    var otherCartRentals = _db.ShoppingCart
                         .Count(s => s.UserID == userId && 
                                     s.IsRental == true && 
                                     s.CartID != cartId);
@@ -311,7 +313,7 @@ namespace DigireadProject.Controllers
                     return Json(new { success = false, message = "כמות לא תקינה" });
 
                 cartItem.Quantity = quantity;
-                db.SaveChanges();
+                _db.SaveChanges();
 
                 return Json(new { success = true });
             }
@@ -324,22 +326,29 @@ namespace DigireadProject.Controllers
         private int GetCurrentUserId()
         {
             var username = User.Identity.Name;
-            var user = db.Users.FirstOrDefault(u => u.Username == username);
+            var user = _db.Users.FirstOrDefault(u => u.Username == username);
             return user?.UserID ?? 0;
         }
         
         private async Task HandleWaitListNotifications(int bookId, string bookTitle)
         {
-            var waitListUsers = await db.WaitList
+            var waitListUsers = await _db.WaitList
                 .Include(w => w.Users)
-                .Where(w => w.BookID == bookId)
+                .Where(w => w.BookID == bookId && !w.EmailNotificationSent.GetValueOrDefault())
                 .OrderBy(w => w.WaitPosition)
                 .Take(3)
                 .ToListAsync();
 
-            if (waitListUsers.Any())
+            foreach (var user in waitListUsers)
             {
-                _notificationScheduler.ScheduleNotifications(waitListUsers, bookTitle);
+                if (user.Users?.Email != null)
+                {
+                    await _emailService.SendBookAvailableNotificationAsync(
+                        user.Users.Email,
+                        bookTitle
+                    );
+                    user.EmailNotificationSent = true;
+                }
             }
         }
 
@@ -347,7 +356,7 @@ namespace DigireadProject.Controllers
         {
             if (disposing)
             {
-                db?.Dispose();
+                _db?.Dispose();
             }
             base.Dispose(disposing);
         }

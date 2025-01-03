@@ -100,10 +100,9 @@ namespace DigireadProject.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> ProcessPayment(PaymentViewModel model)
         {
-            // הוספת בדיקה בהתחלת המתודה
-            if (model == null || model.BookId == 0)
+            if (model == null || !model.CartItems.Any())
             {
-                ModelState.AddModelError("", "נתוני הספר חסרים");
+                ModelState.AddModelError("", "נתוני הספרים חסרים");
                 return View("PaymentForm", model);
             }
 
@@ -111,61 +110,72 @@ namespace DigireadProject.Controllers
             {
                 return View("PaymentForm", model);
             }
-           
 
             using (var transaction = db.Database.BeginTransaction())
             {
                 try
                 {
                     var userId = GetCurrentUserId();
-                    var book = await db.Books.FindAsync(model.BookId);
                     
-                    if (book == null)
+                    foreach (var cartItem in model.CartItems)
                     {
-                        ModelState.AddModelError("", "הספר לא נמצא");
-                        return View("PaymentForm", model);
-                    }
-
-                    if (model.IsRental)
-                    {
-                        if (book.StockQuantityRent <= 0)
+                        var book = await db.Books.FindAsync(cartItem.BookId);
+                        
+                        if (book == null)
                         {
-                            ModelState.AddModelError("", "הספר אינו זמין להשאלה כרגע");
+                            ModelState.AddModelError("", $"הספר {cartItem.BookTitle} לא נמצא");
                             return View("PaymentForm", model);
                         }
 
-                        var rental = new Rentals
+                        if (cartItem.IsRental)
                         {
-                            UserID = userId,
-                            BookID = model.BookId,
-                            RentalDate = DateTime.Now,
-                            ReturnDate = null
-                        };
-                        db.Rentals.Add(rental);
-                        book.StockQuantityRent -= 1;
-                    }
-                    else
-                    {
-                        if (book.StockQuantity <= 0)
+                            if (book.StockQuantityRent < cartItem.Quantity)
+                            {
+                                ModelState.AddModelError("", $"הספר {cartItem.BookTitle} אינו זמין להשאלה בכמות המבוקשת");
+                                return View("PaymentForm", model);
+                            }
+
+                            var rental = new Rentals
+                            {
+                                UserID = userId,
+                                BookID = cartItem.BookId,
+                                RentalDate = DateTime.Now,
+                                ReturnDate = null
+                            };
+                            db.Rentals.Add(rental);
+                            book.StockQuantityRent -= cartItem.Quantity;
+                        }
+                        else
                         {
-                            ModelState.AddModelError("", "הספר אינו זמין לרכישה כרגע");
-                            return View("PaymentForm", model);
+                            if (book.StockQuantity < cartItem.Quantity)
+                            {
+                                ModelState.AddModelError("", $"הספר {cartItem.BookTitle} אינו זמין לרכישה בכמות המבוקשת");
+                                return View("PaymentForm", model);
+                            }
+
+                            var purchase = new Purchases
+                            {
+                                UserID = userId,
+                                BookID = cartItem.BookId,
+                                PurchaseDate = DateTime.Now,
+                                PaymentStatus = true,
+                                PaymentMethod = "Credit Card"
+                            };
+                            db.Purchases.Add(purchase);
+                            book.StockQuantity -= cartItem.Quantity;
+
+                            if (book.StockQuantity <= 0)
+                            {
+                                book.IsAvailable = false;
+                            }
                         }
 
-                        var purchase = new Purchases
+                        // מחיקת הפריט מעגלת הקניות
+                        var cartItemToRemove = await db.ShoppingCart
+                            .FirstOrDefaultAsync(sc => sc.UserID == userId && sc.BookID == cartItem.BookId);
+                        if (cartItemToRemove != null)
                         {
-                            UserID = userId,
-                            BookID = model.BookId,
-                            PurchaseDate = DateTime.Now,
-                            PaymentStatus = true,
-                            PaymentMethod = "Credit Card"
-                        };
-                        db.Purchases.Add(purchase);
-                        book.StockQuantity -= 1;
-
-                        if (book.StockQuantity <= 0)
-                        {
-                            book.IsAvailable = false;
+                            db.ShoppingCart.Remove(cartItemToRemove);
                         }
                     }
 
@@ -183,7 +193,6 @@ namespace DigireadProject.Controllers
                 }
             }
         }
-
         private int GetCurrentUserId()
         {
             var username = User.Identity.Name;

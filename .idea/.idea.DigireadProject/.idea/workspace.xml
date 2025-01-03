@@ -8,31 +8,22 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="20f33115-b11b-49e2-bb24-d6ba9c0d48a8" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/DigireadProject/Models/Services/WaitListService.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.DigireadProject/.idea/dataSources.local.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.DigireadProject/.idea/dataSources.local.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.DigireadProject/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.DigireadProject/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/config/applicationhost.config" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/config/applicationhost.config" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DigireadProject/Content/Home/css/file-explorer.css" beforeDir="false" afterPath="$PROJECT_DIR$/DigireadProject/Content/Home/css/file-explorer.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DigireadProject/Views/Account/ForgotPassword.cshtml" beforeDir="false" afterPath="$PROJECT_DIR$/DigireadProject/Views/Account/ForgotPassword.cshtml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DigireadProject/Views/Account/Login.cshtml" beforeDir="false" afterPath="$PROJECT_DIR$/DigireadProject/Views/Account/Login.cshtml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DigireadProject/Views/Account/Profile.cshtml" beforeDir="false" afterPath="$PROJECT_DIR$/DigireadProject/Views/Account/Profile.cshtml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DigireadProject/Views/Account/Register.cshtml" beforeDir="false" afterPath="$PROJECT_DIR$/DigireadProject/Views/Account/Register.cshtml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DigireadProject/Views/Account/ResetPassword.cshtml" beforeDir="false" afterPath="$PROJECT_DIR$/DigireadProject/Views/Account/ResetPassword.cshtml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DigireadProject/Views/Admin/Dashboard.cshtml" beforeDir="false" afterPath="$PROJECT_DIR$/DigireadProject/Views/Admin/Dashboard.cshtml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DigireadProject/Views/BookManagement/AddBook.cshtml" beforeDir="false" afterPath="$PROJECT_DIR$/DigireadProject/Views/BookManagement/AddBook.cshtml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DigireadProject/Controllers/AccountController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DigireadProject/Controllers/AccountController.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DigireadProject/Controllers/BookManagementController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DigireadProject/Controllers/BookManagementController.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DigireadProject/Controllers/OrderController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DigireadProject/Controllers/OrderController.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DigireadProject/Controllers/RentalsManagementController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DigireadProject/Controllers/RentalsManagementController.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DigireadProject/Controllers/ShoppingCartController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DigireadProject/Controllers/ShoppingCartController.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DigireadProject/DigireadProject.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/DigireadProject/DigireadProject.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DigireadProject/Models/Services/EmailService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DigireadProject/Models/Services/EmailService.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DigireadProject/Models/Services/NotificationScheduler.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/DigireadProject/Models/ViewModels/PaymentViewModel.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DigireadProject/Models/ViewModels/PaymentViewModel.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/DigireadProject/Views/BookManagement/BookDetails.cshtml" beforeDir="false" afterPath="$PROJECT_DIR$/DigireadProject/Views/BookManagement/BookDetails.cshtml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DigireadProject/Views/BookManagement/EditBook.cshtml" beforeDir="false" afterPath="$PROJECT_DIR$/DigireadProject/Views/BookManagement/EditBook.cshtml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DigireadProject/Views/BookManagement/Gallery.cshtml" beforeDir="false" afterPath="$PROJECT_DIR$/DigireadProject/Views/BookManagement/Gallery.cshtml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DigireadProject/Views/BookManagement/MainGallery.cshtml" beforeDir="false" afterPath="$PROJECT_DIR$/DigireadProject/Views/BookManagement/MainGallery.cshtml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DigireadProject/Views/BookManagement/ManageBooks.cshtml" beforeDir="false" afterPath="$PROJECT_DIR$/DigireadProject/Views/BookManagement/ManageBooks.cshtml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DigireadProject/Views/BookManagement/MyLibrary.cshtml" beforeDir="false" afterPath="$PROJECT_DIR$/DigireadProject/Views/BookManagement/MyLibrary.cshtml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/DigireadProject/Views/BookManagement/MyWaitList.cshtml" beforeDir="false" afterPath="$PROJECT_DIR$/DigireadProject/Views/BookManagement/MyWaitList.cshtml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DigireadProject/Views/Home/About.cshtml" beforeDir="false" afterPath="$PROJECT_DIR$/DigireadProject/Views/Home/About.cshtml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DigireadProject/Views/Home/HomePage.cshtml" beforeDir="false" afterPath="$PROJECT_DIR$/DigireadProject/Views/Home/HomePage.cshtml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DigireadProject/Views/Order/Checkout.cshtml" beforeDir="false" afterPath="$PROJECT_DIR$/DigireadProject/Views/Order/Checkout.cshtml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/DigireadProject/Views/Order/PaymentForm.cshtml" beforeDir="false" afterPath="$PROJECT_DIR$/DigireadProject/Views/Order/PaymentForm.cshtml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DigireadProject/Views/RentalsManagement/ManageRentals.cshtml" beforeDir="false" afterPath="$PROJECT_DIR$/DigireadProject/Views/RentalsManagement/ManageRentals.cshtml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DigireadProject/Views/RentalsManagement/ManageWaitList.cshtml" beforeDir="false" afterPath="$PROJECT_DIR$/DigireadProject/Views/RentalsManagement/ManageWaitList.cshtml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DigireadProject/Views/Shared/_Layout.cshtml" beforeDir="false" afterPath="$PROJECT_DIR$/DigireadProject/Views/Shared/_Layout.cshtml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/DigireadProject/bin/DigireadProject.dll" beforeDir="false" afterPath="$PROJECT_DIR$/DigireadProject/bin/DigireadProject.dll" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/DigireadProject/bin/DigireadProject.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/DigireadProject/bin/DigireadProject.pdb" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/DigireadProject/obj/Debug/DigireadProject.csproj.AssemblyReference.cache" beforeDir="false" afterPath="$PROJECT_DIR$/DigireadProject/obj/Debug/DigireadProject.csproj.AssemblyReference.cache" afterDir="false" />
@@ -157,7 +148,7 @@
       <workItem from="1735489479106" duration="3022000" />
       <workItem from="1735549636636" duration="2450000" />
       <workItem from="1735576986033" duration="35867000" />
-      <workItem from="1735860733812" duration="631000" />
+      <workItem from="1735860733812" duration="12884000" />
     </task>
     <servers />
   </component>

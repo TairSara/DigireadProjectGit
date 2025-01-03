@@ -171,5 +171,43 @@
             }
         });
     }
+
+    function rentBookFromWaitList(bookId) {
+        $.ajax({
+            url: '/BookManagement/RentBook',
+            type: 'POST',
+            data: {
+                bookId: bookId,
+                __RequestVerificationToken: $('input[name="__RequestVerificationToken"]').val()
+            },
+            success: function(response) {
+                if (response.success) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'הצלחה!',
+                        text: 'הספר הושאל בהצלחה והוסר מרשימת ההמתנה',
+                        confirmButtonText: 'אישור'
+                    }).then(() => {
+                        window.location.href = '/BookManagement/MyLibrary';
+                    });
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'שגיאה',
+                        text: response.message || 'אירעה שגיאה בהשאלת הספר',
+                        confirmButtonText: 'אישור'
+                    });
+                }
+            },
+            error: function() {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'שגיאה',
+                    text: 'אירעה שגיאה בהשאלת הספר',
+                    confirmButtonText: 'אישור'
+                });
+            }
+        });
+    }
     
 </script>

@@ -34,12 +34,15 @@
             @Html.AntiForgeryToken()
             @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
-            <!-- הוספת שדות נסתרים לשמירת מידע הספר -->
-            @Html.HiddenFor(m => m.BookId)
-            @Html.HiddenFor(m => m.IsRental)
-            @Html.HiddenFor(m => m.Price)
-            @Html.HiddenFor(m => m.BookTitle)
-            @Html.HiddenFor(m => m.BookImageSrc)
+            for (int i = 0; i < Model.CartItems.Count; i++)
+            {
+                @Html.HiddenFor(m => m.CartItems[i].BookId)
+                @Html.HiddenFor(m => m.CartItems[i].BookTitle)
+                @Html.HiddenFor(m => m.CartItems[i].BookImageSrc)
+                @Html.HiddenFor(m => m.CartItems[i].Price)
+                @Html.HiddenFor(m => m.CartItems[i].Quantity)
+                @Html.HiddenFor(m => m.CartItems[i].IsRental)
+            }
 
             <div class="form-group">
                 <label>מספר כרטיס אשראי</label>
@@ -98,12 +101,6 @@
     </div>
 </div>
 <style>
-
-    * {
-        font-family: 'Rubik', 'Assistant', 'Heebo', Calibri, sans-serif;
-    }
-
-
     .payment-container {
         background-color: #f4ecf7;
         padding: 2rem;
@@ -143,7 +140,7 @@
         margin-bottom: 10px;
         border-bottom: 1px solid #eee;
     }
-    
+
     .book-info {
         display: flex;
         gap: 1.5rem;
@@ -239,7 +236,7 @@
 
 
     .shake {
-        animation: shake 0.5s ease-in-out;
+        animation: shake 0.5s ease-in-out;  
     }
 </style>
 

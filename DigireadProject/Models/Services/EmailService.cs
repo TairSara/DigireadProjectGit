@@ -1,23 +1,25 @@
 ﻿using System.Net.Mail;
 using System.Threading.Tasks;
 
-public class EmailService
+namespace DigireadProject.Models.Services
 {
-    private readonly SmtpClient smtpClient;
-
-    public EmailService()
+    public class EmailService
     {
-        smtpClient = new SmtpClient();
-    }
+        private readonly SmtpClient smtpClient;
 
-    public async Task SendPasswordResetEmailAsync(string email, string resetLink)
-    {
-        var mailMessage = new MailMessage
+        public EmailService()
         {
-            From = new MailAddress("tairsto@ac.sce.ac.il"),
-            Subject = "איפוס סיסמה - DigiRead",
-            IsBodyHtml = true,
-            Body = $@"
+            smtpClient = new SmtpClient();
+        }
+
+        public async Task SendPasswordResetEmailAsync(string email, string resetLink)
+        {
+            var mailMessage = new MailMessage
+            {
+                From = new MailAddress("tairsto@ac.sce.ac.il"),
+                Subject = "איפוס סיסמה - DigiRead",
+                IsBodyHtml = true,
+                Body = $@"
                 <div style='direction: rtl; text-align: right;'>
                     <h2>בקשה לאיפוס סיסמה</h2>
                     <p>קיבלנו בקשה לאיפוס הסיסמה שלך.</p>
@@ -25,20 +27,20 @@ public class EmailService
                     <a href='{resetLink}' style='background-color: #007bff; color: white; padding: 10px 15px; text-decoration: none; border-radius: 5px;'>איפוס סיסמה</a>
                     <p>אם לא ביקשת לאפס את הסיסמה, אנא התעלם מהודעה זו.</p>
                 </div>"
-        };
-        mailMessage.To.Add(email);
+            };
+            mailMessage.To.Add(email);
 
-        await smtpClient.SendMailAsync(mailMessage);
-    }
+            await smtpClient.SendMailAsync(mailMessage);
+        }
 
-    public async Task SendRentalExpirationAlertAsync(string email, string bookTitle, int daysLeft)
-    {
-        var mailMessage = new MailMessage
+        public async Task SendRentalExpirationAlertAsync(string email, string bookTitle, int daysLeft)
         {
-            From = new MailAddress("tairsto@ac.sce.ac.il"),
-            Subject = "התראה על סיום תקופת השאלה - DigiRead",
-            IsBodyHtml = true,
-            Body = $@"
+            var mailMessage = new MailMessage
+            {
+                From = new MailAddress("tairsto@ac.sce.ac.il"),
+                Subject = "התראה על סיום תקופת השאלה - DigiRead",
+                IsBodyHtml = true,
+                Body = $@"
                 <div style='direction: rtl; text-align: right;'>
                     <h2>התראה על סיום תקופת השאלה</h2>
                     <p>שלום,</p>
@@ -47,20 +49,20 @@ public class EmailService
                     <p>אנא שים לב שבתום תקופת ההשאלה הספר יוסר אוטומטית מספריית הספרים שלך.</p>
                     <p>תודה על שימושך בשירותי DigiRead!</p>
                 </div>"
-        };
-        mailMessage.To.Add(email);
+            };
+            mailMessage.To.Add(email);
 
-        await smtpClient.SendMailAsync(mailMessage);
-    }
+            await smtpClient.SendMailAsync(mailMessage);
+        }
     
-    public async Task SendBookAvailableNotificationAsync(string email, string bookTitle)
-    {
-        var mailMessage = new MailMessage
+        public async Task SendBookAvailableNotificationAsync(string email, string bookTitle)
         {
-            From = new MailAddress("tairsto@ac.sce.ac.il"),
-            Subject = "הספר שביקשת זמין! - DigiRead",
-            IsBodyHtml = true,
-            Body = $@"
+            var mailMessage = new MailMessage
+            {
+                From = new MailAddress("tairsto@ac.sce.ac.il"),
+                Subject = "הספר שביקשת זמין! - DigiRead",
+                IsBodyHtml = true,
+                Body = $@"
             <div style='direction: rtl; text-align: right;'>
                 <h2>הספר שביקשת זמין עכשיו!</h2>
                 <p>שלום,</p>
@@ -69,9 +71,10 @@ public class EmailService
                 <p>מהר לרכוש או להשאיל את הספר לפני שמישהו אחר יקדים אותך!</p>
                 <p>תודה על שימושך בשירותי DigiRead!</p>
             </div>"
-        };
-        mailMessage.To.Add(email);
+            };
+            mailMessage.To.Add(email);
 
-        await smtpClient.SendMailAsync(mailMessage);
+            await smtpClient.SendMailAsync(mailMessage);
+        }
     }
 }

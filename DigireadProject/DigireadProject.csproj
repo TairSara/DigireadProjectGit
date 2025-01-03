@@ -230,7 +230,7 @@
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Services\EmailService.cs" />
-    <Compile Include="Models\Services\NotificationScheduler.cs" />
+    <Compile Include="Models\Services\WaitListService.cs" />
     <Compile Include="Models\ViewModels\BookViewModel.cs" />
     <Compile Include="Models\ViewModels\CartItemViewModel.cs" />
     <Compile Include="Models\ViewModels\ForgotPasswordViewModel.cs" />

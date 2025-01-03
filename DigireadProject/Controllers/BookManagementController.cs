@@ -4,8 +4,8 @@ using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Mvc;
-using DigireadProject.Models;
 using DigireadProject.Models.ViewModels;
+using DigireadProject.Models.Services;
 
 namespace DigireadProject.Controllers
 {
@@ -14,11 +14,13 @@ namespace DigireadProject.Controllers
     {
         private readonly libraryProject_digireadEntities db;
         private readonly EmailService _emailService;
+        private readonly WaitListService _waitListService;
 
         public BookManagementController()
         {
             db = new libraryProject_digireadEntities();
             _emailService = new EmailService();
+            _waitListService = new WaitListService(db, _emailService); 
             
             System.Diagnostics.Debug.WriteLine($"EmailService created: {_emailService != null}");
             System.Diagnostics.Debug.WriteLine("BookManagementController נוצר");
@@ -501,10 +503,7 @@ namespace DigireadProject.Controllers
 
                             if (firstWaitingUser != null && firstWaitingUser.Users?.Email != null)
                             {
-                                await _emailService.SendBookAvailableNotificationAsync(
-                                    firstWaitingUser.Users.Email,
-                                    book.Title
-                                );
+                                await _waitListService.ProcessWaitListItem(book.BookID);
                             }
                         }
 
@@ -625,6 +624,7 @@ namespace DigireadProject.Controllers
                     {
                         book.IsAvailable = true;
                         book.StockQuantityRent += 1; // החזרת הספר למלאי ההשאלות
+                        await _waitListService.ProcessWaitListItem(book.BookID);
                     }
                 }
 
@@ -675,8 +675,8 @@ namespace DigireadProject.Controllers
                 {
                     var rental = await db.Rentals
                         .FirstOrDefaultAsync(r => r.BookID == bookId && 
-                                                  r.UserID == userId && 
-                                                  r.ReturnDate == null);
+                                                r.UserID == userId && 
+                                                r.ReturnDate == null);
 
                     System.Diagnostics.Debug.WriteLine($"נמצאה השאלה: {rental != null}");
 
@@ -687,6 +687,19 @@ namespace DigireadProject.Controllers
                         {
                             book.StockQuantityRent += 1;
                             System.Diagnostics.Debug.WriteLine($"עודכן מלאי השאלות: {book.StockQuantityRent}");
+
+                            // בדיקת רשימת המתנה ושליחת התראה
+                            var firstWaitingUser = await db.WaitList
+                                .Where(w => w.BookID == bookId)
+                                .OrderBy(w => w.WaitPosition)
+                                .Include(w => w.Users)
+                                .FirstOrDefaultAsync();
+
+                            if (firstWaitingUser != null && firstWaitingUser.Users?.Email != null)
+                            {
+                                await _waitListService.ProcessWaitListItem(bookId);
+                                System.Diagnostics.Debug.WriteLine($"נשלח מייל למשתמש {firstWaitingUser.Users.Email} על זמינות הספר {book.Title}");
+                            }
                         }
                         db.Rentals.Remove(rental);
                         await db.SaveChangesAsync();
@@ -696,7 +709,7 @@ namespace DigireadProject.Controllers
                 {
                     var purchase = await db.Purchases
                         .FirstOrDefaultAsync(p => p.BookID == bookId && 
-                                                  p.UserID == userId);
+                                                p.UserID == userId);
 
                     System.Diagnostics.Debug.WriteLine($"נמצאה רכישה: {purchase != null}");
 
@@ -1221,7 +1234,5 @@ namespace DigireadProject.Controllers
 
             return Json(new { books, hasMore }, JsonRequestBehavior.AllowGet);
         }
-                
     }
-
 }
