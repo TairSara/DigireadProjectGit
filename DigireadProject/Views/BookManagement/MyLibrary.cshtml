@@ -4,9 +4,11 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
     <link href="~/Content/Books/css/MyLibrary.css" rel="stylesheet" />
 }
+
 @{
     ViewBag.Title = "הספרייה שלי";
 }
+
 @Html.AntiForgeryToken()
 <div class="library-container" dir="rtl">
     <h2 class="title">הספרייה שלי</h2>
@@ -22,47 +24,50 @@
         @foreach (var book in Model)
         {
             <div class="book-card">
-                <div class="book-image">
-                    @if (!string.IsNullOrEmpty(book.ImageSrc))
-                    {
-                        <img src="@Url.Content(book.ImageSrc)" alt="@book.Title" />
-                    }
-                    else
-                    {
-                        <img src="~/Content/Images/default-book.jpg" alt="תמונה לא זמינה" />
-                    }
-                </div>
-                <div class="book-info">
-                    <h3>@book.Title</h3>
-                    <p>מאת: @book.Author</p>
-                    <div class="book-type">@book.Type</div>
-                    @if (book.Type == "השאלה" && book.ReturnDate.HasValue)
-                    {
-                        <div class="return-date">
-                            תאריך החזרה: @book.ReturnDate.Value.ToString("dd/MM/yyyy")
-                        </div>
-
-                        var daysLeft = (book.ReturnDate.Value - DateTime.Now).Days;
-                        <div class="days-left">
-                            נותרו @daysLeft ימים להשאלה
-                        </div>
-
-                        if (daysLeft <= 5 && daysLeft > 0)
+                <div class="book-content">
+                    <div class="book-image">
+                        @if (!string.IsNullOrEmpty(book.ImageSrc))
                         {
-                            <div class="days-left-warning">
-                                נותרו @daysLeft ימים להשכרה
-                            </div>
+                            <img src="@Url.Content(book.ImageSrc)" alt="@book.Title" />
                         }
-                    }
-                   
+                        else
+                        {
+                            <img src="~/Content/Images/default-book.jpg" alt="תמונה לא זמינה" />
+                        }
+                    </div>
+                    <div class="book-info">
+                        <div class="book-details">
+                            <h3>@book.Title</h3>
+                            <p>מאת: @book.Author</p>
+                            <div class="book-type">@book.Type</div>
+                            @if (book.Type == "השאלה" && book.ReturnDate.HasValue)
+                            {
+                                <div class="return-date">
+                                    תאריך החזרה: @book.ReturnDate.Value.ToString("dd/MM/yyyy")
+                                </div>
+
+                                var daysLeft = (book.ReturnDate.Value - DateTime.Now).Days;
+                                <div class="days-left">
+                                    נותרו @daysLeft ימים להשאלה
+                                </div>
+
+                                if (daysLeft <= 5 && daysLeft > 0)
+                                {
+                                    <div class="days-left-warning">
+                                        נותרו @daysLeft ימים להשכרה
+                                    </div>
+                                }
+                            }
+                        </div>
+                    </div>
+                </div>
+                <div class="book-buttons">
                     <button class="download-btn" onclick="showFormatDialog(@book.BookId)">
                         <i class="fas fa-download"></i> הורד ספר
                     </button>
-                    
                     <button class="delete-btn" onclick="confirmDelete(@book.BookId, '@book.Type', '@book.Title')">
                         <i class="fas fa-trash"></i> מחק
                     </button>
-
                     <button class="rate-btn" data-book-id="@book.BookId" data-book-title="@book.Title">
                         <i class="fas fa-star"></i> דרג ספר
                     </button>
@@ -72,6 +77,277 @@
     </div>
 </div>
 
+
+<style>
+    * {
+        font-family: 'Rubik', 'Assistant', 'Heebo', Calibri, sans-serif;
+    }
+    
+
+    .library-container {
+        padding: 20px;
+        max-width: 1200px;
+        margin: 0 auto;
+        background: linear-gradient(135deg, #FAF7F2, #FFF8EE);
+    }
+
+    /* עיצוב הכותרת */
+    .title {
+        color: #333;
+        text-align: center;
+        font-size: 2rem;
+        font-weight: 600;
+        margin-bottom: 2rem;
+        position: relative;
+        padding-bottom: 1rem;
+    }
+
+    .title:after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 100px;
+        height: 3px;
+        background: linear-gradient(to right, #9580ff, #6c50e8);
+        border-radius: 2px;
+    }
+
+    .books-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: 25px;
+        margin-top: 20px;
+    }
+
+    .book-card {
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 4px 15px rgba(149, 128, 255, 0.1);
+        overflow: hidden;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        border: 1px solid #f4ecff;
+        display: flex;
+        flex-direction: column;
+        height: 600px;
+    }
+
+    .book-content {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+    }
+    .book-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 25px rgba(149, 128, 255, 0.2);
+    }
+
+    .book-image img {
+        width: 100%;
+        height: 280px;
+        object-fit: cover;
+        transition: transform 0.3s ease;
+    }
+
+    .book-image img:hover {
+        transform: scale(1.05);
+    }
+
+    .book-info {
+        padding: 20px;
+        background: linear-gradient(to bottom, #fff, #f8f5ff);
+    }
+
+    .book-info h3 {
+        margin: 0;
+        font-size: 1.1em;
+        margin-bottom: 10px;
+        font-weight: 600;
+        color: #6c50e8;
+    }
+
+    .download-btn {
+        background-color: #9580ff;
+        color: white;
+        border: none;
+        padding: 8px 15px;
+        border-radius: 8px;
+        margin-top: 12px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        width: 100%;
+        margin-bottom: 8px;
+        box-shadow: 0 4px 15px rgba(149, 128, 255, 0.2);
+    }
+
+    .download-btn:hover {
+        background-color: #6c50e8;
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(149, 128, 255, 0.3);
+    }
+
+    .book-info p {
+        margin: 8px 0;
+        color: #7b6d9e;
+    }
+
+    .book-type {
+        display: inline-block;
+        padding: 5px 12px;
+        background-color: #f4ecff;
+        color: #6c50e8;
+        border-radius: 6px;
+        font-size: 0.9em;
+        margin-top: 8px;
+        font-weight: 500;
+    }
+
+    .return-date {
+        margin-top: 8px;
+        font-size: 0.9em;
+        color: #7b6d9e;
+        background-color: #f8f5ff;
+        padding: 5px 12px;
+        border-radius: 6px;
+    }
+
+    .alert {
+        margin-bottom: 20px;
+        padding: 15px;
+        border-radius: 8px;
+    }
+
+    .alert-info {
+        background-color: #f4ecff;
+        border: 1px solid #e6e0ff;
+        color: #6c50e8;
+    }
+
+    .delete-btn {
+        background-color: #dc3545;
+        color: white;
+        border: none;
+        padding: 8px 15px;
+        border-radius: 8px;
+        margin-top: 12px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        width: 100%;
+    }
+
+    .delete-btn:hover {
+        background-color: #c82333;
+        transform: translateY(-2px);
+    }
+
+    /* עיצוב כפתורי דירוג */
+    .rate-btn {
+        background-color: #9580ff;
+        color: white;
+        border: none;
+        padding: 8px 15px;
+        border-radius: 8px;
+        margin-top: 12px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        width: 100%;
+        margin-bottom: 8px;
+    }
+
+    .rate-btn:hover {
+        background-color: #6c50e8;
+        transform: translateY(-2px);
+    }
+
+    .rate-btn.already-rated {
+        background-color: #e6e0ff;
+        cursor: not-allowed;
+        opacity: 0.7;
+    }
+
+    /* עיצוב כוכבי דירוג */
+    .rating-stars {
+        display: flex;
+        gap: 8px;
+        justify-content: center;
+        margin: 15px 0;
+    }
+
+    .star {
+        font-size: 24px;
+        color: #e6e0ff;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .star:hover,
+    .star.active,
+    .star.selected {
+        color: #9580ff;
+        transform: scale(1.2);
+    }
+
+    .star.selected {
+        animation: pulse 0.3s ease-in-out;
+    }
+
+    /* עיצוב חלון הדירוג */
+    .rating-container {
+        text-align: center;
+        padding: 20px;
+        background-color: white;
+        border-radius: 12px;
+        box-shadow: 0 4px 20px rgba(149, 128, 255, 0.15);
+    }
+
+    .rating-text {
+        color: #7b6d9e;
+        margin: 10px 0;
+        font-size: 0.9em;
+    }
+    .format-options {
+        margin-top: 20px;
+        display: flex;
+        gap: 10px;
+        justify-content: center;
+    }
+
+    .format-btn {
+        padding: 8px 15px;
+        border: none;
+        border-radius: 6px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        font-size: 0.9em;
+    }
+
+    .format-btn:nth-child(1) {
+        background-color: #9580ff;
+        color: white;
+    }
+
+    .format-btn:nth-child(2) {
+        background-color: #7c66e4;
+        color: white;
+    }
+
+    .format-btn:nth-child(3) {
+        background-color: #6450c9;
+        color: white;
+    }
+
+    .format-btn:nth-child(4) {
+        background-color: #4c3b9e;
+        color: white;
+    }
+
+    .format-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(149, 128, 255, 0.3);
+    }
+</style>
 
 @section Scripts {
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -402,223 +678,3 @@
         }
     </script>
 }
-<style>
-    * {
-        font-family: 'Rubik', 'Assistant', 'Heebo', Arial, sans-serif;
-    }
-
-    .library-container {
-        padding: 20px;
-        max-width: 1200px;
-        margin: 0 auto;
-        background: linear-gradient(135deg, #FAF7F2, #FFF8EE);
-    }
-
-    /* עיצוב הכותרת */
-    .title {
-        color: #333;
-        text-align: center;
-        font-size: 2rem;
-        font-weight: 600;
-        margin-bottom: 2rem;
-        position: relative;
-        padding-bottom: 1rem;
-    }
-
-    .title:after {
-        content: '';
-        position: absolute;
-        bottom: 0;
-        left: 50%;
-        transform: translateX(-50%);
-        width: 100px;
-        height: 3px;
-        background: linear-gradient(to right, #9580ff, #6c50e8);
-        border-radius: 2px;
-    }
-
-    .books-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-        gap: 25px;
-        margin-top: 20px;
-    }
-
-    .book-card {
-        background: white;
-        border-radius: 12px;
-        box-shadow: 0 4px 15px rgba(149, 128, 255, 0.1);
-        overflow: hidden;
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
-        border: 1px solid #f4ecff;
-    }
-
-    .book-card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 8px 25px rgba(149, 128, 255, 0.2);
-    }
-
-    .book-image img {
-        width: 100%;
-        height: 280px;
-        object-fit: cover;
-        transition: transform 0.3s ease;
-    }
-
-    .book-image img:hover {
-        transform: scale(1.05);
-    }
-
-    .book-info {
-        padding: 20px;
-        background: linear-gradient(to bottom, #fff, #f8f5ff);
-    }
-
-    .book-info h3 {
-        margin: 0;
-        font-size: 1.1em;
-        margin-bottom: 10px;
-        font-weight: 600;
-        color: #6c50e8;
-    }
-
-    .download-btn {
-        background-color: #9580ff;
-        color: white;
-        border: none;
-        padding: 8px 15px;
-        border-radius: 8px;
-        margin-top: 12px;
-        cursor: pointer;
-        transition: all 0.3s ease;
-        width: 100%;
-        margin-bottom: 8px;
-        box-shadow: 0 4px 15px rgba(149, 128, 255, 0.2);
-    }
-
-    .download-btn:hover {
-        background-color: #6c50e8;
-        transform: translateY(-2px);
-        box-shadow: 0 6px 20px rgba(149, 128, 255, 0.3);
-    }
-
-    .book-info p {
-        margin: 8px 0;
-        color: #7b6d9e;
-    }
-
-    .book-type {
-        display: inline-block;
-        padding: 5px 12px;
-        background-color: #f4ecff;
-        color: #6c50e8;
-        border-radius: 6px;
-        font-size: 0.9em;
-        margin-top: 8px;
-        font-weight: 500;
-    }
-
-    .return-date {
-        margin-top: 8px;
-        font-size: 0.9em;
-        color: #7b6d9e;
-        background-color: #f8f5ff;
-        padding: 5px 12px;
-        border-radius: 6px;
-    }
-
-    .alert {
-        margin-bottom: 20px;
-        padding: 15px;
-        border-radius: 8px;
-    }
-
-    .alert-info {
-        background-color: #f4ecff;
-        border: 1px solid #e6e0ff;
-        color: #6c50e8;
-    }
-
-    .delete-btn {
-        background-color: #dc3545;
-        color: white;
-        border: none;
-        padding: 8px 15px;
-        border-radius: 8px;
-        margin-top: 12px;
-        cursor: pointer;
-        transition: all 0.3s ease;
-        width: 100%;
-    }
-
-    .delete-btn:hover {
-        background-color: #c82333;
-        transform: translateY(-2px);
-    }
-
-    /* עיצוב כפתורי דירוג */
-    .rate-btn {
-        background-color: #9580ff;
-        color: white;
-        border: none;
-        padding: 8px 15px;
-        border-radius: 8px;
-        margin-top: 12px;
-        cursor: pointer;
-        transition: all 0.3s ease;
-        width: 100%;
-        margin-bottom: 8px;
-    }
-
-    .rate-btn:hover {
-        background-color: #6c50e8;
-        transform: translateY(-2px);
-    }
-
-    .rate-btn.already-rated {
-        background-color: #e6e0ff;
-        cursor: not-allowed;
-        opacity: 0.7;
-    }
-
-    /* עיצוב כוכבי דירוג */
-    .rating-stars {
-        display: flex;
-        gap: 8px;
-        justify-content: center;
-        margin: 15px 0;
-    }
-
-    .star {
-        font-size: 24px;
-        color: #e6e0ff;
-        cursor: pointer;
-        transition: all 0.3s ease;
-    }
-
-    .star:hover,
-    .star.active,
-    .star.selected {
-        color: #9580ff;
-        transform: scale(1.2);
-    }
-
-    .star.selected {
-        animation: pulse 0.3s ease-in-out;
-    }
-
-    /* עיצוב חלון הדירוג */
-    .rating-container {
-        text-align: center;
-        padding: 20px;
-        background-color: white;
-        border-radius: 12px;
-        box-shadow: 0 4px 20px rgba(149, 128, 255, 0.15);
-    }
-
-    .rating-text {
-        color: #7b6d9e;
-        margin: 10px 0;
-        font-size: 0.9em;
-    }
-</style>

@@ -7,8 +7,8 @@
     <!-- קודם כל התמונה -->
     <section class="welcome-section">
         <img src="~/Content/DigiRead/1.png" alt="תמונת ספרייה" class="library-poster" />
-
     </section>
+
     <!-- מתחת לתמונה - רשימת הספרים -->
     <section class="popular-books-section">
         <h2>ספרים פופולריים</h2>
@@ -52,7 +52,6 @@
                             <span class="average-rating">דירוג ממוצע: @rating.ToString("F1")</span>
                         </div>
                     </div>
-                    <!-- Hidden link for book details -->
                     <a href="@Url.Action("BookDetails", "BookManagement", new { id = book.BookID })" class="book-details-link" style="display:none;"></a>
                 </div>
             }
@@ -83,7 +82,6 @@
                     <a href="@Url.Action("BookDetails", "BookManagement", new { id = book.BookID })" class="book-details-link" style="display:none;"></a>
                 </div>
             }
-
         </div>
     </section>
 
@@ -113,18 +111,10 @@
                         </div>
                     }
                 </div>
-                <div class="grid-nav">
-                    <button class="prev">
-                        <i class="fa-solid fa-chevron-left"></i>
-                    </button>
-                    <button class="next">
-                        <i class="fa-solid fa-chevron-right"></i>
-                    </button>
-                </div>
             </div>
         </div>
 
-        <!-- ספרי מדע בדיוני -->
+        <!-- ספרי הארי פוטר -->
         <div class="series-category">
             <h3>סדרת הארי פוטר</h3>
             <div class="books-container">
@@ -146,17 +136,10 @@
                         </div>
                     }
                 </div>
-                <div class="grid-nav">
-                    <button class="prev">
-                        <i class="fa-solid fa-chevron-left"></i>
-                    </button>
-                    <button class="next">
-                        <i class="fa-solid fa-chevron-right"></i>
-                    </button>
-                </div>
             </div>
         </div>
     </section>
+
     <!-- סקציית ביקורות על האתר -->
     <section class="website-reviews-section">
         <h2>מה המשתמשים חושבים על האתר שלנו</h2>
@@ -197,6 +180,7 @@
             </div>
         </div>
     </section>
+
     <!-- Modal for all reviews -->
     <div id="reviewsModal" class="reviews-modal">
         <div class="modal-content">
@@ -238,11 +222,10 @@
     </div>
 
     <style>
-
-        /* הקטנת הכותרת הראשית */
+        /* עיצוב כללי של הסדרות */
         .recommended-series-section h2,
         .series-section h2 {
-            font-size:3rem !important; /* הקטנת גודל הכותרת */
+            font-size: 3rem !important;
             color: #2c3e50;
             margin-bottom: 2rem;
             text-align: center;
@@ -251,43 +234,7 @@
             text-shadow: 2px 2px 4px rgba(255, 255, 255, 0.99);
         }
 
-        .recommended-series-section h2::after {
-            content: '';
-            position: absolute;
-            bottom: -15px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 150px;
-            height: 4px;
-            background: linear-gradient(to right, #a17bc6, #8154a8);
-            border-radius: 2px;
-        }
-
-        .recommended-series-section::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 200px;
-            background: linear-gradient(180deg, rgba(0,0,0,0.05) 0%, transparent 100%);
-            pointer-events: none;
-        }
-
-
-
-        .recommended-series-section h2::after {
-            content: '';
-            position: absolute;
-            bottom: -15px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 150px;
-            height: 4px;
-            background: linear-gradient(to right, #a17bc6, #8154a8);
-            border-radius: 2px;
-        }
-
+        /* עיצוב הסדרות */
         .series-category {
             margin-bottom: 4rem;
             padding: 3rem 2rem;
@@ -302,28 +249,282 @@
             text-align: center;
             position: relative;
             font-weight: 700;
+            font-size: 1.8rem;
         }
 
+        .series-category .books-container {
+            width: 100%;
+            padding: 1rem;
+        }
+
+        .series-category .books-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+            padding: 1.5rem;
+            justify-content: center;
+        }
+
+        .series-category {
+            margin-bottom: 4rem;
+            padding: 0;
+            background: none;
+            border-radius: 0;
+            box-shadow: none;
+        }
+
+        .series-category .books-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+            padding: 0;
+            justify-content: center;
+            margin: 0;
+        }
+
+        .series-category .book-card {
+            position: relative;
+            width: 180px;
+            aspect-ratio: 2/3;
+            overflow: hidden;
+            transition: transform 0.3s ease;
+            cursor: pointer;
+            flex-shrink: 0;
+            margin: 0;
+            padding: 0;
+            background: none;
+            border: none;
+            box-shadow: none;
+        }
+
+        .series-category .book-image {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+
+        .series-category .book-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            margin: 0;
+            padding: 0;
+        }
+
+        .series-category .book-info {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 1rem;
+            background: linear-gradient(to top, rgba(0,0,0,0.8), rgba(0,0,0,0));
+            color: white;
+            text-align: center;
+        }
+
+        .series-category .book-title {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 0.3rem;
+            color: white;
+        }
+
+        .series-category .book-author {
+            font-size: 0.9rem;
+            color: rgba(255,255,255,0.9);
+            margin-bottom: 0.3rem;
+        }
+
+        .series-category .book-price {
+            font-size: 1rem;
+            color: white;
+            font-weight: 500;
+        }
+        .series-category .book-card {
+            background: #dab1f1;
+            border-radius: 15px;
+            padding: 1rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            cursor: pointer;
+            text-align: right;
+        }
+
+        .series-category .book-info {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .series-category .book-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 0.3rem;
+        }
+
+        .series-category .book-author {
+            font-size: 1rem;
+            color: #666;
+            margin-bottom: 0.5rem;
+        }
+
+        .series-category .book-price {
+            font-size: 1.1rem;
+            color: #2c3e50;
+            font-weight: 500;
+            margin-top: 0.5rem;
+        }
+
+        /* הסרת הקו הסגול */
+        .series-category .book-card::after,
+        .series-category .book-card::before {
+            display: none;
+        }
+
+        .series-category .book-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .series-category .book-image {
+            width: 100%;
+            aspect-ratio: 2/3;
+            overflow: hidden;
+            border-radius: 10px;
+            margin-bottom: 1rem;
+        }
+
+        .series-category .book-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* עיצוב כפתור הביקורות */
+        .more-reviews-button {
+            background: linear-gradient(135deg, #8154a8, #a17bc6);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin: 2rem auto;
+            box-shadow: 0 4px 15px rgba(129, 84, 168, 0.3);
+        }
+
+        .more-reviews-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(129, 84, 168, 0.4);
+            background: linear-gradient(135deg, #9165b9, #b28cd7);
+        }
+
+        .more-reviews-button:active {
+            transform: translateY(1px);
+        }
+
+        .more-reviews-button i {
+            font-size: 1.2rem;
+        }
+
+        /* עיצוב המודאל */
+        .reviews-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background-color: #fff;
+            margin: 5% auto;
+            padding: 20px;
+            width: 80%;
+            max-width: 800px;
+            border-radius: 15px;
+            position: relative;
+            max-height: 80vh;
+            overflow-y: auto;
+            animation: modalFadeIn 0.3s ease-out;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid #e0e0e0;
+            margin-bottom: 1rem;
+        }
         .colored-toast {
-            background: linear-gradient(to right, #E6E6FA, #DDA0DD) !important;
-            color: #4B0082 !important;
-            padding: 1.5rem !important;
-            width: 400px !important;  /* הגדלת רוחב החלון */
-            font-size: 1.2rem !important; /* הגדלת גודל הטקסט */
+            background: #f4ecff !important;
+            color: #6c50e8 !important;
+            border: 1px solid #e6e0ff !important;
         }
 
-        .colored-toast .swal2-title,
-        .colored-toast .swal2-content {
-            color: #4B0082 !important;
-            font-size: 1.4rem !important; /* הגדלת גודל הטקסט בכותרת ובתוכן */
-            margin: 10px 0 !important; /* מרווח נוסף מעל ומתחת */
+        .colored-toast .swal2-icon {
+            color: #6c50e8 !important;
+            border-color: #6c50e8 !important;
         }
 
         .colored-toast .swal2-timer-progress-bar {
-            height: 0.3rem !important; /* הגדלת גובה שורת ההתקדמות */
-            background-color: #4B0082 !important; /* שינוי צבע שורת ההתקדמות */
+            background: #9580ff !important;
+        }
+        .modal-header h3 {
+            color: #2c3e50;
+            margin: 0;
+            font-size: 1.5rem;
+        }
+
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 2rem;
+            color: #666;
+            cursor: pointer;
+            padding: 0;
+            line-height: 1;
+        }
+
+     
+        .close-modal:hover {
+            color: #333;
+        }
+
+        .modal-body {
+            padding: 1rem 0;
+        }
+
+        .modal-content {
+            animation: modalFadeIn 0.3s ease-out;
+        }
+
+        /* סגנון נוסף לביקורות בתוך המודאל */
+        .modal-review {
+            margin-bottom: 1.5rem;
+            padding: 1rem;
+            border-radius: 10px;
+            background-color: #f8f9fa;
+            transition: background-color 0.2s ease;
+        }
+
+        .modal-review:hover {
+            background-color: #f1f3f5;
         }
     </style>
+
 
 </main>
 
@@ -376,6 +577,51 @@
                     }
                 });
             }
+        });
+        document.addEventListener('DOMContentLoaded', function() {
+            const modal = document.getElementById('reviewsModal');
+            const btn = document.getElementById('showMoreReviews');
+            const closeBtn = document.querySelector('.close-modal');
+            const modalContent = document.querySelector('.modal-content');
+
+            // פתיחת המודאל עם אנימציה
+            btn.onclick = function() {
+                modal.style.display = "block";
+                document.body.style.overflow = 'hidden'; // מניעת גלילה ברקע
+                setTimeout(() => {
+                    modal.style.opacity = "1";
+                }, 10);
+            }
+
+            // סגירת המודאל
+            function closeModal() {
+                modal.style.opacity = "0";
+                setTimeout(() => {
+                    modal.style.display = "none";
+                    document.body.style.overflow = ''; // החזרת הגלילה
+                }, 300);
+            }
+
+            closeBtn.onclick = closeModal;
+
+            // סגירת המודאל בלחיצה על הרקע
+            modal.onclick = function(event) {
+                if (event.target === modal) {
+                    closeModal();
+                }
+            }
+
+            // מניעת סגירת המודאל בלחיצה על תוכן המודאל
+            modalContent.onclick = function(event) {
+                event.stopPropagation();
+            }
+
+            // סגירת המודאל בלחיצה על ESC
+            document.addEventListener('keydown', function(event) {
+                if (event.key === "Escape" && modal.style.display === "block") {
+                    closeModal();
+                }
+            });
         });
     </script>
 }

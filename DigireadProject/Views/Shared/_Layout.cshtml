@@ -22,6 +22,7 @@
             z-index: -2;
             overflow: hidden;
         }
+
         .navbar {
             position: fixed;
             top: 0;
@@ -30,6 +31,7 @@
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
             z-index: 100;
             transition: transform 0.3s ease;
+            background: linear-gradient(135deg, #FAF7F2, #FFF8EE);
         }
 
         .navbar.hidden {
@@ -38,23 +40,33 @@
 
         body {
             padding-top: 80px;
+            font-family: Calibri, 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
+
+        /* מוודא שכל האלמנטים יורשים את הגופן */
+        * {
+            font-family: inherit;
+        }
+
         .logo {
             height: 80px;
             margin-left: 5px;
         }
+
         .navbar-content {
             display: flex;
             width: 100%;
             align-items: center;
             gap: 20px;
         }
+
         .nav-links {
             display: flex;
             gap: 35px;
             align-items: center;
             margin-right: 0;
         }
+
         .nav-link {
             text-decoration: none;
             color: #333;
@@ -64,6 +76,7 @@
             position: relative;
             cursor: pointer;
         }
+
         .nav-link::after {
             content: '';
             position: absolute;
@@ -74,12 +87,15 @@
             background: #6B5B95;
             transition: width 0.3s ease;
         }
+
         .nav-link:hover::after {
             width: 100%;
         }
+
         .nav-link:hover {
             color: #6B5B95;
         }
+
         .nav-link button {
             background: none;
             border: none;
@@ -88,6 +104,34 @@
             color: inherit;
             cursor: pointer;
         }
+
+        .social-links {
+            display: flex;
+            gap: 15px;
+            margin-right: auto;
+            margin-left: 20px;
+        }
+
+        .social-link {
+            color: #6B5B95;
+            font-size: 20px;
+            transition: all 0.3s ease;
+            padding: 8px;
+            border-radius: 50%;
+            background: rgba(107, 91, 149, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+        }
+
+        .social-link:hover {
+            transform: translateY(-3px);
+            background: #6B5B95;
+            color: #fff;
+        }
+
         #bthn {
             position: fixed;
             bottom: 0;
@@ -145,6 +189,7 @@
 <body class="@(ViewContext.RouteData.Values["action"].ToString() == "HomePage" ? "home-page" : "")">
 @Html.AntiForgeryToken()
 <div class="background-wrapper"></div>
+
 <nav class="navbar">
     <div class="navbar-content">
         <img src="~/Content/Illustrative-Colorful-Library--unscreen.gif" alt="Logo" class="logo">
@@ -208,9 +253,9 @@
                 }
 
                 <span class="nav-link" id="rateWebsiteBtn">
-                    <i class="fas fa-star"></i>
-                    <span>דרג אותנו</span>
-                </span>
+                        <i class="fas fa-star"></i>
+                        <span>דרג אותנו</span>
+                    </span>
 
                 if (Session["IsAdmin"]?.ToString() == "True")
                 {
@@ -226,11 +271,29 @@
                     <span>התנתקות</span>
                 </a>
             }
+
+            <!-- רשתות חברתיות -->
+            <div class="social-links">
+                <a href="https://www.facebook.com" class="social-link" title="פייסבוק" target="_blank">
+                    <i class="fab fa-facebook-f"></i>
+                </a>
+                <a href="https://www.instagram.com" class="social-link" title="אינסטגרם" target="_blank">
+                    <i class="fab fa-instagram"></i>
+                </a>
+                <a href="https://www.twitter.com" class="social-link" title="טוויטר" target="_blank">
+                    <i class="fab fa-twitter"></i>
+                </a>
+                <a href="https://www.linkedin.com" class="social-link" title="לינקדאין" target="_blank">
+                    <i class="fab fa-linkedin-in"></i>
+                </a>
+            </div>
         </div>
     </div>
 </nav>
 
-<div class="page-title"><img src="~/Content/DigiRead/main.png" alt="DIGIREAD" class="title-logo"></div>
+<div class="page-title">
+    <img src="~/Content/DigiRead/main.png" alt="DIGIREAD" class="title-logo">
+</div>
 
 <div>@RenderBody()</div>
 <div id="bthn"></div>
@@ -239,6 +302,7 @@
 @Scripts.Render("~/bundles/bootstrap")
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/js/all.min.js"></script>
+
 <script>
     $(document).ready(function() {
         $('#rateWebsiteBtn').on('click', function() {
