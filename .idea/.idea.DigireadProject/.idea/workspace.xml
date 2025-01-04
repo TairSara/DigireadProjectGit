@@ -8,22 +8,14 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="20f33115-b11b-49e2-bb24-d6ba9c0d48a8" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/DigireadProject/Models/Services/WaitListService.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.DigireadProject/.idea/dataSources.local.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.DigireadProject/.idea/dataSources.local.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.DigireadProject/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.DigireadProject/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/config/applicationhost.config" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/config/applicationhost.config" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DigireadProject/Controllers/AccountController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DigireadProject/Controllers/AccountController.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DigireadProject/Controllers/BookManagementController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DigireadProject/Controllers/BookManagementController.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DigireadProject/Controllers/OrderController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DigireadProject/Controllers/OrderController.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DigireadProject/Controllers/RentalsManagementController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DigireadProject/Controllers/RentalsManagementController.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DigireadProject/Controllers/ShoppingCartController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DigireadProject/Controllers/ShoppingCartController.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DigireadProject/Content/Account/js/reset-password-validation.js" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/DigireadProject/DigireadProject.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/DigireadProject/DigireadProject.csproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DigireadProject/Models/Services/EmailService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DigireadProject/Models/Services/EmailService.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DigireadProject/Models/Services/NotificationScheduler.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/DigireadProject/Models/ViewModels/PaymentViewModel.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DigireadProject/Models/ViewModels/PaymentViewModel.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DigireadProject/Views/BookManagement/BookDetails.cshtml" beforeDir="false" afterPath="$PROJECT_DIR$/DigireadProject/Views/BookManagement/BookDetails.cshtml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DigireadProject/Views/BookManagement/MyWaitList.cshtml" beforeDir="false" afterPath="$PROJECT_DIR$/DigireadProject/Views/BookManagement/MyWaitList.cshtml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DigireadProject/Views/Order/PaymentForm.cshtml" beforeDir="false" afterPath="$PROJECT_DIR$/DigireadProject/Views/Order/PaymentForm.cshtml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DigireadProject/Views/Account/Profile.cshtml" beforeDir="false" afterPath="$PROJECT_DIR$/DigireadProject/Views/Account/Profile.cshtml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DigireadProject/Views/Account/ResetPassword.cshtml" beforeDir="false" afterPath="$PROJECT_DIR$/DigireadProject/Views/Account/ResetPassword.cshtml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DigireadProject/Views/Shared/_Layout.cshtml" beforeDir="false" afterPath="$PROJECT_DIR$/DigireadProject/Views/Shared/_Layout.cshtml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/DigireadProject/bin/DigireadProject.dll" beforeDir="false" afterPath="$PROJECT_DIR$/DigireadProject/bin/DigireadProject.dll" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/DigireadProject/bin/DigireadProject.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/DigireadProject/bin/DigireadProject.pdb" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/DigireadProject/obj/Debug/DigireadProject.csproj.AssemblyReference.cache" beforeDir="false" afterPath="$PROJECT_DIR$/DigireadProject/obj/Debug/DigireadProject.csproj.AssemblyReference.cache" afterDir="false" />

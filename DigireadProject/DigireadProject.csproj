@@ -278,7 +278,6 @@
   <ItemGroup>
     <Content Include="Content\Account\js\profile.js" />
     <Content Include="Content\Account\js\register-validation.js" />
-    <Content Include="Content\Account\js\reset-password-validation.js" />
     <Content Include="Content\Admin\css\admin-dashboard.css" />
     <Content Include="Content\Admin\js\admin.js" />
     <Content Include="Content\Books\css\book-management.css" />
