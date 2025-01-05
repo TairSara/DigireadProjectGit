@@ -256,65 +256,93 @@
             let isBookExists = false;
 
             // בדיקת שם הספר בזמן הקלדה
-            $('#Title').on('keyup', function () {
+            $('#Title').on('input', function() {
                 const title = $(this).val().trim();
                 clearTimeout(typingTimer);
-                
-                if (title) {
+
+                if (title.length > 0) {
+                    $(this).addClass('checking');
+                    
                     typingTimer = setTimeout(function() {
-                        checkBookExists(title);
+                        validateBook(title);
                     }, doneTypingInterval);
                 } else {
+                    $(this).removeClass('checking is-invalid');
                     $('#titleError').hide();
-                    $(this).removeClass('is-invalid');
                     isBookExists = false;
                 }
             });
 
-            // פונקציה לבדיקת קיום הספר
-            function checkBookExists(title) {
-                $.ajax({
-                    url: '@Url.Action("CheckBookExists", "BookManagement")',
-                    type: 'GET',
-                    data: { title: title },
-                    success: function (exists) {
-                        if (exists) {
-                            $('#titleError').show();
+            // פונקציית בדיקת ספר
+            function validateBook(title) {
+                return $.ajax({
+                    url: '@Url.Action("ValidateBook", "BookManagement")',
+                    type: 'POST',
+                    data: {
+                        title: title,
+                        __RequestVerificationToken: $('input[name="__RequestVerificationToken"]').val()
+                    },
+                    success: function(response) {
+                        $('#Title').removeClass('checking');
+                        if (!response.isValid) {
                             $('#Title').addClass('is-invalid');
+                            $('#titleError').show();
                             isBookExists = true;
                         } else {
-                            $('#titleError').hide();
                             $('#Title').removeClass('is-invalid');
+                            $('#titleError').hide();
                             isBookExists = false;
                         }
                     }
                 });
             }
 
-            // הגשת הטופס
-            $('#addBookForm').on('submit', function (e) {
-                e.preventDefault();
+            // מניעת שליחת הטופס אם הספר קיים
+            $('#addBookForm').on('submit', async function(e) {
+                e.preventDefault(); // מונע שליחה אוטומטית
+
+                const title = $('#Title').val().trim();
                 
-                // אם הספר קיים, מונע שליחה
+                // בדיקה סופית לפני שליחה
+                if (title) {
+                    await validateBook(title);
+                }
+
                 if (isBookExists) {
+                    $('#Title').focus();
                     return false;
                 }
 
-                // שליחת הטופס רק אם הספר לא קיים
+                // אם הספר לא קיים, שולח את הטופס
                 $.ajax({
                     url: $(this).attr('action'),
                     type: 'POST',
                     data: $(this).serialize(),
-                    success: function (response) {
+                    success: function(response) {
                         if (response.success) {
                             window.location.href = '@Url.Action("ManageBooks", "BookManagement")';
                         }
-                    },
-                    error: function () {
-                        alert('אירעה שגיאה בהוספת הספר');
                     }
                 });
             });
         });
     </script>
+
+    <style>
+        .is-invalid {
+            border-color: #dc3545 !important;
+            background-color: #fff8f8 !important;
+        }
+
+        .checking {
+            background-color: #f8f9fa !important;
+            border-color: #6c757d !important;
+        }
+
+        #titleError {
+            color: #dc3545;
+            font-size: 0.875em;
+            margin-top: 0.25rem;
+        }
+    </style>
 }

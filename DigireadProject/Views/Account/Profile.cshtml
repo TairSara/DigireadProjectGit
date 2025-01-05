@@ -5,10 +5,13 @@
 
 <link rel="stylesheet" href="~/Content/Books/css/book-management.css">
 <link href="~/Content/Account/css/account.css" rel="stylesheet">
-<script src="~/Content/Account/js/profile.js"></script>
+<link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <div class="container">
-
     @using (Html.BeginForm("UpdateProfile", "Account", FormMethod.Post, new { id = "profileForm", @class = "form-horizontal" }))
     {
         @Html.AntiForgeryToken()
@@ -40,21 +43,36 @@
                     <input type="text" class="form-control" value="@(Model.IsAdmin ? "מנהל" : "משתמש רגיל")" readonly>
                 </div>
 
-                <div class="form-group">
+                <div class="form-group position-relative">
                     @Html.LabelFor(m => m.CurrentPassword, "סיסמה נוכחית")
                     @Html.PasswordFor(m => m.CurrentPassword, new { @class = "form-control", placeholder = "הזן סיסמה נוכחית אם ברצונך לשנות סיסמה" })
                     @Html.ValidationMessageFor(m => m.CurrentPassword, "", new { @class = "text-danger" })
                 </div>
 
-                <div class="form-group">
+                <div class="form-group position-relative">
                     @Html.LabelFor(m => m.NewPassword, "סיסמה חדשה")
-                    @Html.PasswordFor(m => m.NewPassword, new { @class = "form-control", placeholder = "סיסמה חדשה (אופציונלי)" })
+                    <div class="position-relative">
+                        @Html.PasswordFor(m => m.NewPassword, new { @class = "form-control", id = "newPassword", placeholder = "סיסמה חדשה (אופציונלי)" })
+                        <span id="password-validation" class="validation-icon"></span>
+                    </div>
                     @Html.ValidationMessageFor(m => m.NewPassword, "", new { @class = "text-danger" })
+                    <div id="password-requirements" class="mt-2" style="display: none;">
+                        <small>
+                            <span id="length-req" class="requirement d-block"><i class="fas fa-times text-danger"></i> לפחות 6 תווים</span>
+                            <span id="uppercase-req" class="requirement d-block"><i class="fas fa-times text-danger"></i> אות גדולה אחת לפחות</span>
+                            <span id="lowercase-req" class="requirement d-block"><i class="fas fa-times text-danger"></i> אות קטנה אחת לפחות</span>
+                            <span id="number-req" class="requirement d-block"><i class="fas fa-times text-danger"></i> מספר אחד לפחות</span>
+                            <span id="special-req" class="requirement d-block"><i class="fas fa-times text-danger"></i> תו מיוחד אחד לפחות</span>
+                        </small>
+                    </div>
                 </div>
 
-                <div class="form-group">
+                <div class="form-group position-relative">
                     @Html.LabelFor(m => m.ConfirmNewPassword, "אימות סיסמה חדשה")
-                    @Html.PasswordFor(m => m.ConfirmNewPassword, new { @class = "form-control", placeholder = "אימות סיסמה חדשה" })
+                    <div class="position-relative">
+                        @Html.PasswordFor(m => m.ConfirmNewPassword, new { @class = "form-control", id = "confirmPassword", placeholder = "אימות סיסמה חדשה" })
+                        <span id="repassword-validation" class="validation-icon"></span>
+                    </div>
                     @Html.ValidationMessageFor(m => m.ConfirmNewPassword, "", new { @class = "text-danger" })
                 </div>
 
@@ -70,5 +88,211 @@
     * {
         font-family: 'Rubik', 'Assistant', 'Heebo', Calibri, sans-serif;
     }
+    
+    .validation-icon {
+        position: absolute;
+        right: 10px;
+        top: 50%;
+        transform: translateY(-50%);
+    }
 
+    .requirement {
+        margin-bottom: 5px;
+    }
+
+    .position-relative {
+        position: relative;
+    }
+</style>
+
+<script>
+class PasswordValidator {
+    constructor() {
+        this.passwordInput = document.getElementById("newPassword");
+        this.confirmInput = document.getElementById("confirmPassword");
+        this.form = document.getElementById("profileForm");
+        this.requirements = document.getElementById("password-requirements");
+        this.initializeEventListeners();
+    }
+
+    initializeEventListeners() {
+        this.passwordInput.addEventListener("focus", () => {
+            this.requirements.style.display = "block";
+        });
+
+        this.passwordInput.addEventListener("blur", () => {
+            if (!this.passwordInput.value) {
+                this.requirements.style.display = "none";
+            }
+        });
+
+        this.passwordInput.addEventListener("input", () => this.validatePassword());
+        this.confirmInput.addEventListener("input", () => this.checkPasswordMatch());
+        this.form.addEventListener('submit', (e) => this.handleSubmit(e));
+    }
+
+    validatePassword() {
+        const password = this.passwordInput.value;
+        if (!password) {
+            this.requirements.style.display = "none";
+            return true; // אם הסיסמה ריקה (לא משנים סיסמה), זה תקין
+        }
+
+        this.requirements.style.display = "block";
+        const requirements = {
+            length: password.length >= 6,
+            uppercase: /[A-Z]/.test(password),
+            lowercase: /[a-z]/.test(password),
+            number: /[0-9]/.test(password),
+            special: /[!#$%^&*(),.?":{}|<>]/.test(password)
+        };
+
+        this.updateRequirementUI('length-req', requirements.length, 'לפחות 6 תווים');
+        this.updateRequirementUI('uppercase-req', requirements.uppercase, 'אות גדולה אחת לפחות');
+        this.updateRequirementUI('lowercase-req', requirements.lowercase, 'אות קטנה אחת לפחות');
+        this.updateRequirementUI('number-req', requirements.number, 'מספר אחד לפחות');
+        this.updateRequirementUI('special-req', requirements.special, 'תו מיוחד אחד לפחות');
+
+        const isValid = Object.values(requirements).every(req => req);
+        this.updateValidationIcon('password-validation', isValid);
+
+        if (this.confirmInput.value !== "") {
+            this.checkPasswordMatch();
+        }
+
+        return isValid;
+    }
+
+    updateRequirementUI(elementId, isValid, text) {
+        const element = document.getElementById(elementId);
+        if (isValid) {
+            element.innerHTML = `<i class="fas fa-check" style="color: #28a745;"></i> ${text}`;
+            element.style.color = '#28a745';
+        } else {
+            element.innerHTML = `<i class="fas fa-times" style="color: #dc3545;"></i> ${text}`;
+            element.style.color = '#dc3545';
+        }
+    }
+
+    updateValidationIcon(elementId, isValid) {
+        const element = document.getElementById(elementId);
+        if (!element) return;
+        
+        if (isValid) {
+            element.innerHTML = `<i class="fas fa-check" style="color: #28a745;"></i>`;
+        } else {
+            element.innerHTML = `<i class="fas fa-times" style="color: #dc3545;"></i>`;
+        }
+    }
+
+    checkPasswordMatch() {
+        if (!this.passwordInput.value && !this.confirmInput.value) {
+            this.updateValidationIcon('repassword-validation', true);
+            return true;
+        }
+
+        const isMatch = this.passwordInput.value === this.confirmInput.value;
+        this.updateValidationIcon('repassword-validation', isMatch);
+        return isMatch;
+    }
+
+    handleSubmit(e) {
+        e.preventDefault();
+        
+        // אם לא מנסים לשנות סיסמה, נאפשר שליחה
+        if (!this.passwordInput.value && !this.confirmInput.value) {
+            this.submitForm();
+            return;
+        }
+
+        // אם מנסים לשנות סיסמה, נבדוק את כל התנאים
+        if (!this.validatePassword()) {
+            Swal.fire({
+                title: 'שגיאה!',
+                text: 'אנא ודא שהסיסמה החדשה עומדת בכל הדרישות',
+                icon: 'error',
+                confirmButtonText: 'אישור',
+                customClass: {
+                    popup: 'rtl-swal'
+                }
+            });
+            return;
+        }
+
+        if (!this.checkPasswordMatch()) {
+            Swal.fire({
+                title: 'שגיאה!',
+                text: 'הסיסמאות החדשות אינן תואמות',
+                icon: 'error',
+                confirmButtonText: 'אישור',
+                customClass: {
+                    popup: 'rtl-swal'
+                }
+            });
+            return;
+        }
+
+        this.submitForm();
+    }
+
+    submitForm() {
+        var formData = $(this.form).serialize();
+        
+        $.ajax({
+            url: this.form.action,
+            type: 'POST',
+            data: formData,
+            success: (response) => {
+                if (response.success) {
+                    Swal.fire({
+                        title: 'הצלחה!',
+                        text: response.message,
+                        icon: 'success',
+                        confirmButtonText: 'אישור',
+                        customClass: {
+                            popup: 'rtl-swal'
+                        }
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            window.location.reload();
+                        }
+                    });
+                } else {
+                    Swal.fire({
+                        title: 'שגיאה!',
+                        text: response.message,
+                        icon: 'error',
+                        confirmButtonText: 'אישור',
+                        customClass: {
+                            popup: 'rtl-swal'
+                        }
+                    });
+                }
+            },
+            error: () => {
+                Swal.fire({
+                    title: 'שגיאה!',
+                    text: 'אירעה שגיאה בעדכון הפרופיל. אנא נסה שנית.',
+                    icon: 'error',
+                    confirmButtonText: 'אישור',
+                    customClass: {
+                        popup: 'rtl-swal'
+                    }
+                });
+            }
+        });
+    }
+}
+
+// Initialize validator when DOM is loaded
+document.addEventListener('DOMContentLoaded', () => {
+    new PasswordValidator();
+});
+</script>
+
+<style>
+    .rtl-swal {
+        direction: rtl;
+        text-align: center;
+    }
 </style>

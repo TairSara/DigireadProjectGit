@@ -315,6 +315,7 @@
     <Content Include="Content\SampleBooks\sample_book.epub" />
     <Content Include="Content\SampleBooks\sample_book.mobi" />
     <Content Include="Content\SampleBooks\sample_book.pdf" />
+    <Content Include="Content\SampleBooks\‏‏sample_book.fb2" />
     <Content Include="Content\ביוגרפיה.gif" />
     <Content Include="Content\היסטוריה.gif" />
     <Content Include="Content\ילדים.gif" />

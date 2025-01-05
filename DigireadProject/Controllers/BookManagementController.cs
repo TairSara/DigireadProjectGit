@@ -49,67 +49,87 @@ namespace DigireadProject.Controllers
             return View(new BookViewModel());
         }
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
+  [HttpPost]
+[ValidateAntiForgeryToken]
+public async Task<ActionResult> AddBook(BookViewModel viewModel)
+{
+    if (!await IsUserAdmin())
+    {
+        return Json(new { success = false, message = "אין הרשאת מנהל" });
+    }
 
-        public async Task<ActionResult> AddBook(BookViewModel viewModel)
+    if (ModelState.IsValid)
+    {
+        try
         {
-            if (!await IsUserAdmin())
+            // בדיקת מחירים
+            if (viewModel.PurchasePrice >= viewModel.OriginalPrice)
             {
-                return Json(new { success = false, message = "אין הרשאת מנהל" });
+                return Json(new { success = false, message = "מחיר ההנחה חייב להיות נמוך מהמחיר המקורי" });
             }
 
-            if (ModelState.IsValid)
+            // בדיקה אם הספר כבר קיים
+            bool bookExists = await db.Books.AnyAsync(b => 
+                b.Title.ToLower().Trim() == viewModel.Title.ToLower().Trim());
+
+            if (bookExists)
             {
-                try
-                {
-                    // בדיקה אם כבר קיים ספר עם אותו שם וסופר
-                    var existingBook = await db.Books
-                        .FirstOrDefaultAsync(b => b.Title.ToLower() == viewModel.Title.ToLower() 
-                                             && b.MainAuthor.ToLower() == viewModel.MainAuthor.ToLower());
-                    
-                    if (existingBook != null)
-                    {
-                        return Json(new { success = false, message = "ספר זה כבר קיים במערכת" });
-                    }
-
-                    var book = new Books
-                    {
-                        Title = viewModel.Title,
-                        MainAuthor = viewModel.MainAuthor,
-                        Publisher = viewModel.Publisher,
-                        PublishYear = viewModel.PublishYear,
-                        RentalPrice = viewModel.RentalPrice,
-                        PurchasePrice = viewModel.PurchasePrice,
-                        AgeRestriction = viewModel.AgeRestriction,
-                        Genre = viewModel.Genre,
-                        IsAvailable = viewModel.IsAvailable.GetValueOrDefault(),
-                        IsForRent = viewModel.IsForRent.GetValueOrDefault(),
-                        OriginalPrice = viewModel.OriginalPrice,
-                        DiscountEndDate = viewModel.DiscountEndDate,
-                        IsEPUBAvailable = viewModel.IsEPUBAvailable.GetValueOrDefault(),
-                        IsF2BAvailable = viewModel.IsF2BAvailable.GetValueOrDefault(),
-                        IsMobiAvailable = viewModel.IsMobiAvailable.GetValueOrDefault(),
-                        IsPDFAvailable = viewModel.IsPDFAvailable.GetValueOrDefault(),
-                        CreatedDate = DateTime.Now,
-                        StockQuantity = viewModel.IsAvailable == true ? viewModel.StockQuantity : 0,
-                        ImageSrc = viewModel.ImageSrc,
-                        Description = viewModel.Description
-                    };
-
-                    db.Books.Add(book);
-                    await db.SaveChangesAsync();
-                    return Json(new { success = true, bookId = book.BookID });
-                }
-                catch (Exception ex)
-                {
-                    return Json(new { success = false, message = "אירעה שגיאה בשמירת הספר: " + ex.Message });
-                }
+                return Json(new { success = false, message = "ספר זה כבר קיים במערכת" });
             }
 
-            return Json(new { success = false, message = "נתונים לא תקינים" });
+            var book = new Books
+            {
+                Title = viewModel.Title.Trim(),
+                MainAuthor = viewModel.MainAuthor,
+                Publisher = viewModel.Publisher,
+                PublishYear = viewModel.PublishYear,
+                RentalPrice = viewModel.RentalPrice,
+                PurchasePrice = viewModel.PurchasePrice,
+                AgeRestriction = viewModel.AgeRestriction,
+                Genre = viewModel.Genre,
+                IsAvailable = viewModel.IsAvailable.GetValueOrDefault(),
+                IsForRent = viewModel.IsForRent.GetValueOrDefault(),
+                OriginalPrice = viewModel.OriginalPrice,
+                DiscountEndDate = viewModel.DiscountEndDate,
+                IsEPUBAvailable = viewModel.IsEPUBAvailable.GetValueOrDefault(),
+                IsF2BAvailable = viewModel.IsF2BAvailable.GetValueOrDefault(),
+                IsMobiAvailable = viewModel.IsMobiAvailable.GetValueOrDefault(),
+                IsPDFAvailable = viewModel.IsPDFAvailable.GetValueOrDefault(),
+                CreatedDate = DateTime.Now,
+                StockQuantity = viewModel.IsAvailable == true ? viewModel.StockQuantity : 0,
+                ImageSrc = viewModel.ImageSrc,
+                Description = viewModel.Description
+            };
+
+            db.Books.Add(book);
+            await db.SaveChangesAsync();
+            return Json(new { success = true, bookId = book.BookID });
         }
+        catch (Exception ex)
+        {
+            return Json(new { success = false, message = "אירעה שגיאה בשמירת הספר: " + ex.Message });
+        }
+    }
 
+    return Json(new { success = false, message = "נתונים לא תקינים" });
+}
+
+[HttpPost]
+[ValidateAntiForgeryToken]
+public async Task<JsonResult> ValidateBook(string title)
+{
+    try
+    {
+        var bookExists = await db.Books
+            .AnyAsync(b => b.Title.ToLower().Trim() == title.ToLower().Trim());
+
+        return Json(new { isValid = !bookExists });
+    }
+    catch (Exception)
+    {
+        return Json(new { isValid = false });
+    }
+}
         [HttpGet]
         public async Task<ActionResult> EditBook(int id)
         {
@@ -126,90 +146,86 @@ namespace DigireadProject.Controllers
             return View(MapToViewModel(book));
         }
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<ActionResult> EditBook(BookViewModel viewModel)
+     
+[HttpPost]
+[ValidateAntiForgeryToken]
+public async Task<ActionResult> EditBook(BookViewModel viewModel)
+{
+    if (!await IsUserAdmin())
+    {
+        return Json(new { success = false, message = "אין הרשאת מנהל" });
+    }
+
+    if (ModelState.IsValid)
+    {
+        try
         {
-            if (!await IsUserAdmin())
+            var book = await db.Books.FindAsync(viewModel.BookID);
+            if (book == null)
             {
-                return Json(new { success = false, message = "אין הרשאת מנהל" });
+                return Json(new { success = false, message = "הספר לא נמצא" });
             }
 
-            if (ModelState.IsValid)
+            // בדיקת מחירים
+            if (viewModel.PurchasePrice >= viewModel.OriginalPrice)
             {
-                try
+                return Json(new { success = false, message = "מחיר ההנחה חייב להיות נמוך מהמחיר המקורי" });
+            }
+
+            int oldStock = book.StockQuantityRent.GetValueOrDefault(0);
+            bool wasAvailable = book.IsAvailable ?? false;
+            
+            book.Title = viewModel.Title;
+            book.MainAuthor = viewModel.MainAuthor;
+            book.Publisher = viewModel.Publisher;
+            book.PublishYear = viewModel.PublishYear;
+            book.RentalPrice = viewModel.RentalPrice;
+            book.PurchasePrice = viewModel.PurchasePrice;
+            book.AgeRestriction = viewModel.AgeRestriction;
+            book.Genre = viewModel.Genre;
+            book.IsAvailable = viewModel.IsAvailable ?? false;
+            book.IsForRent = viewModel.IsForRent ?? false;
+            book.OriginalPrice = viewModel.OriginalPrice;
+            book.DiscountEndDate = viewModel.DiscountEndDate;
+            book.IsEPUBAvailable = viewModel.IsEPUBAvailable ?? false;
+            book.IsF2BAvailable = viewModel.IsF2BAvailable ?? false;
+            book.IsMobiAvailable = viewModel.IsMobiAvailable ?? false;
+            book.IsPDFAvailable = viewModel.IsPDFAvailable ?? false;
+            book.StockQuantity = (viewModel.IsAvailable ?? false) ? viewModel.StockQuantity : 0;
+            book.ImageSrc = viewModel.ImageSrc;
+            book.Description = viewModel.Description;
+            book.StockQuantityRent = (viewModel.IsForRent ?? false) ? viewModel.StockQuantityRent : 0;
+
+            await db.SaveChangesAsync();
+
+            // המשך הטיפול ברשימת המתנה ושליחת מיילים...
+            if ((book.StockQuantityRent > oldStock) || (!wasAvailable && book.IsAvailable == true))
+            {
+                var firstWaitingUser = await db.WaitList
+                    .Where(w => w.BookID == book.BookID)
+                    .OrderBy(w => w.WaitPosition)
+                    .Include(w => w.Users)
+                    .FirstOrDefaultAsync();
+
+                if (firstWaitingUser != null && firstWaitingUser.Users?.Email != null)
                 {
-                    var book = await db.Books.FindAsync(viewModel.BookID);
-                    if (book == null)
-                    {
-                        return Json(new { success = false, message = "הספר לא נמצא" });
-                    }
-
-                    int oldStock = book.StockQuantityRent.GetValueOrDefault(0);
-                    bool wasAvailable = book.IsAvailable ?? false;
-                    
-                    book.Title = viewModel.Title;
-                    book.MainAuthor = viewModel.MainAuthor;
-                    book.Publisher = viewModel.Publisher;
-                    book.PublishYear = viewModel.PublishYear;
-                    book.RentalPrice = viewModel.RentalPrice;
-                    book.PurchasePrice = viewModel.PurchasePrice;
-                    book.AgeRestriction = viewModel.AgeRestriction;
-                    book.Genre = viewModel.Genre;
-                    book.IsAvailable = viewModel.IsAvailable ?? false;
-                    book.IsForRent = viewModel.IsForRent ?? false;
-                    book.OriginalPrice = viewModel.OriginalPrice;
-                    book.DiscountEndDate = viewModel.DiscountEndDate;
-                    book.IsEPUBAvailable = viewModel.IsEPUBAvailable ?? false;
-                    book.IsF2BAvailable = viewModel.IsF2BAvailable ?? false;
-                    book.IsMobiAvailable = viewModel.IsMobiAvailable ?? false;
-                    book.IsPDFAvailable = viewModel.IsPDFAvailable ?? false;
-                    book.StockQuantity = (viewModel.IsAvailable ?? false) ? viewModel.StockQuantity : 0;
-                    book.ImageSrc = viewModel.ImageSrc;
-                    book.Description = viewModel.Description;
-                    book.StockQuantityRent = (viewModel.IsForRent ?? false) ? viewModel.StockQuantityRent : 0;
-
-                    await db.SaveChangesAsync();
-
-                    // אם הספר הפך לזמין או שכמות המלאי גדלה
-                    if ((book.StockQuantityRent > oldStock) || (!wasAvailable && book.IsAvailable == true))
-                    {
-                        var firstWaitingUser = await db.WaitList
-                            .Where(w => w.BookID == book.BookID)
-                            .OrderBy(w => w.WaitPosition)
-                            .Include(w => w.Users)
-                            .FirstOrDefaultAsync();
-
-                        if (firstWaitingUser != null && firstWaitingUser.Users?.Email != null)
-                        {
-                            await _emailService.SendBookAvailableNotificationAsync(
-                                firstWaitingUser.Users.Email,
-                                book.Title
-                            );
-                            System.Diagnostics.Debug.WriteLine($"נשלח מייל למשתמש {firstWaitingUser.Users.Email} על זמינות הספר {book.Title}");
-                        }
-                        else
-                        {
-                            System.Diagnostics.Debug.WriteLine("לא נמצאו משתמשים ברשימת ההמתנה או שאין אימייל למשתמש הראשון");
-                        }
-                    }
-                    else
-                    {
-                        System.Diagnostics.Debug.WriteLine($"לא נשלח מייל כי המלאי לא גדל. מלאי ישן: {oldStock}, מלאי חדש: {book.StockQuantityRent}");
-                    }
-
-                    return Json(new { success = true, message = "הספר עודכן בהצלחה" });
-                }
-                catch (Exception ex)
-                {
-                    System.Diagnostics.Debug.WriteLine($"שגיאה בעדכון הספר: {ex.Message}");
-                    System.Diagnostics.Debug.WriteLine($"Stack Trace: {ex.StackTrace}");
-                    return Json(new { success = false, message = "אירעה שגיאה בשמירת הספר: " + ex.Message });
+                    await _emailService.SendBookAvailableNotificationAsync(
+                        firstWaitingUser.Users.Email,
+                        book.Title
+                    );
                 }
             }
 
-            return Json(new { success = false, message = "נתונים לא תקינים" });
+            return Json(new { success = true, message = "הספר עודכן בהצלחה" });
         }
+        catch (Exception ex)
+        {
+            return Json(new { success = false, message = "אירעה שגיאה בשמירת הספר: " + ex.Message });
+        }
+    }
+
+    return Json(new { success = false, message = "נתונים לא תקינים" });
+}
 
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -729,7 +745,6 @@ namespace DigireadProject.Controllers
                 return Json(new { success = false, message = ex.Message });
             }
         }
-        
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> DownloadBook(int bookId, string format)
@@ -751,6 +766,12 @@ namespace DigireadProject.Controllers
                     return Json(new { success = false, message = "הספר לא נמצא" });
                 }
 
+                // אם הפורמט הוא FB2, נשנה אותו ל-PDF
+                if (format.ToUpper() == "FB2")
+                {
+                    format = "PDF";
+                }
+        
                 string fileName = $"{book.Title}.{format.ToLower()}";
                 string sampleFileName = $"sample_book.{format.ToLower()}";
                 string filePath = System.IO.Path.Combine(Server.MapPath("~/Content/SampleBooks"), sampleFileName);
@@ -775,37 +796,42 @@ namespace DigireadProject.Controllers
             try
             {
                 var userId = GetCurrentUserId();
-                var purchase = db.Purchases.FirstOrDefault(p => p.BookID == bookId && p.UserID == userId);
-                var rental = db.Rentals.FirstOrDefault(r => r.BookID == bookId && r.UserID == userId && r.ReturnDate == null);
-
-                if (purchase == null && rental == null)
+                var hasAccess = db.Purchases.Any(p => p.BookID == bookId && p.UserID == userId) ||
+                                db.Rentals.Any(r => r.BookID == bookId && r.UserID == userId && r.ReturnDate == null);
+        
+                if (!hasAccess)
                 {
-                    return new HttpStatusCodeResult(System.Net.HttpStatusCode.Forbidden);
+                    return HttpNotFound();
+                }
+
+                // אם הפורמט הוא FB2, נשנה אותו ל-PDF
+                if (format.ToUpper() == "FB2")
+                {
+                    format = "PDF";
+                }
+
+                // קריאה פשוטה של הקובץ
+                string sampleFileName = $"sample_book.{format.ToLower()}";
+                string filePath = Server.MapPath($"~/Content/SampleBooks/{sampleFileName}");
+        
+                if (!System.IO.File.Exists(filePath))
+                {
+                    System.Diagnostics.Debug.WriteLine($"קובץ לא נמצא בנתיב: {filePath}");
+                    return HttpNotFound();
                 }
 
                 var book = db.Books.Find(bookId);
-                if (book == null)
-                {
-                    return HttpNotFound();
-                }
-
                 string fileName = $"{book.Title}.{format.ToLower()}";
-                string sampleFileName = $"sample_book.{format.ToLower()}";
-                string filePath = System.IO.Path.Combine(Server.MapPath("~/Content/SampleBooks"), sampleFileName);
 
-                if (!System.IO.File.Exists(filePath))
-                {
-                    return HttpNotFound();
-                }
-
-                return File(filePath, GetMimeType(format), fileName);
+                byte[] fileBytes = System.IO.File.ReadAllBytes(filePath);
+                return File(fileBytes, "application/octet-stream", fileName);
             }
             catch (Exception ex)
             {
-                return new HttpStatusCodeResult(System.Net.HttpStatusCode.InternalServerError);
+                System.Diagnostics.Debug.WriteLine($"שגיאה בהורדת קובץ: {ex.Message}");
+                return HttpNotFound();
             }
         }
-
         private string GetMimeType(string format)
         {
             switch (format.ToUpper())
@@ -817,7 +843,7 @@ namespace DigireadProject.Controllers
                 case "MOBI":
                     return "application/x-mobipocket-ebook";
                 case "FB2":
-                    return "application/xml";
+                    return "application/x-fictionbook+xml";
                 default:
                     return "application/octet-stream";
             }
@@ -1219,9 +1245,9 @@ namespace DigireadProject.Controllers
                             .Take(5)
                     }
                 })
-                .OrderByDescending(x => x.ReviewStats.AverageRating) // קודם לפי דירוג ממוצע
-                .ThenByDescending(x => x.ReviewStats.ReviewCount)    // אחר כך לפי מספר ביקורות
-                .ThenBy(x => x.Title);                              // ולבסוף לפי שם הספר
+                .OrderByDescending(x => x.ReviewStats.AverageRating) 
+                .ThenByDescending(x => x.ReviewStats.ReviewCount)  
+                .ThenBy(x => x.Title);                        
 
             var books = await booksQuery
                 .Skip((page - 1) * pageSize)
