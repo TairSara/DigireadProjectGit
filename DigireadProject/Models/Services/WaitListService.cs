@@ -104,7 +104,29 @@ namespace DigireadProject.Models.Services
                 }
 
                 await _db.SaveChangesAsync();
+
+                // בדיקה אם יש עדיין ספר במלאי
+                var book = await _db.Books.FindAsync(bookId);
+                if (book != null && book.StockQuantityRent > 0)
+                {
+                    // מציאת המשתמש הראשון ברשימת ההמתנה
+                    var firstWaitingUser = await _db.WaitList
+                        .Where(w => w.BookID == bookId)
+                        .OrderBy(w => w.WaitPosition)
+                        .Include(w => w.Users)
+                        .FirstOrDefaultAsync();
+
+                    // אם יש משתמש ראשון ויש לו אימייל, שולח לו התראה
+                    if (firstWaitingUser?.Users?.Email != null)
+                    {
+                        await _emailService.SendBookAvailableNotificationAsync(
+                            firstWaitingUser.Users.Email,
+                            book.Title
+                        );
+                        firstWaitingUser.EmailNotificationSent = true;
+                        await _db.SaveChangesAsync();
+                    }
+                }
             }
-        }
-    }
+        }    }
 }

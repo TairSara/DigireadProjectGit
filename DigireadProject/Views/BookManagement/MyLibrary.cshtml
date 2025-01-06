@@ -82,7 +82,6 @@
     * {
         font-family: 'Rubik', 'Assistant', 'Heebo', Calibri, sans-serif;
     }
-    
 
     .library-container {
         padding: 20px;
@@ -91,7 +90,6 @@
         background: linear-gradient(135deg, #FAF7F2, #FFF8EE);
     }
 
-    /* עיצוב הכותרת */
     .title {
         color: #333;
         text-align: center;
@@ -116,8 +114,8 @@
 
     .books-grid {
         display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-        gap: 25px;
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        gap: 20px;
         margin-top: 20px;
     }
 
@@ -130,23 +128,32 @@
         border: 1px solid #f4ecff;
         display: flex;
         flex-direction: column;
-        height: 600px;
+        height: 480px;
+        width: 250px;
     }
 
     .book-content {
         flex: 1;
         display: flex;
         flex-direction: column;
+        height: 350px;
     }
+
     .book-card:hover {
         transform: translateY(-5px);
         box-shadow: 0 8px 25px rgba(149, 128, 255, 0.2);
     }
 
+    .book-image {
+        height: 250px;
+        width: 100%;
+        overflow: hidden;
+    }
+
     .book-image img {
         width: 100%;
-        height: 280px;
-        object-fit: cover;
+        height: 100%;
+        object-fit: contain;
         transition: transform 0.3s ease;
     }
 
@@ -155,61 +162,87 @@
     }
 
     .book-info {
-        padding: 20px;
-        background: linear-gradient(to bottom, #fff, #f8f5ff);
+        padding: 15px;
+        height: 100px;
+        overflow: auto;
+    }
+
+    .book-buttons {
+        padding: 10px;
+        background: #f8f5ff;
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+        height: 130px;
     }
 
     .book-info h3 {
         margin: 0;
-        font-size: 1.1em;
-        margin-bottom: 10px;
+        font-size: 1em;
+        margin-bottom: 5px;
         font-weight: 600;
         color: #6c50e8;
     }
 
-    .download-btn {
+    .book-info p {
+        margin: 5px 0;
+        color: #7b6d9e;
+        font-size: 0.9em;
+    }
+
+    .download-btn,
+    .delete-btn,
+    .rate-btn {
         background-color: #9580ff;
         color: white;
         border: none;
-        padding: 8px 15px;
-        border-radius: 8px;
-        margin-top: 12px;
+        padding: 6px 12px;
+        border-radius: 6px;
         cursor: pointer;
         transition: all 0.3s ease;
         width: 100%;
-        margin-bottom: 8px;
-        box-shadow: 0 4px 15px rgba(149, 128, 255, 0.2);
+        font-size: 0.85em;
+        height: 32px;
+        margin: 2px 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
 
-    .download-btn:hover {
+    .delete-btn {
+        background-color: #dc3545;
+    }
+
+    .download-btn:hover,
+    .rate-btn:hover {
         background-color: #6c50e8;
         transform: translateY(-2px);
-        box-shadow: 0 6px 20px rgba(149, 128, 255, 0.3);
     }
 
-    .book-info p {
-        margin: 8px 0;
-        color: #7b6d9e;
+    .delete-btn:hover {
+        background-color: #c82333;
+        transform: translateY(-2px);
     }
 
     .book-type {
         display: inline-block;
-        padding: 5px 12px;
+        padding: 4px 8px;
         background-color: #f4ecff;
         color: #6c50e8;
-        border-radius: 6px;
-        font-size: 0.9em;
-        margin-top: 8px;
+        border-radius: 4px;
+        font-size: 0.8em;
+        margin-top: 5px;
         font-weight: 500;
     }
 
-    .return-date {
-        margin-top: 8px;
-        font-size: 0.9em;
+    .return-date,
+    .days-left {
+        margin-top: 5px;
+        font-size: 0.8em;
         color: #7b6d9e;
         background-color: #f8f5ff;
-        padding: 5px 12px;
-        border-radius: 6px;
+        padding: 4px 8px;
+        border-radius: 4px;
     }
 
     .alert {
@@ -224,124 +257,56 @@
         color: #6c50e8;
     }
 
-    .delete-btn {
-        background-color: #dc3545;
-        color: white;
-        border: none;
-        padding: 8px 15px;
-        border-radius: 8px;
-        margin-top: 12px;
-        cursor: pointer;
-        transition: all 0.3s ease;
-        width: 100%;
-    }
-
-    .delete-btn:hover {
-        background-color: #c82333;
-        transform: translateY(-2px);
-    }
-
-    /* עיצוב כפתורי דירוג */
-    .rate-btn {
-        background-color: #9580ff;
-        color: white;
-        border: none;
-        padding: 8px 15px;
-        border-radius: 8px;
-        margin-top: 12px;
-        cursor: pointer;
-        transition: all 0.3s ease;
-        width: 100%;
-        margin-bottom: 8px;
-    }
-
-    .rate-btn:hover {
-        background-color: #6c50e8;
-        transform: translateY(-2px);
-    }
-
     .rate-btn.already-rated {
         background-color: #e6e0ff;
         cursor: not-allowed;
         opacity: 0.7;
     }
 
-    /* עיצוב כוכבי דירוג */
-    .rating-stars {
-        display: flex;
-        gap: 8px;
-        justify-content: center;
-        margin: 15px 0;
-    }
-
-    .star {
-        font-size: 24px;
-        color: #e6e0ff;
-        cursor: pointer;
-        transition: all 0.3s ease;
-    }
-
-    .star:hover,
-    .star.active,
-    .star.selected {
-        color: #9580ff;
-        transform: scale(1.2);
-    }
-
-    .star.selected {
-        animation: pulse 0.3s ease-in-out;
-    }
-
     /* עיצוב חלון הדירוג */
     .rating-container {
         text-align: center;
-        padding: 20px;
+        padding: 15px;
         background-color: white;
         border-radius: 12px;
         box-shadow: 0 4px 20px rgba(149, 128, 255, 0.15);
     }
 
-    .rating-text {
-        color: #7b6d9e;
-        margin: 10px 0;
-        font-size: 0.9em;
-    }
-    .format-options {
-        margin-top: 20px;
+    .rating-stars {
         display: flex;
-        gap: 10px;
+        gap: 6px;
+        justify-content: center;
+        margin: 10px 0;
+    }
+
+    .star {
+        font-size: 20px;
+        color: #e6e0ff;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .format-options {
+        margin-top: 15px;
+        display: flex;
+        gap: 8px;
         justify-content: center;
     }
 
     .format-btn {
-        padding: 8px 15px;
+        padding: 6px 12px;
         border: none;
-        border-radius: 6px;
+        border-radius: 4px;
         font-weight: 500;
         cursor: pointer;
         transition: all 0.3s ease;
-        font-size: 0.9em;
+        font-size: 0.8em;
     }
 
-    .format-btn:nth-child(1) {
-        background-color: #9580ff;
-        color: white;
-    }
-
-    .format-btn:nth-child(2) {
-        background-color: #7c66e4;
-        color: white;
-    }
-
-    .format-btn:nth-child(3) {
-        background-color: #6450c9;
-        color: white;
-    }
-
-    .format-btn:nth-child(4) {
-        background-color: #4c3b9e;
-        color: white;
-    }
+    .format-btn:nth-child(1) { background-color: #9580ff; color: white; }
+    .format-btn:nth-child(2) { background-color: #7c66e4; color: white; }
+    .format-btn:nth-child(3) { background-color: #6450c9; color: white; }
+    .format-btn:nth-child(4) { background-color: #4c3b9e; color: white; }
 
     .format-btn:hover {
         transform: translateY(-2px);

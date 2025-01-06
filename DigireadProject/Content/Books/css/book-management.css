@@ -1,5 +1,4 @@
-﻿/* Book Form Styles */
-.container {
+﻿.container {
     max-width: 800px;
     margin: 0 auto;
     padding: 2rem;
@@ -28,7 +27,6 @@
     padding: 1.5rem;
 }
 
-/* Form Controls */
 .form-group {
     text-align: center;
     margin-bottom: 1rem;
@@ -55,7 +53,6 @@
     box-shadow: 0 0 0 0.2rem rgba(0,123,255,0.25);
 }
 
-/* Checkbox Styling */
 .form-check {
     padding-right: 1.75rem;
     padding-left: 0;
@@ -74,7 +71,6 @@
     text-align: right;
 }
 
-/* Image Preview */
 #imagePreview {
     margin-top: 1rem;
     text-align: center;
@@ -87,7 +83,6 @@
     margin: 0 auto;
 }
 
-/* Buttons */
 .text-center {
     text-align: center;
 }
@@ -122,7 +117,6 @@
     border-color: #545b62;
 }
 
-/* Validation Messages */
 .text-danger {
     font-size: 0.875rem;
     margin-top: 0.25rem;
@@ -130,7 +124,6 @@
     text-align: center;
 }
 
-/* Form Row Layout */
 .row {
     display: flex;
     flex-wrap: wrap;
@@ -160,20 +153,17 @@
     max-width: 100%;
 }
 
-/* Description Textarea */
 textarea.form-control {
     min-height: 100px;
     resize: vertical;
     text-align: right;
 }
 
-/* Format Section */
 .formats-section {
     text-align: center;
     margin: 1.5rem 0;
 }
 
-/* Responsive Adjustments */
 @media (max-width: 768px) {
     .container {
         padding: 1rem;

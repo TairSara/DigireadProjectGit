@@ -4,12 +4,10 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 <main>
-    <!-- קודם כל התמונה -->
     <section class="welcome-section">
         <img src="~/Content/DigiRead/1.png" alt="תמונת ספרייה" class="library-poster" />
     </section>
 
-    <!-- מתחת לתמונה - רשימת הספרים -->
     <section class="popular-books-section">
         <h2>ספרים פופולריים</h2>
         <div class="books-grid">
@@ -58,7 +56,6 @@
         </div>
     </section>
 
-    <!-- מתחת לספרים פופולריים - רשימת ספרים במבצע -->
     <section class="sale-books-section">
         <h2>ספרים במבצע</h2>
         <div class="books-grid">
@@ -85,11 +82,9 @@
         </div>
     </section>
 
-    <!-- סקציית סדרות מומלצות -->
     <section class="recommended-series-section">
         <h2>סדרות מומלצות</h2>
 
-        <!-- ספרי רומן -->
         <div class="series-category">
             <h3>סדרת הלביאה הלוחמת והאריה האגדי</h3>
             <div class="books-container">
@@ -114,7 +109,6 @@
             </div>
         </div>
 
-        <!-- ספרי הארי פוטר -->
         <div class="series-category">
             <h3>סדרת הארי פוטר</h3>
             <div class="books-container">
@@ -140,7 +134,6 @@
         </div>
     </section>
 
-    <!-- סקציית ביקורות על האתר -->
     <section class="website-reviews-section">
         <h2>מה המשתמשים חושבים על האתר שלנו</h2>
         <div class="reviews-grid">
@@ -181,7 +174,6 @@
         </div>
     </section>
 
-    <!-- Modal for all reviews -->
     <div id="reviewsModal" class="reviews-modal">
         <div class="modal-content">
             <div class="modal-header">
@@ -222,7 +214,6 @@
     </div>
 
     <style>
-        /* עיצוב כללי של הסדרות */
         .recommended-series-section h2,
         .series-section h2 {
             font-size: 3rem !important;
@@ -234,7 +225,6 @@
             text-shadow: 2px 2px 4px rgba(255, 255, 255, 0.99);
         }
 
-        /* עיצוב הסדרות */
         .series-category {
             margin-bottom: 4rem;
             padding: 3rem 2rem;
@@ -378,7 +368,6 @@
             margin-top: 0.5rem;
         }
 
-        /* הסרת הקו הסגול */
         .series-category .book-card::after,
         .series-category .book-card::before {
             display: none;
@@ -403,7 +392,6 @@
             object-fit: cover;
         }
 
-        /* עיצוב כפתור הביקורות */
         .more-reviews-button {
             background: linear-gradient(135deg, #8154a8, #a17bc6);
             color: white;
@@ -435,7 +423,6 @@
             font-size: 1.2rem;
         }
 
-        /* עיצוב המודאל */
         .reviews-modal {
             display: none;
             position: fixed;
@@ -511,7 +498,6 @@
             animation: modalFadeIn 0.3s ease-out;
         }
 
-        /* סגנון נוסף לביקורות בתוך המודאל */
         .modal-review {
             margin-bottom: 1.5rem;
             padding: 1rem;
@@ -541,19 +527,16 @@
             const btn = document.getElementById('showMoreReviews');
             const closeBtn = document.querySelector('.close-modal');
 
-            // פתיחת המודאל
             btn.onclick = function() {
                 modal.style.display = "block";
                 document.body.classList.add('modal-open');
             }
 
-            // סגירת המודאל
             closeBtn.onclick = function() {
                 modal.style.display = "none";
                 document.body.classList.remove('modal-open');
             }
 
-            // סגירת המודאל בלחיצה על הרקע
             window.onclick = function(event) {
                 if (event.target == modal) {
                     modal.style.display = "none";
@@ -584,39 +567,34 @@
             const closeBtn = document.querySelector('.close-modal');
             const modalContent = document.querySelector('.modal-content');
 
-            // פתיחת המודאל עם אנימציה
             btn.onclick = function() {
                 modal.style.display = "block";
-                document.body.style.overflow = 'hidden'; // מניעת גלילה ברקע
+                document.body.style.overflow = 'hidden'; 
                 setTimeout(() => {
                     modal.style.opacity = "1";
                 }, 10);
             }
 
-            // סגירת המודאל
             function closeModal() {
                 modal.style.opacity = "0";
                 setTimeout(() => {
                     modal.style.display = "none";
-                    document.body.style.overflow = ''; // החזרת הגלילה
+                    document.body.style.overflow = ''; 
                 }, 300);
             }
 
             closeBtn.onclick = closeModal;
 
-            // סגירת המודאל בלחיצה על הרקע
             modal.onclick = function(event) {
                 if (event.target === modal) {
                     closeModal();
                 }
             }
 
-            // מניעת סגירת המודאל בלחיצה על תוכן המודאל
             modalContent.onclick = function(event) {
                 event.stopPropagation();
             }
 
-            // סגירת המודאל בלחיצה על ESC
             document.addEventListener('keydown', function(event) {
                 if (event.key === "Escape" && modal.style.display === "block") {
                     closeModal();

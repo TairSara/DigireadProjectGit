@@ -63,7 +63,6 @@
     }
 }
 
-// Initialize when document is ready
 $(document).ready(() => {
     new BookManagement();
 });

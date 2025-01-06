@@ -1,5 +1,4 @@
 $(document).ready(function () {
-    // Image preview handler
     $('#ImageSrc').on('change', function () {
         var imgUrl = $(this).val();
         if (imgUrl) {
@@ -73,7 +72,6 @@ $(document).ready(function () {
         });
     });
 
-    // רק טיפול בכמות להשכרה
     $('#IsForRent').on('change', function () {
         var stockQuantityRentInput = $('#StockQuantityRent');
         if (!$(this).is(':checked')) {

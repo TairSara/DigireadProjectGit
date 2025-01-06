@@ -7,8 +7,7 @@
         const title = book.getAttribute('data-title').toLowerCase();
         const author = book.getAttribute('data-author').toLowerCase();
         const publisher = book.getAttribute('data-publisher').toLowerCase();
-
-        // בדוק אם יש תג מבצע בספר הספציפי
+        
         const hasSaleBadge = book.querySelector('.sale-badge') !== null;
 
         const matchesSearch = searchInput === '' ||
@@ -26,7 +25,6 @@ function filterByGenre(genre) {
     const books = document.querySelectorAll('.book-item');
     const buttons = document.querySelectorAll('.genre-button');
 
-    // עדכון הכפתור הפעילש
     buttons.forEach(button => {
         if (button.textContent === genre || (button.textContent === 'הכל' && genre === 'all')) {
             button.classList.add('active');
@@ -69,7 +67,6 @@ function sortBooks() {
         }
     });
 
-    // נקה את הקונטיינר וסדר מחדש
     container.innerHTML = '';
     books.forEach(book => container.appendChild(book));
 }
@@ -78,7 +75,6 @@ function sortBooks() {
     const booksContainer = document.getElementById('booksContainer');
     const books = Array.from(booksContainer.getElementsByClassName('book-item'));
 
-    // אם לא נבחרה אופציית מיון, החזר את הספרים לסדר המקורי לפי ה-DB
     if (!sortBy) {
         books.sort((a, b) => {
             return parseInt(a.getAttribute('data-db-order')) - parseInt(b.getAttribute('data-db-order'));
@@ -90,7 +86,6 @@ function sortBooks() {
                     const titleA = a.getAttribute('data-title').trim().replace(/^['"](.*?)['"]$/, '$1');
                     const titleB = b.getAttribute('data-title').trim().replace(/^['"](.*?)['"]$/, '$1');
 
-                    // מספרים בתחילת הכותרת
                     const numA = titleA.match(/^\d+/);
                     const numB = titleB.match(/^\d+/);
 
@@ -102,7 +97,6 @@ function sortBooks() {
                         return 1;
                     }
 
-                    // מיון אלפביתי בעברית עם התעלמות מתווים מיוחדים
                     return titleA.localeCompare(titleB, 'he', {
                         sensitivity: 'base',
                         ignorePunctuation: true

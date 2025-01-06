@@ -678,73 +678,96 @@ public async Task<ActionResult> EditBook(BookViewModel viewModel)
             }
         }
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<ActionResult> DeleteFromLibrary(int bookId, string type)
+     [HttpPost]
+[ValidateAntiForgeryToken]
+public async Task<ActionResult> DeleteFromLibrary(int bookId, string type)
+{
+    try
+    {
+        int userId = GetCurrentUserId();
+        System.Diagnostics.Debug.WriteLine($"מנסה למחוק ספר: BookId={bookId}, Type={type}, UserId={userId}");
+
+        if (type == "השאלה")
         {
-            try
+            // שלב 1: מצא את ההשאלה
+            var rental = await db.Rentals
+                .FirstOrDefaultAsync(r => r.BookID == bookId && 
+                                        r.UserID == userId && 
+                                        r.ReturnDate == null);
+
+            if (rental == null)
             {
-                int userId = GetCurrentUserId();
-                System.Diagnostics.Debug.WriteLine($"מנסה למחוק ספר: BookId={bookId}, Type={type}, UserId={userId}");
-
-                if (type == "השאלה")
-                {
-                    var rental = await db.Rentals
-                        .FirstOrDefaultAsync(r => r.BookID == bookId && 
-                                                r.UserID == userId && 
-                                                r.ReturnDate == null);
-
-                    System.Diagnostics.Debug.WriteLine($"נמצאה השאלה: {rental != null}");
-
-                    if (rental != null)
-                    {
-                        var book = await db.Books.FindAsync(bookId);
-                        if (book != null)
-                        {
-                            book.StockQuantityRent += 1;
-                            System.Diagnostics.Debug.WriteLine($"עודכן מלאי השאלות: {book.StockQuantityRent}");
-
-                            // בדיקת רשימת המתנה ושליחת התראה
-                            var firstWaitingUser = await db.WaitList
-                                .Where(w => w.BookID == bookId)
-                                .OrderBy(w => w.WaitPosition)
-                                .Include(w => w.Users)
-                                .FirstOrDefaultAsync();
-
-                            if (firstWaitingUser != null && firstWaitingUser.Users?.Email != null)
-                            {
-                                await _waitListService.ProcessWaitListItem(bookId);
-                                System.Diagnostics.Debug.WriteLine($"נשלח מייל למשתמש {firstWaitingUser.Users.Email} על זמינות הספר {book.Title}");
-                            }
-                        }
-                        db.Rentals.Remove(rental);
-                        await db.SaveChangesAsync();
-                    }
-                }
-                else if (type == "רכישה")
-                {
-                    var purchase = await db.Purchases
-                        .FirstOrDefaultAsync(p => p.BookID == bookId && 
-                                                p.UserID == userId);
-
-                    System.Diagnostics.Debug.WriteLine($"נמצאה רכישה: {purchase != null}");
-
-                    if (purchase != null)
-                    {
-                        db.Purchases.Remove(purchase);
-                        await db.SaveChangesAsync();
-                    }
-                }
-
-                return Json(new { success = true });
+                return Json(new { success = false, message = "ההשאלה לא נמצאה במערכת" });
             }
-            catch (Exception ex)
+
+            // שלב 2: מצא את הספר ועדכן את המלאי
+            var book = await db.Books
+                .FirstOrDefaultAsync(b => b.BookID == bookId);
+
+            if (book == null)
             {
-                System.Diagnostics.Debug.WriteLine($"שגיאה: {ex.Message}");
-                System.Diagnostics.Debug.WriteLine($"Stack Trace: {ex.StackTrace}");
-                return Json(new { success = false, message = ex.Message });
+                return Json(new { success = false, message = "הספר לא נמצא במערכת" });
+            }
+
+            // שלב 3: עדכון המלאי
+            int currentStock = book.StockQuantityRent ?? 0;
+            book.StockQuantityRent = currentStock + 1;
+            
+            System.Diagnostics.Debug.WriteLine($"עדכון מלאי: מ-{currentStock} ל-{book.StockQuantityRent}");
+
+            // שלב 4: מחיקת ההשאלה
+            db.Rentals.Remove(rental);
+            
+            // שלב 5: שמירת השינויים
+            await db.SaveChangesAsync();
+
+            // שלב 6: בדיקת רשימת המתנה
+            if (book.StockQuantityRent > 0)
+            {
+                var firstWaitingUser = await db.WaitList
+                    .Where(w => w.BookID == bookId)
+                    .OrderBy(w => w.WaitPosition)
+                    .Include(w => w.Users)
+                    .FirstOrDefaultAsync();
+
+                if (firstWaitingUser?.Users?.Email != null)
+                {
+                    try
+                    {
+                        await _waitListService.ProcessWaitListItem(bookId);
+                        System.Diagnostics.Debug.WriteLine($"נשלח מייל למשתמש ברשימת המתנה");
+                    }
+                    catch (Exception ex)
+                    {
+                        System.Diagnostics.Debug.WriteLine($"שגיאה בשליחת מייל: {ex.Message}");
+                        // ממשיכים למרות שגיאה בשליחת המייל
+                    }
+                }
             }
         }
+        else if (type == "רכישה")
+        {
+            var purchase = await db.Purchases
+                .FirstOrDefaultAsync(p => p.BookID == bookId && p.UserID == userId);
+
+            if (purchase == null)
+            {
+                return Json(new { success = false, message = "הרכישה לא נמצאה במערכת" });
+            }
+
+            db.Purchases.Remove(purchase);
+            await db.SaveChangesAsync();
+        }
+
+        return Json(new { success = true, message = "הפריט הוסר בהצלחה מהספרייה שלך" });
+    }
+    catch (Exception ex)
+    {
+        System.Diagnostics.Debug.WriteLine($"שגיאה כללית: {ex.Message}");
+        System.Diagnostics.Debug.WriteLine($"Stack Trace: {ex.StackTrace}");
+        return Json(new { success = false, message = $"אירעה שגיאה בהסרת הפריט: {ex.Message}" });
+    }
+}
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> DownloadBook(int bookId, string format)
@@ -861,6 +884,7 @@ public async Task<ActionResult> EditBook(BookViewModel viewModel)
                 .ToListAsync();
 
             // שלב 2: המרה ל-ViewModel
+            // המרה מהמודל ל-ViewModel
             var waitListViewModels = waitListItems.Select(w => new WaitListViewModel
                 {
                     WaitListID = w.WaitListID,
@@ -878,7 +902,6 @@ public async Task<ActionResult> EditBook(BookViewModel viewModel)
                 })
                 .OrderBy(w => w.WaitPosition)
                 .ToList();
-
             return View(waitListViewModels);
         }
 
@@ -1211,6 +1234,7 @@ public async Task<ActionResult> EditBook(BookViewModel viewModel)
                 System.Diagnostics.Debug.WriteLine($"שגיאה בהסרה מרשימת המתנה לאחר השאלה: {ex.Message}");
             }
         }
+        
         [HttpGet]
         [AllowAnonymous]
         public async Task<JsonResult> GetPopularBooks(int page = 1, int pageSize = 12)
@@ -1261,4 +1285,5 @@ public async Task<ActionResult> EditBook(BookViewModel viewModel)
             return Json(new { books, hasMore }, JsonRequestBehavior.AllowGet);
         }
     }
+    
 }

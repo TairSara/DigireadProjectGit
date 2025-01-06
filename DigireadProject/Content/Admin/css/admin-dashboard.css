@@ -1,12 +1,10 @@
-﻿/* Admin Dashboard Layout */
-.dashboard-container {
+﻿.dashboard-container {
     padding: 2rem;
     max-width: 1200px;
     margin: 0 auto;
     background-color: #f8f9fa;
 }
 
-/* Header Section */
 .dashboard-header {
     text-align: center;
     margin-bottom: 2rem;
@@ -28,7 +26,6 @@
     font-size: 0.9rem;
 }
 
-/* Dashboard Cards Grid */
 .dashboard-cards {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -36,7 +33,6 @@
     margin-bottom: 2rem;
 }
 
-/* Card Styling */
 .dashboard-card {
     background: white;
     border-radius: 15px;
@@ -75,7 +71,6 @@
     transform: scaleX(1);
 }
 
-/* Card Icons */
 .card-icon {
     font-size: 2.5rem;
     margin-bottom: 1rem;
@@ -88,7 +83,6 @@
     color: #673ab7;
 }
 
-/* Card Content */
 .card-title {
     font-size: 1.25rem;
     margin-bottom: 0.5rem;
@@ -103,7 +97,6 @@
     line-height: 1.4;
 }
 
-/* Statistics Grid */
 .stats-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -111,7 +104,6 @@
     margin-top: 2rem;
 }
 
-/* Statistics Cards */
 .stat-card {
     background: white;
     padding: 1.5rem;
@@ -142,7 +134,6 @@
     font-weight: 500;
 }
 
-/* Responsive Design */
 @media (max-width: 768px) {
     .dashboard-container {
         padding: 1rem;

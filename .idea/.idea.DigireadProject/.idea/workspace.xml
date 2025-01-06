@@ -8,59 +8,16 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="20f33115-b11b-49e2-bb24-d6ba9c0d48a8" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/DigireadProject/Content/SampleBooks/‏‏sample_book.fb2" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.DigireadProject/.idea/shelf/Uncommitted_changes_before_Checkout_at_28_12_2024_13_24_[Changes]/.suo" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.DigireadProject/.idea/shelf/Uncommitted_changes_before_Checkout_at_28_12_2024_13_24_[Changes]/DesignTimeResolveAssemblyReferencesInput.cache" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.DigireadProject/.idea/shelf/Uncommitted_changes_before_Checkout_at_28_12_2024_13_24_[Changes]/DigireadProject.csproj.AssemblyReference.cache" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.DigireadProject/.idea/shelf/Uncommitted_changes_before_Checkout_at_28_12_2024_13_24_[Changes]/DigireadProject.csproj.CoreCompileInputs.cache" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.DigireadProject/.idea/shelf/Uncommitted_changes_before_Checkout_at_28_12_2024_13_24_[Changes]/DigireadProject.dll" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.DigireadProject/.idea/shelf/Uncommitted_changes_before_Checkout_at_28_12_2024_13_24_[Changes]/DigireadProject.pdb" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.DigireadProject/.idea/shelf/Uncommitted_changes_before_Checkout_at_28_12_2024_13_24_[Changes]/DigireadProject1.dll" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.DigireadProject/.idea/shelf/Uncommitted_changes_before_Checkout_at_28_12_2024_13_24_[Changes]/DigireadProject1.pdb" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.DigireadProject/.idea/shelf/Uncommitted_changes_before_Checkout_at_28_12_2024_13_24_[Changes]/shelved.patch" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.DigireadProject/.idea/shelf/Uncommitted_changes_before_Checkout_at_28_12_2024_13_24__Changes_.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.DigireadProject/.idea/shelf/Uncommitted_changes_before_Checkout_at_28_12_2024_13_25_[Changes]/.suo" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.DigireadProject/.idea/shelf/Uncommitted_changes_before_Checkout_at_28_12_2024_13_25_[Changes]/DesignTimeResolveAssemblyReferencesInput.cache" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.DigireadProject/.idea/shelf/Uncommitted_changes_before_Checkout_at_28_12_2024_13_25_[Changes]/DigireadProject.csproj.AssemblyReference.cache" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.DigireadProject/.idea/shelf/Uncommitted_changes_before_Checkout_at_28_12_2024_13_25_[Changes]/DigireadProject.csproj.CoreCompileInputs.cache" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.DigireadProject/.idea/shelf/Uncommitted_changes_before_Checkout_at_28_12_2024_13_25_[Changes]/DigireadProject.dll" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.DigireadProject/.idea/shelf/Uncommitted_changes_before_Checkout_at_28_12_2024_13_25_[Changes]/DigireadProject.pdb" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.DigireadProject/.idea/shelf/Uncommitted_changes_before_Checkout_at_28_12_2024_13_25_[Changes]/DigireadProject1.dll" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.DigireadProject/.idea/shelf/Uncommitted_changes_before_Checkout_at_28_12_2024_13_25_[Changes]/DigireadProject1.pdb" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.DigireadProject/.idea/shelf/Uncommitted_changes_before_Checkout_at_28_12_2024_13_25_[Changes]/shelved.patch" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.DigireadProject/.idea/shelf/Uncommitted_changes_before_Checkout_at_28_12_2024_13_25_[Changes]/slnx.sqlite" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.DigireadProject/.idea/shelf/Uncommitted_changes_before_Checkout_at_28_12_2024_13_25__Changes_.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.DigireadProject/.idea/shelf/Uncommitted_changes_before_Merge_at_28_12_2024_13_24_[Changes]/.suo" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.DigireadProject/.idea/shelf/Uncommitted_changes_before_Merge_at_28_12_2024_13_24_[Changes]/DesignTimeResolveAssemblyReferencesInput.cache" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.DigireadProject/.idea/shelf/Uncommitted_changes_before_Merge_at_28_12_2024_13_24_[Changes]/DigireadProject.csproj.AssemblyReference.cache" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.DigireadProject/.idea/shelf/Uncommitted_changes_before_Merge_at_28_12_2024_13_24_[Changes]/DigireadProject.csproj.CoreCompileInputs.cache" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.DigireadProject/.idea/shelf/Uncommitted_changes_before_Merge_at_28_12_2024_13_24_[Changes]/DigireadProject.dll" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.DigireadProject/.idea/shelf/Uncommitted_changes_before_Merge_at_28_12_2024_13_24_[Changes]/DigireadProject.pdb" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.DigireadProject/.idea/shelf/Uncommitted_changes_before_Merge_at_28_12_2024_13_24_[Changes]/DigireadProject1.dll" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.DigireadProject/.idea/shelf/Uncommitted_changes_before_Merge_at_28_12_2024_13_24_[Changes]/DigireadProject1.pdb" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.DigireadProject/.idea/shelf/Uncommitted_changes_before_Merge_at_28_12_2024_13_24_[Changes]/shelved.patch" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.DigireadProject/.idea/shelf/Uncommitted_changes_before_Merge_at_28_12_2024_13_24_[Changes]/slnx.sqlite" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.DigireadProject/.idea/shelf/Uncommitted_changes_before_Merge_at_28_12_2024_13_24__Changes_.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.DigireadProject/.idea/shelf/Uncommitted_changes_before_Merge_at_28_12_2024_13_26_[Changes]/.suo" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.DigireadProject/.idea/shelf/Uncommitted_changes_before_Merge_at_28_12_2024_13_26_[Changes]/DesignTimeResolveAssemblyReferencesInput.cache" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.DigireadProject/.idea/shelf/Uncommitted_changes_before_Merge_at_28_12_2024_13_26_[Changes]/DigireadProject.csproj.AssemblyReference.cache" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.DigireadProject/.idea/shelf/Uncommitted_changes_before_Merge_at_28_12_2024_13_26_[Changes]/DigireadProject.csproj.CoreCompileInputs.cache" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.DigireadProject/.idea/shelf/Uncommitted_changes_before_Merge_at_28_12_2024_13_26_[Changes]/DigireadProject.dll" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.DigireadProject/.idea/shelf/Uncommitted_changes_before_Merge_at_28_12_2024_13_26_[Changes]/DigireadProject.pdb" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.DigireadProject/.idea/shelf/Uncommitted_changes_before_Merge_at_28_12_2024_13_26_[Changes]/DigireadProject1.dll" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.DigireadProject/.idea/shelf/Uncommitted_changes_before_Merge_at_28_12_2024_13_26_[Changes]/DigireadProject1.pdb" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.DigireadProject/.idea/shelf/Uncommitted_changes_before_Merge_at_28_12_2024_13_26_[Changes]/shelved.patch" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.DigireadProject/.idea/shelf/Uncommitted_changes_before_Merge_at_28_12_2024_13_26_[Changes]/slnx.sqlite" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.DigireadProject/.idea/shelf/Uncommitted_changes_before_Merge_at_28_12_2024_13_26__Changes_.xml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.DigireadProject/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.DigireadProject/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DigireadProject/Controllers/BookManagementController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DigireadProject/Controllers/BookManagementController.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DigireadProject/DigireadProject.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/DigireadProject/DigireadProject.csproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DigireadProject/Models/ViewModels/PaymentViewModel.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DigireadProject/Models/ViewModels/PaymentViewModel.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DigireadProject/Views/Account/Profile.cshtml" beforeDir="false" afterPath="$PROJECT_DIR$/DigireadProject/Views/Account/Profile.cshtml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DigireadProject/Views/BookManagement/AddBook.cshtml" beforeDir="false" afterPath="$PROJECT_DIR$/DigireadProject/Views/BookManagement/AddBook.cshtml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DigireadProject/Content/Admin/css/admin-dashboard.css" beforeDir="false" afterPath="$PROJECT_DIR$/DigireadProject/Content/Admin/css/admin-dashboard.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DigireadProject/Content/Books/css/MyLibrary.css" beforeDir="false" afterPath="$PROJECT_DIR$/DigireadProject/Content/Books/css/MyLibrary.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DigireadProject/Content/Books/css/book-management.css" beforeDir="false" afterPath="$PROJECT_DIR$/DigireadProject/Content/Books/css/book-management.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DigireadProject/Content/Books/js/EditBook.js" beforeDir="false" afterPath="$PROJECT_DIR$/DigireadProject/Content/Books/js/EditBook.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DigireadProject/Content/Books/js/book-management.js" beforeDir="false" afterPath="$PROJECT_DIR$/DigireadProject/Content/Books/js/book-management.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DigireadProject/Content/Books/js/gallery.js" beforeDir="false" afterPath="$PROJECT_DIR$/DigireadProject/Content/Books/js/gallery.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DigireadProject/Views/Home/HomePage.cshtml" beforeDir="false" afterPath="$PROJECT_DIR$/DigireadProject/Views/Home/HomePage.cshtml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/DigireadProject/bin/DigireadProject.dll" beforeDir="false" afterPath="$PROJECT_DIR$/DigireadProject/bin/DigireadProject.dll" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/DigireadProject/bin/DigireadProject.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/DigireadProject/bin/DigireadProject.pdb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DigireadProject/obj/Debug/DigireadProject.csproj.AssemblyReference.cache" beforeDir="false" afterPath="$PROJECT_DIR$/DigireadProject/obj/Debug/DigireadProject.csproj.AssemblyReference.cache" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/DigireadProject/obj/Debug/DigireadProject.dll" beforeDir="false" afterPath="$PROJECT_DIR$/DigireadProject/obj/Debug/DigireadProject.dll" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/DigireadProject/obj/Debug/DigireadProject.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/DigireadProject/obj/Debug/DigireadProject.pdb" afterDir="false" />
     </list>
@@ -183,7 +140,8 @@
       <workItem from="1735576986033" duration="35867000" />
       <workItem from="1735860733812" duration="12884000" />
       <workItem from="1736076259286" duration="3868000" />
-      <workItem from="1736080183478" duration="1404000" />
+      <workItem from="1736080183478" duration="1817000" />
+      <workItem from="1736149728429" duration="439000" />
     </task>
     <servers />
   </component>

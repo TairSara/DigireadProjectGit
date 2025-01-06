@@ -5,7 +5,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 using DigireadProject.Models.ViewModels; 
-using System.Data.Entity;  
+using System.Data.Entity;
+using DigireadProject.Models.Services;
 
 
 namespace DigireadProject.Controllers
@@ -14,10 +15,14 @@ namespace DigireadProject.Controllers
     public class OrderController : Controller
     {
         private readonly libraryProject_digireadEntities db = new libraryProject_digireadEntities();
+        private readonly EmailService _emailService;
+        private readonly WaitListService _waitListService;
 
         public OrderController()
         {
             db = new libraryProject_digireadEntities();
+            _emailService = new EmailService();
+            _waitListService = new WaitListService(db, _emailService); 
         }
 
         [HttpGet]
@@ -144,6 +149,9 @@ namespace DigireadProject.Controllers
                             };
                             db.Rentals.Add(rental);
                             book.StockQuantityRent -= cartItem.Quantity;
+                            var waitListService = new WaitListService(db, new EmailService());
+                            await waitListService.RemoveFromWaitListAfterSuccessfulRental(cartItem.BookId, userId);
+
                         }
                         else
                         {
@@ -241,6 +249,7 @@ namespace DigireadProject.Controllers
                         TempData["ErrorMessage"] = "לא ניתן להשאיל יותר מ-3 ספרים במקביל";
                         return RedirectToAction("BookDetails", "BookManagement", new { id = bookId });
                     }
+                    await _waitListService.RemoveFromWaitListAfterSuccessfulRental(bookId, userId);
                 }
                 else
                 {

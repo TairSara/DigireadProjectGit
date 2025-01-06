@@ -1,5 +1,4 @@
-﻿/* סגנונות לסקציית הפתיחה */
-.welcome-section {
+﻿.welcome-section {
     font-family:"Calibri";
     width: 100%;
     height: 40vh;
@@ -14,7 +13,6 @@
 }
 
 
-/* סגנונות לתמונת הספרייה */
 .library-poster {
     max-width:50%;
     max-height: 50%;
@@ -23,7 +21,6 @@
     margin: 0 auto;
 }
 
-/* התאמה למסכים קטנים */
 @media screen and (max-width: 768px) {
     .welcome-section {
         height: 30vh;
@@ -34,7 +31,6 @@
     }
 }
 
-/* סגנונות נוספים לרכיבים אחרים בדף */
 .popular-books-section,
 .website-reviews-section {
     padding: 2rem;
@@ -42,7 +38,6 @@
 
 }
 
-/* סגנונות לסקציית הספרים הפופולריים */
 .popular-books-section {
     padding: 6rem 2rem;
     position: relative;
@@ -91,13 +86,12 @@
     border-radius: 2px;
 }
 
-/* סגנונות לקרוסלת הספרים */
 .books-carousel-container {
     position: relative;
     width: 100%;
     overflow: hidden;
     padding: 0 80px;
-    direction: ltr;  /* שינוי לLTR */
+    direction: ltr;
 }
 
 .books-carousel {
@@ -195,7 +189,6 @@
     font-weight: 500;
 }
 
-/* סגנונות לכוכבים */
 .stars {
     display: flex;
     gap: 8px;
@@ -258,7 +251,6 @@
 .view-all-reviews:hover::after {
     transform: scaleX(1);
 }
-/* כפתורי ניווט */
 .carousel-nav button {
     position: absolute;
     top: 50%;
@@ -329,7 +321,6 @@
     background: linear-gradient(135deg, #472e65, #8154a8);
 }
 
-/* התאמה למסכים קטנים */
 @media screen and (max-width: 1024px) {
     .preview-content {
         flex-direction: column;
@@ -364,7 +355,6 @@
     }
 }
 
-/* אנימציות נוספות */
 @keyframes fadeIn {
     from { opacity: 0; }
     to { opacity: 1; }
@@ -424,7 +414,6 @@
     opacity: 1;
 }
 
-/* מניעת הפעלת הקישור כשלוחצים על הכפתור */
 .info-button {
     position: relative;
     z-index: 3;
@@ -434,7 +423,6 @@
     outline: none;
 }
 
-/* הוספת חץ קטן לתיבת המידע */
 .tooltip-text::before {
     content: '';
     position: absolute;
@@ -445,7 +433,6 @@
     border-color: transparent transparent white transparent;
 }
 
-/* מניעת מעבר לדף הפרטים בלחיצה על הכפתור */
 .info-button {
     pointer-events: auto;
 }
@@ -508,14 +495,14 @@
 }
 .books-grid {
     display: flex;
-    flex-direction: row-reverse; /* הפוך את כיוון הפריטים */
+    flex-direction: row-reverse;
     gap: 25px;
     overflow-x: auto;
     padding: 20px;
     scroll-behavior: smooth;
     -webkit-overflow-scrolling: touch;
     scrollbar-width: none;
-    direction: ltr; /* שנה את הכיוון לLTR */
+    direction: ltr;
 }
 
 .books-grid::-webkit-scrollbar {
@@ -525,7 +512,7 @@
 .book-card {
     min-width: 260px;
     max-width: 260px;
-    flex-shrink: 0; /* מנע כיווץ של הכרטיסים */
+    flex-shrink: 0; 
     background: white;
     border-radius: 20px;
     padding: 20px;
@@ -580,7 +567,6 @@
     color: white;
     transform: scale(1.1);
 }
-/* סגנונות לסקציית הספרים במבצע */
 .sale-books-section {
     padding: 6rem 2rem;
     background: linear-gradient(135deg, #FFF8EE, #FAF7F2);
@@ -632,7 +618,6 @@
     border-radius: 2px;
 }
 
-/* סגנונות למחירים */
 .book-prices {
     display: flex;
     flex-direction: column;
@@ -657,7 +642,6 @@
     text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
 }
 
-/* סגנונות לסקציית הספרים במבצע */
 .sale-books-section {
     padding: 6rem 2rem;
     background: linear-gradient(135deg, #FFF8EE, #FAF7F2);
@@ -709,7 +693,6 @@
     border-radius: 2px;
 }
 
-/* סגנונות למחירים */
 .book-prices {
     display: flex;
     flex-direction: column;
@@ -763,10 +746,9 @@
     border-radius: 2px;
 }
 
-/* הקטנת הכותרת הראשית */
 .recommended-series-section h2,
 .series-section h2 {
-    font-size: 1.8rem !important; /* הקטנת גודל הכותרת */
+    font-size: 1.8rem !important;
     color: #2c3e50;
     margin-bottom: 2rem;
     text-align: center;
@@ -795,9 +777,8 @@
     box-shadow: 0 10px 30px rgba(255, 255, 255, 0.99);
 }
 
-/* הקטנת כותרות המשנה */
 .series-category h3 {
-    font-size: 1.5rem !important; /* הקטנת גודל הכותרת המשנית */
+    font-size: 1.5rem !important; 
     color: #2c3e50;
     margin-bottom: 1.5rem;
     text-align: center;
@@ -817,7 +798,6 @@
     border-radius: 2px;
 }
 
-/* הקטנת כותרות הספרים */
 .book-title {
     font-size: 1rem !important;
     margin-bottom: 0.5rem;
@@ -828,7 +808,6 @@
     margin-bottom: 0.8rem;
 }
 
-/* עדכון גדלים נוספים */
 .book-card {
     padding: 15px;
 }
@@ -938,7 +917,6 @@
         font-size: 2rem !important;
     }
 
-//* סגנון כפתור 'הצג עוד' */
 .more-reviews-button-container {
     display: flex;
     justify-content: center;
@@ -971,7 +949,6 @@
         margin-left: 0.8rem;
     }
 
-    /* סגנון המודאל */
     .reviews-modal {
         display: none;
         position: fixed;
@@ -1002,7 +979,7 @@
         padding-bottom: 1.5rem;
         margin-bottom: 1.5rem;
         border-bottom: 2px solid #f0f0f0;
-        direction: rtl; /* מבטיח שה-X יהיה בצד שמאל */
+        direction: rtl; 
     }
 
     .modal-header h3 {
@@ -1010,7 +987,7 @@
         color: #2c3e50;
         font-weight: 800;
         position: relative;
-        margin: 0 auto; /* ממרכז את הכותרת */
+        margin: 0 auto; 
         text-align: center;
     }
 
@@ -1044,7 +1021,6 @@
         color: #8154a8;
     }
 
-    /* עדכון הריווח של תוכן המודאל */
     .modal-content {
         position: relative;
         background: white;
@@ -1068,8 +1044,7 @@
         margin-bottom: 1rem;
     }
 
-    /* מניעת גלילה של הרקע כשהמודאל פתוח */
     body.modal-open {
         overflow: hidden;
     }
-<style/>
+}
