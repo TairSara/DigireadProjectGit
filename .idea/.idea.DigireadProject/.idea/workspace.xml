@@ -7,20 +7,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="20f33115-b11b-49e2-bb24-d6ba9c0d48a8" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.DigireadProject/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.DigireadProject/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DigireadProject/Content/Admin/css/admin-dashboard.css" beforeDir="false" afterPath="$PROJECT_DIR$/DigireadProject/Content/Admin/css/admin-dashboard.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DigireadProject/Content/Books/css/MyLibrary.css" beforeDir="false" afterPath="$PROJECT_DIR$/DigireadProject/Content/Books/css/MyLibrary.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DigireadProject/Content/Books/css/book-management.css" beforeDir="false" afterPath="$PROJECT_DIR$/DigireadProject/Content/Books/css/book-management.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DigireadProject/Content/Books/js/EditBook.js" beforeDir="false" afterPath="$PROJECT_DIR$/DigireadProject/Content/Books/js/EditBook.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DigireadProject/Content/Books/js/book-management.js" beforeDir="false" afterPath="$PROJECT_DIR$/DigireadProject/Content/Books/js/book-management.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DigireadProject/Content/Books/js/gallery.js" beforeDir="false" afterPath="$PROJECT_DIR$/DigireadProject/Content/Books/js/gallery.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DigireadProject/Views/Home/HomePage.cshtml" beforeDir="false" afterPath="$PROJECT_DIR$/DigireadProject/Views/Home/HomePage.cshtml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DigireadProject/bin/DigireadProject.dll" beforeDir="false" afterPath="$PROJECT_DIR$/DigireadProject/bin/DigireadProject.dll" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DigireadProject/bin/DigireadProject.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/DigireadProject/bin/DigireadProject.pdb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DigireadProject/obj/Debug/DigireadProject.dll" beforeDir="false" afterPath="$PROJECT_DIR$/DigireadProject/obj/Debug/DigireadProject.dll" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DigireadProject/obj/Debug/DigireadProject.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/DigireadProject/obj/Debug/DigireadProject.pdb" afterDir="false" />
-    </list>
+    <list default="true" id="20f33115-b11b-49e2-bb24-d6ba9c0d48a8" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -60,8 +47,15 @@
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="HighlightingSettingsPerFile">
-    <setting file="mock://C:/Users/noamd/RiderProjects/DigireadProjectGit/DigireadProject/Views/BookManagement/Gallery.cshtml" root0="FORCE_HIGHLIGHTING" root1="FORCE_HIGHLIGHTING" root2="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/noamd/RiderProjects/DigireadProjectGit/DigireadProject/Views/BookManagement/Gallery.cshtml" root0="FORCE_HIGHLIGHTING" root1="FORCE_HIGHLIGHTING" root2="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/tairt/source/DigireadProjectgit/DigireadProject/Models/ViewModels/PaymentViewModel.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/tairt/source/DigireadProjectgit/DigireadProject/Models/ViewModels/PaymentViewModel.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/tairt/source/DigireadProjectgit/DigireadProject/Models/ViewModels/PaymentViewModel.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/tairt/source/DigireadProjectgit/DigireadProject/Models/ViewModels/PaymentViewModel.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/tairt/source/DigireadProjectgit/DigireadProject/Models/ViewModels/PaymentViewModel.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/tairt/source/DigireadProjectgit/DigireadProject/Models/ViewModels/PaymentViewModel.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/tairt/source/DigireadProjectgit/DigireadProject/Models/ViewModels/PaymentViewModel.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/tairt/source/DigireadProjectgit/DigireadProject/Models/ViewModels/PaymentViewModel.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/tairt/source/DigireadProjectgit/DigireadProject/Models/ViewModels/PaymentViewModel.cs" root0="SKIP_HIGHLIGHTING" />
   </component>
   <component name="MetaFilesCheckinStateConfiguration" checkMetaFiles="true" />
   <component name="ProblemsViewState">
@@ -142,6 +136,7 @@
       <workItem from="1736076259286" duration="3868000" />
       <workItem from="1736080183478" duration="1817000" />
       <workItem from="1736149728429" duration="439000" />
+      <workItem from="1736153041358" duration="8062000" />
     </task>
     <servers />
   </component>

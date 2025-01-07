@@ -239,19 +239,36 @@ public async Task<ActionResult> EditBook(BookViewModel viewModel)
             try
             {
                 var book = await db.Books.FindAsync(id);
-                if (book != null)
+                if (book == null)
                 {
-                    // בדיקה אם יש השאלות פעילות
-                    if (await db.Rentals.AnyAsync(r => r.BookID == id && r.ReturnDate == null))
-                    {
-                        return Json(new { success = false, message = "לא ניתן למחוק ספר שיש לו השאלות פעילות" });
-                    }
+                    return Json(new { success = false, message = "הספר לא נמצא" });
+                }
 
+                // בדיקת השאלות פעילות
+                if (await db.Rentals.AnyAsync(r => r.BookID == id && r.ReturnDate == null))
+                {
+                    return Json(new { success = false, message = "לא ניתן למחוק ספר שיש לו השאלות פעילות" });
+                }
+
+                // בדיקה אם הספר נרכש או הושאל בעבר
+                var hasHistory = await db.Purchases.AnyAsync(p => p.BookID == id) ||
+                                 await db.Rentals.AnyAsync(r => r.BookID == id);
+
+                if (hasHistory)
+                {
+                    // אם יש היסטוריה, רק מסמנים את הספר כלא זמין במקום למחוק אותו
+                    book.IsAvailable = false;
+                    book.IsForRent = false;
+                    await db.SaveChangesAsync();
+                    return Json(new { success = true, message = "הספר סומן כלא זמין מכיוון שיש לו היסטוריית רכישות או השאלות" });
+                }
+                else
+                {
+                    // אם אין היסטוריה, מוחקים את הספר לגמרי
                     db.Books.Remove(book);
                     await db.SaveChangesAsync();
-                    return Json(new { success = true });
+                    return Json(new { success = true, message = "הספר נמחק בהצלחה" });
                 }
-                return Json(new { success = false, message = "הספר לא נמצא" });
             }
             catch (Exception ex)
             {

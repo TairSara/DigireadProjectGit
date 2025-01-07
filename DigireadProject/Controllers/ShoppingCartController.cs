@@ -351,7 +351,70 @@ namespace DigireadProject.Controllers
                 }
             }
         }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> UpdateTransactionType(int cartId, bool isRental)
+        {
+            try
+            {
+                int userId = GetCurrentUserId();
+                var cartItem = await _db.ShoppingCart
+                    .Include(c => c.Books)
+                    .FirstOrDefaultAsync(c => c.CartID == cartId && c.UserID == userId);
 
+                if (cartItem == null)
+                {
+                    return Json(new { success = false, message = "פריט לא נמצא" });
+                }
+
+                if (isRental)
+                {
+                    if (!cartItem.Books.IsForRent.GetValueOrDefault())
+                    {
+                        return Json(new { success = false, message = "הספר אינו זמין להשכרה" });
+                    }
+
+                    // בדיקת מגבלת השכרה
+                    var activeRentals = await _db.Rentals
+                        .CountAsync(r => r.UserID == userId && r.ReturnDate == null);
+            
+                    var otherCartRentals = await _db.ShoppingCart
+                        .CountAsync(s => s.UserID == userId && 
+                                         s.IsRental == true && 
+                                         s.CartID != cartId);
+
+                    if (activeRentals + otherCartRentals + 1 > 3)
+                    {
+                        return Json(new { 
+                            success = false, 
+                            message = "לא ניתן להשאיל יותר מ-3 ספרים במקביל" 
+                        });
+                    }
+                }
+
+                cartItem.IsRental = isRental;
+                cartItem.Price = isRental ? cartItem.Books.RentalPrice : cartItem.Books.PurchasePrice;
+
+                await _db.SaveChangesAsync();
+
+                return Json(new { 
+                    success = true,
+                    newPrice = cartItem.Price,
+                    totalPrice = await GetCartTotalPrice(userId)
+                });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = "אירעה שגיאה בעדכון סוג העסקה" });
+            }
+        }
+
+        private async Task<decimal> GetCartTotalPrice(int userId)
+        {
+            return await _db.ShoppingCart
+                .Where(c => c.UserID == userId)
+                .SumAsync(c => (c.Price ?? 0) * (c.Quantity ?? 1));
+        }
         protected override void Dispose(bool disposing)
         {
             if (disposing)

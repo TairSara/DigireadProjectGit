@@ -49,7 +49,6 @@ namespace DigireadProject.Controllers
             return RedirectToAction("PaymentForm");
         }
 
-        
         [HttpGet]
         public ActionResult PaymentForm()
         {
@@ -68,10 +67,13 @@ namespace DigireadProject.Controllers
                     {
                         BookId = c.Books.BookID,
                         BookTitle = c.Books.Title,
-                        BookImageSrc = c.Books.ImageSrc,  // הוספת שדה התמונה
-                        Price = c.Price ?? 0,
+                        BookImageSrc = c.Books.ImageSrc,
+                        Price = c.IsRental ?? false ? c.Books.RentalPrice ?? 0 : c.Books.PurchasePrice ?? 0,
+                        PurchasePrice = c.Books.PurchasePrice ?? 0,
+                        RentalPrice = c.Books.RentalPrice ?? 0,
                         Quantity = c.Quantity ?? 1,
-                        IsRental = c.IsRental ?? false
+                        IsRental = c.IsRental ?? false,
+                        CanBeRented = c.Books.IsForRent ?? false
                     })
                     .ToList();
 
@@ -84,11 +86,7 @@ namespace DigireadProject.Controllers
 
                 var viewModel = new PaymentViewModel
                 {
-                    BookId = userCart.First().BookId,
-                    BookTitle = userCart.First().BookTitle,
-                    BookImageSrc = db.Books.Find(userCart.First().BookId)?.ImageSrc,
                     Price = totalAmount,
-                    IsRental = userCart.First().IsRental,
                     CartItems = userCart
                 };
 
@@ -100,108 +98,119 @@ namespace DigireadProject.Controllers
                 throw;
             }
         }
-        
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> ProcessPayment(PaymentViewModel model)
+
+public async Task<ActionResult> ProcessPayment(PaymentViewModel model)
+{
+    if (model == null || !model.CartItems.Any())
+    {
+        ModelState.AddModelError("", "נתוני הספרים חסרים");
+        return View("PaymentForm", model);
+    }
+
+    if (!ModelState.IsValid)
+    {
+        return View("PaymentForm", model);
+    }
+
+    using (var transaction = db.Database.BeginTransaction())
+    {
+        try
         {
-            if (model == null || !model.CartItems.Any())
+            var userId = GetCurrentUserId();
+            var user = await db.Users.FirstOrDefaultAsync(u => u.UserID == userId);
+            
+            if (user == null)
             {
-                ModelState.AddModelError("", "נתוני הספרים חסרים");
+                ModelState.AddModelError("", "משתמש לא נמצא");
                 return View("PaymentForm", model);
             }
 
-            if (!ModelState.IsValid)
+            foreach (var cartItem in model.CartItems)
             {
-                return View("PaymentForm", model);
-            }
-
-            using (var transaction = db.Database.BeginTransaction())
-            {
-                try
+                var book = await db.Books.FindAsync(cartItem.BookId);
+                
+                if (book == null)
                 {
-                    var userId = GetCurrentUserId();
-                    
-                    foreach (var cartItem in model.CartItems)
-                    {
-                        var book = await db.Books.FindAsync(cartItem.BookId);
-                        
-                        if (book == null)
-                        {
-                            ModelState.AddModelError("", $"הספר {cartItem.BookTitle} לא נמצא");
-                            return View("PaymentForm", model);
-                        }
-
-                        if (cartItem.IsRental)
-                        {
-                            if (book.StockQuantityRent < cartItem.Quantity)
-                            {
-                                ModelState.AddModelError("", $"הספר {cartItem.BookTitle} אינו זמין להשאלה בכמות המבוקשת");
-                                return View("PaymentForm", model);
-                            }
-
-                            var rental = new Rentals
-                            {
-                                UserID = userId,
-                                BookID = cartItem.BookId,
-                                RentalDate = DateTime.Now,
-                                ReturnDate = null
-                            };
-                            db.Rentals.Add(rental);
-                            book.StockQuantityRent -= cartItem.Quantity;
-                            var waitListService = new WaitListService(db, new EmailService());
-                            await waitListService.RemoveFromWaitListAfterSuccessfulRental(cartItem.BookId, userId);
-
-                        }
-                        else
-                        {
-                            if (book.StockQuantity < cartItem.Quantity)
-                            {
-                                ModelState.AddModelError("", $"הספר {cartItem.BookTitle} אינו זמין לרכישה בכמות המבוקשת");
-                                return View("PaymentForm", model);
-                            }
-
-                            var purchase = new Purchases
-                            {
-                                UserID = userId,
-                                BookID = cartItem.BookId,
-                                PurchaseDate = DateTime.Now,
-                                PaymentStatus = true,
-                                PaymentMethod = "Credit Card"
-                            };
-                            db.Purchases.Add(purchase);
-                            book.StockQuantity -= cartItem.Quantity;
-
-                            if (book.StockQuantity <= 0)
-                            {
-                                book.IsAvailable = false;
-                            }
-                        }
-
-                        // מחיקת הפריט מעגלת הקניות
-                        var cartItemToRemove = await db.ShoppingCart
-                            .FirstOrDefaultAsync(sc => sc.UserID == userId && sc.BookID == cartItem.BookId);
-                        if (cartItemToRemove != null)
-                        {
-                            db.ShoppingCart.Remove(cartItemToRemove);
-                        }
-                    }
-
-                    await db.SaveChangesAsync();
-                    transaction.Commit();
-
-                    TempData["PurchaseSuccess"] = true;
-                    return RedirectToAction("Checkout");
-                }
-                catch (Exception)
-                {
-                    transaction.Rollback();
-                    ModelState.AddModelError("", "אירעה שגיאה בביצוע התשלום");
+                    ModelState.AddModelError("", $"הספר {cartItem.BookTitle} לא נמצא");
                     return View("PaymentForm", model);
                 }
+
+                if (cartItem.IsRental)
+                {
+                    if (book.StockQuantityRent < cartItem.Quantity)
+                    {
+                        ModelState.AddModelError("", $"הספר {cartItem.BookTitle} אינו זמין להשאלה בכמות המבוקשת");
+                        return View("PaymentForm", model);
+                    }
+
+                    var rental = new Rentals
+                    {
+                        UserID = userId,
+                        BookID = cartItem.BookId,
+                        RentalDate = DateTime.Now,
+                        ReturnDate = null
+                    };
+                    db.Rentals.Add(rental);
+                    book.StockQuantityRent -= cartItem.Quantity;
+                    await _waitListService.RemoveFromWaitListAfterSuccessfulRental(cartItem.BookId, userId);
+                }
+                else
+                {
+                    if (book.StockQuantity < cartItem.Quantity)
+                    {
+                        ModelState.AddModelError("", $"הספר {cartItem.BookTitle} אינו זמין לרכישה בכמות המבוקשת");
+                        return View("PaymentForm", model);
+                    }
+
+                    var purchase = new Purchases
+                    {
+                        UserID = userId,
+                        BookID = cartItem.BookId,
+                        PurchaseDate = DateTime.Now,
+                        PaymentStatus = true,
+                        PaymentMethod = "Credit Card"
+                    };
+                    db.Purchases.Add(purchase);
+                    book.StockQuantity -= cartItem.Quantity;
+
+                    if (book.StockQuantity <= 0)
+                    {
+                        book.IsAvailable = false;
+                    }
+                }
+
+                var cartItemToRemove = await db.ShoppingCart
+                    .FirstOrDefaultAsync(sc => sc.UserID == userId && sc.BookID == cartItem.BookId);
+                if (cartItemToRemove != null)
+                {
+                    db.ShoppingCart.Remove(cartItemToRemove);
+                }
             }
+
+            await db.SaveChangesAsync();
+            
+            // שליחת מייל אישור הזמנה
+            decimal totalAmount = model.CartItems.Sum(x => x.Price * x.Quantity);
+            await _emailService.SendOrderConfirmationAsync(
+                user.Email,
+                model.CartItems,
+                totalAmount
+            );
+
+            transaction.Commit();
+            TempData["PurchaseSuccess"] = true;
+            return RedirectToAction("Checkout");
         }
-        private int GetCurrentUserId()
+        catch (Exception)
+        {
+            transaction.Rollback();
+            ModelState.AddModelError("", "אירעה שגיאה בביצוע התשלום");
+            return View("PaymentForm", model);
+        }
+    }
+}        private int GetCurrentUserId()
         {
             var username = User.Identity.Name;
             return db.Users.FirstOrDefault(u => u.Username == username)?.UserID ?? 0;
