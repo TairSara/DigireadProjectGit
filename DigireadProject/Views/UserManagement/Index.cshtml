@@ -19,7 +19,7 @@
     h2 {
         color: #6a1b9a;
         font-weight: bold;
-        margin-bottom: 20px; /* מרווחים גדולים יותר לכותרת */
+        margin-bottom: 20px; 
     }
 
     .table {
@@ -302,11 +302,56 @@
         }
 
         function deleteUser(userId) {
-            if (confirm('האם אתה בטוח שברצונך למחוק משתמש זה?')) {
-                $.post('/UserManagement/DeleteUser', { userId: userId }, function (response) {
-                    if (response.success) location.reload();
-                });
-            }
+            Swal.fire({
+                title: 'מחיקת משתמש',
+                text: 'האם אתה בטוח שברצונך למחוק משתמש זה? פעולה זו היא סופית.',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'כן, מחק משתמש',
+                cancelButtonText: 'ביטול'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: '/UserManagement/DeleteUser',
+                        type: 'POST',
+                        data: {
+                            userId: userId,
+                            __RequestVerificationToken: $('input[name="__RequestVerificationToken"]').val()
+                        },
+                        success: function(response) {
+                            console.log(response); 
+
+                            if (response.success) {
+                                Swal.fire({
+                                    title: 'המשתמש נמחק בהצלחה!',
+                                    icon: 'success',
+                                    confirmButtonText: 'אישור'
+                                }).then(() => {
+                                    location.reload();
+                                });
+                            } else {
+                                Swal.fire({
+                                    title: 'שגיאה',
+                                    text: response.message || 'לא ניתן היה למחוק את המשתמש',
+                                    icon: 'error',
+                                    confirmButtonText: 'אישור'
+                                });
+                            }
+                        },
+                        error: function(xhr, status, error) {
+                            console.error(xhr.responseText); 
+                            Swal.fire({
+                                title: 'שגיאה',
+                                text: 'אירעה שגיאה בניסיון למחוק את המשתמש',
+                                icon: 'error',
+                                confirmButtonText: 'אישור'
+                            });
+                        }
+                    });
+                }
+            });
         }
     </script>
 }

@@ -96,7 +96,7 @@
                             <h5 class="card-title">@item.BookTitle</h5>
                             <p class="card-text">
                                 מיקום בתור: @item.WaitPosition<br>
-                                תאריך הוספה: @(item.AddedDate?.ToString("dd/mm/yyyy") ?? DateTime.Now.ToString("dd/mm/yyyy"))<br>
+                                תאריך הוספה: @(item.AddedDate?.ToString("dd/MM/yyyy") ?? DateTime.Now.ToString("dd/MM/yyyy"))<br>
                             </p>
 
                             @if (item.StockQuantityRent > 0 && item.IsAvailableForUser)

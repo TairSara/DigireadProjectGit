@@ -26,36 +26,28 @@ namespace DigireadProject.Controllers
 
             try
             {
-                // סך כל המשתמשים
                 ViewBag.TotalUsers = await db.Users.CountAsync();
                 
-                // ספירת השאלות הפעילות
                 ViewBag.TotalRentals = await db.Rentals
                     .CountAsync(r => r.ReturnDate == null);
                 
-                // סך כל הספרים
                 ViewBag.TotalBooks = await db.Books.CountAsync();
                 
-                // משתמשים פעילים (IsActive = 1)
                 ViewBag.ActiveUsers = await db.Users
                     .Where(u => u.IsActive.HasValue && u.IsActive.Value)
                     .CountAsync();
                 
-                // מנהלי מערכת (IsAdmin = 1)
                 ViewBag.AdminUsers = await db.Users
                     .Where(u => u.IsAdmin.HasValue && u.IsAdmin.Value)
                     .CountAsync();
                 
-                // משתמשים חדשים מהיום
                 var today = DateTime.Today;
                 ViewBag.NewUsersToday = await db.Users
                     .CountAsync(u => u.RegistrationDate.HasValue &&
                                    DbFunctions.TruncateTime(u.RegistrationDate) == today);
 
-                // ספרים ברשימת המתנה
                 ViewBag.WaitList = await db.WaitList.CountAsync(w => w.UserID != null);
 
-                // לוג לבדיקה
                 System.Diagnostics.Debug.WriteLine($"Total Users: {ViewBag.TotalUsers}");
                 System.Diagnostics.Debug.WriteLine($"Active Users: {ViewBag.ActiveUsers}");
                 System.Diagnostics.Debug.WriteLine($"Admin Users: {ViewBag.AdminUsers}");
@@ -64,11 +56,9 @@ namespace DigireadProject.Controllers
             }
             catch (Exception ex)
             {
-                // לוג השגיאה
                 System.Diagnostics.Debug.WriteLine($"Error in Dashboard: {ex.Message}");
                 System.Diagnostics.Debug.WriteLine($"Stack Trace: {ex.StackTrace}");
 
-                // ערכי ברירת מחדל במקרה של שגיאה
                 ViewBag.TotalUsers = 0;
                 ViewBag.TotalBooks = 0;
                 ViewBag.ActiveUsers = 0;

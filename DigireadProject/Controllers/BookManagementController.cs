@@ -27,6 +27,31 @@ namespace DigireadProject.Controllers
             System.Diagnostics.Debug.WriteLine($"EmailService status: {_emailService != null}");
         }
 
+        private async Task CleanExpiredReservations()
+        {
+            try 
+            {
+                var expiredItems = await db.WaitList
+                    .Where(w => w.IsReserved && 
+                                w.ReservationExpiryTime.HasValue && 
+                                w.ReservationExpiryTime.Value <= DateTime.Now)
+                    .ToListAsync();
+
+                foreach (var item in expiredItems)
+                {
+                    item.IsReserved = false;
+                    item.ReservationExpiryTime = null;
+                }
+
+                await db.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"שגיאה בניקוי הזמנות שפג תוקפן: {ex.Message}");
+            }
+        }
+
+        // GET: BookManagement/ManageBooks
         public async Task<ActionResult> ManageBooks()
         {
             if (!await IsUserAdmin())
@@ -244,19 +269,16 @@ public async Task<ActionResult> EditBook(BookViewModel viewModel)
                     return Json(new { success = false, message = "הספר לא נמצא" });
                 }
 
-                // בדיקת השאלות פעילות
                 if (await db.Rentals.AnyAsync(r => r.BookID == id && r.ReturnDate == null))
                 {
                     return Json(new { success = false, message = "לא ניתן למחוק ספר שיש לו השאלות פעילות" });
                 }
 
-                // בדיקה אם הספר נרכש או הושאל בעבר
                 var hasHistory = await db.Purchases.AnyAsync(p => p.BookID == id) ||
                                  await db.Rentals.AnyAsync(r => r.BookID == id);
 
                 if (hasHistory)
                 {
-                    // אם יש היסטוריה, רק מסמנים את הספר כלא זמין במקום למחוק אותו
                     book.IsAvailable = false;
                     book.IsForRent = false;
                     await db.SaveChangesAsync();
@@ -264,7 +286,6 @@ public async Task<ActionResult> EditBook(BookViewModel viewModel)
                 }
                 else
                 {
-                    // אם אין היסטוריה, מוחקים את הספר לגמרי
                     db.Books.Remove(book);
                     await db.SaveChangesAsync();
                     return Json(new { success = true, message = "הספר נמחק בהצלחה" });
@@ -314,7 +335,13 @@ public async Task<ActionResult> EditBook(BookViewModel viewModel)
 
         protected override void Dispose(bool disposing)
         {
-            if (disposing) db?.Dispose();
+            if (disposing)
+            {
+                if (db != null)
+                {
+                    db.Dispose();
+                }
+            }
             base.Dispose(disposing);
         }
 
@@ -372,7 +399,6 @@ public async Task<ActionResult> EditBook(BookViewModel viewModel)
                 .Distinct()
                 .ToListAsync();
 
-            // בדיקה אם המשתמש מחובר
             var userWishlist = new List<int>();
             if (User.Identity.IsAuthenticated)
             {
@@ -388,7 +414,7 @@ public async Task<ActionResult> EditBook(BookViewModel viewModel)
                 Genres = allGenres,
                 Books = books,
                 SelectedGenre = genre,
-                UserWishlist = userWishlist // נוסיף את זה גם כאן
+                UserWishlist = userWishlist 
             };
 
             return View("Gallery", viewModel);
@@ -457,7 +483,7 @@ public async Task<ActionResult> EditBook(BookViewModel viewModel)
                     ReturnDate = r.ReturnDate,
                     BookID = r.BookID ?? 0,
                     Status = r.ReturnDate.HasValue ? "הוחזר" :
-                             (r.RentalDate.Value.AddDays(31) < now ? "פג תוקף" : "פעיל"),//לשנות
+                             (r.RentalDate.Value.AddDays(31) < now ? "פג תוקף" : "פעיל"),
                     DaysOverdue = r.ReturnDate == null && r.RentalDate.Value.AddDays(31) < now
                         ? (int)(now - r.RentalDate.Value.AddDays(31)).TotalDays
                         : 0
@@ -482,17 +508,14 @@ public async Task<ActionResult> EditBook(BookViewModel viewModel)
             var rental = await db.Rentals.FindAsync(rentalId);
             if (rental != null)
             {
-                // אם ההשאלה טרם הוחזרה
                 if (rental.ReturnDate == null)
                 {
-                    // החזר את הספר לזמינות
                     var book = await db.Books.FindAsync(rental.BookID);
                     if (book != null)
                     {
                         book.IsAvailable = true;
                     }
 
-                    // מחק את ההשאלה
                     db.Rentals.Remove(rental);
                     await db.SaveChangesAsync();
 
@@ -502,7 +525,6 @@ public async Task<ActionResult> EditBook(BookViewModel viewModel)
             return Json(new { success = false, message = "לא ניתן לבטל השאלה זו" });
         }
 
-        // שיטה להחזרת ספר
         [HttpPost]
         public async Task<ActionResult> ReturnBook(int rentalId)
         {
@@ -521,11 +543,9 @@ public async Task<ActionResult> EditBook(BookViewModel viewModel)
                     var book = await db.Books.FindAsync(rental.BookID);
                     if (book != null)
                     {
-                        // עדכון המלאי
                         book.StockQuantityRent += 1;
-                        await db.SaveChangesAsync(); // שומר את השינויים במלאי קודם
+                        await db.SaveChangesAsync(); 
 
-                        // שליחת התראה למשתמש הראשון ברשימת ההמתנה
                         if (book.StockQuantityRent > 0)
                         {
                             var firstWaitingUser = await db.WaitList
@@ -611,7 +631,7 @@ public async Task<ActionResult> EditBook(BookViewModel viewModel)
                         Author = book.MainAuthor,
                         ImageSrc = book.ImageSrc,
                         Type = "השאלה",
-                        ReturnDate = rental.RentalDate?.AddDays(31) //לשנות
+                        ReturnDate = rental.RentalDate?.AddDays(31) 
                     });
                 }
             }
@@ -633,7 +653,7 @@ public async Task<ActionResult> EditBook(BookViewModel viewModel)
         private bool IsRentalExpired(DateTime? rentalDate)
         {
             if (!rentalDate.HasValue) return false;
-            return (DateTime.Now - rentalDate.Value).TotalDays >= 31; //לשנות
+            return (DateTime.Now - rentalDate.Value).TotalDays >= 31; 
         }
         
         //Automatically handles expired questions
@@ -643,7 +663,7 @@ public async Task<ActionResult> EditBook(BookViewModel viewModel)
             var expiredRentals = await db.Rentals
                 .Where(r => r.UserID == userId && 
                             r.ReturnDate == null && 
-                            DbFunctions.AddDays(r.RentalDate, 31) < now)//לשנות
+                            DbFunctions.AddDays(r.RentalDate, 31) < now)
                 .ToListAsync();
 
             if (expiredRentals.Any())
@@ -656,7 +676,7 @@ public async Task<ActionResult> EditBook(BookViewModel viewModel)
                     if (book != null)
                     {
                         book.IsAvailable = true;
-                        book.StockQuantityRent += 1; // החזרת הספר למלאי ההשאלות
+                        book.StockQuantityRent += 1; 
                         await _waitListService.ProcessWaitListItem(book.BookID);
                     }
                 }
@@ -671,14 +691,13 @@ public async Task<ActionResult> EditBook(BookViewModel viewModel)
             var now = DateTime.Now;
             var fiveDaysFromNow = now.AddDays(5);
 
-            // מצא את כל ההשאלות שיפוגו בעוד 5 ימים
             var expiringRentals = await db.Rentals
-                .Where(r => r.ReturnDate == null // עדיין לא הוחזר
+                .Where(r => r.ReturnDate == null 
                             && r.RentalDate.HasValue
-                            && DbFunctions.AddDays(r.RentalDate.Value, 25) <= now // עברו 25 ימים מההשאלה
-                            && DbFunctions.AddDays(r.RentalDate.Value, 26) > now) // אבל לא עברו 26 ימים
-                .Include(r => r.Books) // כולל מידע על הספר
-                .Include(r => r.Users) // כולל מידע על המשתמש
+                            && DbFunctions.AddDays(r.RentalDate.Value, 25) <= now 
+                            && DbFunctions.AddDays(r.RentalDate.Value, 26) > now) 
+                .Include(r => r.Books) 
+                .Include(r => r.Users) 
                 .ToListAsync();
 
             foreach (var rental in expiringRentals)
@@ -706,7 +725,6 @@ public async Task<ActionResult> DeleteFromLibrary(int bookId, string type)
 
         if (type == "השאלה")
         {
-            // שלב 1: מצא את ההשאלה
             var rental = await db.Rentals
                 .FirstOrDefaultAsync(r => r.BookID == bookId && 
                                         r.UserID == userId && 
@@ -717,7 +735,6 @@ public async Task<ActionResult> DeleteFromLibrary(int bookId, string type)
                 return Json(new { success = false, message = "ההשאלה לא נמצאה במערכת" });
             }
 
-            // שלב 2: מצא את הספר ועדכן את המלאי
             var book = await db.Books
                 .FirstOrDefaultAsync(b => b.BookID == bookId);
 
@@ -726,19 +743,15 @@ public async Task<ActionResult> DeleteFromLibrary(int bookId, string type)
                 return Json(new { success = false, message = "הספר לא נמצא במערכת" });
             }
 
-            // שלב 3: עדכון המלאי
             int currentStock = book.StockQuantityRent ?? 0;
             book.StockQuantityRent = currentStock + 1;
             
             System.Diagnostics.Debug.WriteLine($"עדכון מלאי: מ-{currentStock} ל-{book.StockQuantityRent}");
 
-            // שלב 4: מחיקת ההשאלה
             db.Rentals.Remove(rental);
             
-            // שלב 5: שמירת השינויים
             await db.SaveChangesAsync();
 
-            // שלב 6: בדיקת רשימת המתנה
             if (book.StockQuantityRent > 0)
             {
                 var firstWaitingUser = await db.WaitList
@@ -757,7 +770,6 @@ public async Task<ActionResult> DeleteFromLibrary(int bookId, string type)
                     catch (Exception ex)
                     {
                         System.Diagnostics.Debug.WriteLine($"שגיאה בשליחת מייל: {ex.Message}");
-                        // ממשיכים למרות שגיאה בשליחת המייל
                     }
                 }
             }
@@ -806,7 +818,6 @@ public async Task<ActionResult> DeleteFromLibrary(int bookId, string type)
                     return Json(new { success = false, message = "הספר לא נמצא" });
                 }
 
-                // אם הפורמט הוא FB2, נשנה אותו ל-PDF
                 if (format.ToUpper() == "FB2")
                 {
                     format = "PDF";
@@ -844,13 +855,11 @@ public async Task<ActionResult> DeleteFromLibrary(int bookId, string type)
                     return HttpNotFound();
                 }
 
-                // אם הפורמט הוא FB2, נשנה אותו ל-PDF
                 if (format.ToUpper() == "FB2")
                 {
                     format = "PDF";
                 }
 
-                // קריאה פשוטה של הקובץ
                 string sampleFileName = $"sample_book.{format.ToLower()}";
                 string filePath = Server.MapPath($"~/Content/SampleBooks/{sampleFileName}");
         
@@ -889,38 +898,66 @@ public async Task<ActionResult> DeleteFromLibrary(int bookId, string type)
             }
         }
         
-        [Authorize]
-        public async Task<ActionResult> MyWaitList()
+       [Authorize]
+public async Task<ActionResult> MyWaitList()
+{
+    int userId = GetCurrentUserId();
+    await CleanExpiredReservations(); 
+
+    var waitListItems = await db.WaitList
+        .Where(w => w.UserID == userId)
+        .Include(w => w.Books)
+        .OrderBy(w => w.WaitPosition)
+        .ToListAsync();
+
+    foreach (var item in waitListItems)
+    {
+        if (item.Books?.StockQuantityRent > 0 && item.WaitPosition == 1)
         {
-            int userId = GetCurrentUserId();
+            var hasActiveReservation = await db.WaitList
+                .AnyAsync(w => w.BookID == item.BookID && 
+                              w.IsReserved && 
+                              w.ReservationExpiryTime > DateTime.Now);
 
-            // שלב 1: הבאת הנתונים מהדאטהבייס
-            var waitListItems = await db.WaitList
-                .Where(w => w.UserID == userId)
-                .Include(w => w.Books)
-                .ToListAsync();
-
-            // שלב 2: המרה ל-ViewModel
-            // המרה מהמודל ל-ViewModel
-            var waitListViewModels = waitListItems.Select(w => new WaitListViewModel
+            if (!hasActiveReservation)
+            {
+                item.IsReserved = true;
+                item.ReservationExpiryTime = DateTime.Now.AddHours(4);
+                item.EmailNotificationSent = true;
+                
+                if (item.Users?.Email != null)
                 {
-                    WaitListID = w.WaitListID,
-                    BookID = w.BookID ?? 0,
-                    UserID = w.UserID ?? 0,
-                    WaitPosition = w.WaitPosition ?? 0,
-                    AddedDate = w.AddedDate ?? DateTime.Now,
-                    EmailNotificationSent = w.EmailNotificationSent ?? false,
-                    BookTitle = w.Books?.Title ?? string.Empty,
-                    ImageSrc = w.Books?.ImageSrc ?? string.Empty,
-                    IsAvailable = w.Books?.IsAvailable ?? false,
-                    IsRental = w.IsRental ?? false,
-                    StockQuantity = w.Books?.StockQuantity ?? 0,
-                    StockQuantityRent = w.Books?.StockQuantityRent ?? 0
-                })
-                .OrderBy(w => w.WaitPosition)
-                .ToList();
-            return View(waitListViewModels);
+                    await _emailService.SendBookAvailableNotificationAsync(
+                        item.Users.Email,
+                        item.Books.Title
+                    );
+                }
+            }
         }
+    }
+
+    await db.SaveChangesAsync();
+
+    var waitListViewModels = waitListItems.Select(w => new WaitListViewModel
+    {
+        WaitListID = w.WaitListID,
+        BookID = w.BookID ?? 0,
+        UserID = w.UserID ?? 0,
+        WaitPosition = w.WaitPosition ?? 0,
+        AddedDate = w.AddedDate ?? DateTime.Now,
+        EmailNotificationSent = w.EmailNotificationSent ?? false,
+        BookTitle = w.Books?.Title ?? string.Empty,
+        ImageSrc = w.Books?.ImageSrc ?? string.Empty,
+        IsAvailable = w.Books?.IsAvailable ?? false,
+        IsRental = w.IsRental ?? false,
+        StockQuantity = w.Books?.StockQuantity ?? 0,
+        StockQuantityRent = w.Books?.StockQuantityRent ?? 0,
+        IsReserved = w.IsReserved,
+        ReservationExpiryTime = w.ReservationExpiryTime
+    }).ToList();
+
+    return View(waitListViewModels);
+}
 
         [HttpPost]
         [Authorize]
@@ -936,17 +973,14 @@ public async Task<ActionResult> DeleteFromLibrary(int bookId, string type)
                 {
                     int bookId = waitListItem.BookID ?? 0;
 
-                    // מחיקת הפריט מרשימת ההמתנה
                     db.WaitList.Remove(waitListItem);
                     await db.SaveChangesAsync();
 
-                    // מציאת כל המשתמשים שעדיין ממתינים לאותו ספר ומיון לפי המיקום הנוכחי
                     var remainingUsers = await db.WaitList
                         .Where(w => w.BookID == bookId)
                         .OrderBy(w => w.WaitPosition)
                         .ToListAsync();
 
-                    // עדכון המיקומים החדשים - התחלה מ-1
                     for (int i = 0; i < remainingUsers.Count; i++)
                     {
                         remainingUsers[i].WaitPosition = i + 1;
@@ -955,7 +989,6 @@ public async Task<ActionResult> DeleteFromLibrary(int bookId, string type)
 
                     await db.SaveChangesAsync();
 
-                    // בדיקה אם יש ספר זמין במלאי ושליחת התראה למשתמש הראשון
                     var book = await db.Books.FindAsync(bookId);
                     if (book != null && book.StockQuantityRent > 0)
                     {
@@ -975,270 +1008,298 @@ public async Task<ActionResult> DeleteFromLibrary(int bookId, string type)
             }
         }
         
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<ActionResult> AddToWaitList(int bookId, bool isRental)
+[HttpPost]        
+[ValidateAntiForgeryToken]        
+public async Task<ActionResult> AddToWaitList(int bookId, bool isRental)        
+{            
+    await CleanExpiredReservations();             
+    try            
+    {                
+        if (!isRental)                
+        {                    
+            return Json(new { success = false, message = "לא ניתן להצטרף לרשימת המתנה עבור רכישת ספר" });                
+        }                 
+
+        int userId = GetCurrentUserId();                 
+
+        var existingWaitListItem = await db.WaitList                    
+            .FirstOrDefaultAsync(w => w.BookID == bookId && w.UserID == userId);                 
+
+        if (existingWaitListItem != null)                
+        {                    
+            return Json(new { success = false, message = "הנך כבר נמצא ברשימת ההמתנה לספר זה" });                
+        }                 
+
+        var book = await db.Books.FindAsync(bookId);                
+        if (book == null)                
+        {                    
+            return Json(new { success = false, message = "הספר לא נמצא" });                
+        }                 
+
+        if (!book.IsForRent == true)                
+        {                    
+            return Json(new { success = false, message = "הספר אינו מיועד להשאלה" });                
+        }                 
+
+        var nextPosition = await db.WaitList                    
+            .Where(w => w.BookID == bookId)                    
+            .Select(w => (int?)w.WaitPosition)                    
+            .MaxAsync() ?? 0;                 
+
+        var waitListItem = new WaitList                
+        {                    
+            BookID = bookId,                    
+            UserID = userId,                    
+            WaitPosition = nextPosition + 1,                    
+            AddedDate = DateTime.Now,                    
+            EmailNotificationSent = false,                    
+            IsRental = true,                    
+            IsReserved = false,                    
+            ReservationExpiryTime = null                
+        };                 
+
+        db.WaitList.Add(waitListItem);                
+        await db.SaveChangesAsync();                 
+
+        return Json(new {                     
+            success = true,                    
+            message = "נוספת בהצלחה לרשימת ההמתנה",                    
+            position = waitListItem.WaitPosition                
+        });            
+    }            
+    catch (Exception ex)            
+    {                
+        return Json(new { success = false, message = $"אירעה שגיאה בהוספה לרשימת ההמתנה: {ex.Message}" });            
+    }        
+}
+ private async Task CheckAndUpdateWaitList(int bookId)
+ 
         {
-            try
+            await CleanExpiredReservations();
+
+            var book = await db.Books.FindAsync(bookId);
+            
+            if (book != null && book.StockQuantityRent > 0)
             {
-                // אם זו לא השאלה, אין אפשרות להצטרף לרשימת המתנה
-                if (!isRental)
+                var hasActiveReservation = await db.WaitList
+                    .AnyAsync(w => w.BookID == bookId && 
+                                 w.IsReserved && 
+                                 w.ReservationExpiryTime > DateTime.Now);
+
+                if (!hasActiveReservation)
                 {
-                    return Json(new { success = false, 
-                        message = "לא ניתן להצטרף לרשימת המתנה עבור רכישת ספר" });
-                }
-
-                int userId = GetCurrentUserId();
-
-                // בדיקה אם המשתמש כבר ברשימת המתנה לספר זה
-                var existingWaitListItem = await db.WaitList
-                    .FirstOrDefaultAsync(w => w.BookID == bookId && w.UserID == userId);
-
-                if (existingWaitListItem != null)
-                {
-                    return Json(new { success = false, 
-                        message = "את/ה כבר נמצא/ת ברשימת ההמתנה לספר זה" });
-                }
-
-                var book = await db.Books.FindAsync(bookId);
-                if (book == null)
-                {
-                    return Json(new { success = false, message = "הספר לא נמצא" });
-                }
-
-                // בדיקה שאכן מדובר בספר להשאלה ושאין מלאי
-                if (!book.IsForRent == true || book.StockQuantityRent > 0)
-                {
-                    return Json(new { success = false, 
-                        message = "הספר זמין להשאלה או שאינו מיועד להשאלה" });
-                }
-
-                // חישוב המיקום הבא ברשימת ההמתנה
-                var nextPosition = await db.WaitList
-                    .Where(w => w.BookID == bookId)
-                    .Select(w => (int?)w.WaitPosition)
-                    .MaxAsync() ?? 0;
-
-                var waitListItem = new WaitList
-                {
-                    BookID = bookId,
-                    UserID = userId,
-                    WaitPosition = nextPosition + 1,
-                    AddedDate = DateTime.Now,
-                    EmailNotificationSent = false,
-                    IsRental = true // תמיד true כי רק השאלות יכולות להיכנס לרשימת המתנה
-                };
-
-                db.WaitList.Add(waitListItem);
-                await db.SaveChangesAsync();
-
-                return Json(new { success = true });
-            }
-            catch (Exception ex)
-            {
-                return Json(new { success = false, 
-                    message = "אירעה שגיאה בהוספה לרשימת ההמתנה" });
-            }
-        }
-        
-        private async Task CheckAndUpdateWaitList(int bookId)
-        {
-            System.Diagnostics.Debug.WriteLine($"=== התחלת בדיקת רשימת המתנה עבור ספר {bookId} ===");
-
-            try 
-            {
-                var book = await db.Books.FindAsync(bookId);
-                System.Diagnostics.Debug.WriteLine($"האם נמצא ספר: {book != null}");
-                System.Diagnostics.Debug.WriteLine($"כמות במלאי להשאלה: {book?.StockQuantityRent}");
-
-                if (book != null && book.StockQuantityRent > 0)
-                {
-                    System.Diagnostics.Debug.WriteLine($"הספר {book.Title} זמין להשאלה");
-
-                    // בדיקה כמה אנשים בסך הכל ברשימת ההמתנה
-                    var totalWaiting = await db.WaitList
-                        .CountAsync(w => w.BookID == bookId);
-                    System.Diagnostics.Debug.WriteLine($"מספר אנשים ברשימת ההמתנה: {totalWaiting}");
-
                     var firstWaitingUser = await db.WaitList
                         .Where(w => w.BookID == bookId)
                         .OrderBy(w => w.WaitPosition)
                         .Include(w => w.Users)
                         .FirstOrDefaultAsync();
 
-                    System.Diagnostics.Debug.WriteLine($"נמצא משתמש ממתין: {firstWaitingUser != null}");
-                    System.Diagnostics.Debug.WriteLine($"מיקום בתור: {firstWaitingUser?.WaitPosition}");
-                    System.Diagnostics.Debug.WriteLine($"האם יש אימייל: {firstWaitingUser?.Users?.Email != null}");
-
-                    if (firstWaitingUser != null && firstWaitingUser.Users?.Email != null)
+                    if (firstWaitingUser != null)
                     {
-                        try 
+                        firstWaitingUser.IsReserved = true;
+                        firstWaitingUser.ReservationExpiryTime = DateTime.Now.AddHours(4);
+
+                        var otherWaitListItems = await db.WaitList
+                            .Where(w => w.BookID == bookId && w.WaitListID != firstWaitingUser.WaitListID)
+                            .ToListAsync();
+
+                        foreach (var item in otherWaitListItems)
                         {
-                            System.Diagnostics.Debug.WriteLine($"מנסה לשלוח מייל ל: {firstWaitingUser.Users.Email}");
+                            item.IsReserved = false;
+                            item.ReservationExpiryTime = null;
+                        }
+
+                        await db.SaveChangesAsync();
+
+                        if (firstWaitingUser.Users?.Email != null)
+                        {
                             await _emailService.SendBookAvailableNotificationAsync(
                                 firstWaitingUser.Users.Email,
                                 book.Title
                             );
-                            System.Diagnostics.Debug.WriteLine("המייל נשלח בהצלחה");
-                        }
-                        catch (Exception ex)
-                        {
-                            System.Diagnostics.Debug.WriteLine($"שגיאה בשליחת המייל: {ex.Message}");
-                            System.Diagnostics.Debug.WriteLine($"Stack Trace: {ex.StackTrace}");
-                            throw; // זורק את השגיאה הלאה כדי שנוכל לראות אותה
+                            firstWaitingUser.EmailNotificationSent = true;
+                            await db.SaveChangesAsync();
                         }
                     }
                 }
             }
-            catch (Exception ex)
-            {
-                System.Diagnostics.Debug.WriteLine($"שגיאה כללית: {ex.Message}");
-                System.Diagnostics.Debug.WriteLine($"Stack Trace: {ex.StackTrace}");
-                throw;
-            }
-            System.Diagnostics.Debug.WriteLine("=== סיום בדיקת רשימת המתנה ===");
         }
-        [HttpPost]
-        public async Task<ActionResult> ManageRentalAction(int rentalId, string action)
+[HttpPost]
+[ValidateAntiForgeryToken]
+public async Task<JsonResult> CheckRentalEligibility(int bookId)
+{
+    await CleanExpiredReservations();
+
+    try 
+    {
+        int userId = GetCurrentUserId();
+        var book = await db.Books.FindAsync(bookId);
+
+        if (book == null)
         {
-            if (!await IsUserAdmin())
-            {
-                return Json(new { success = false, message = "אין הרשאת מנהל" });
-            }
-
-            try 
-            {
-                var rental = await db.Rentals.FindAsync(rentalId);
-                if (rental == null)
-                {
-                    return Json(new { success = false, message = "ההשאלה לא נמצאה" });
-                }
-
-                switch (action.ToLower())
-                {
-                    case "return":
-                        rental.ReturnDate = DateTime.Now;
-                        var book = await db.Books.FindAsync(rental.BookID);
-                        if (book != null)
-                        {
-                            book.StockQuantityRent += 1;
-                            await CheckAndUpdateWaitList(book.BookID);
-                        }
-                        break;
-
-                    case "extend":
-                        // הוספת זמן להשאלה, למשל עוד 14 יום
-                        rental.RentalDate = rental.RentalDate.Value.AddDays(14);
-                        break;
-
-                    case "cancel":
-                        db.Rentals.Remove(rental);
-                        break;
-
-                    default:
-                        return Json(new { success = false, message = "פעולה לא חוקית" });
-                }
-
-                await db.SaveChangesAsync();
-                return Json(new { success = true, message = $"הפעולה {action} בוצעה בהצלחה" });
-            }
-            catch (Exception ex)
-            {
-                return Json(new { success = false, message = $"אירעה שגיאה: {ex.Message}" });
-            }
+            return Json(new { 
+                success = false, 
+                actionType = "error",
+                message = "הספר לא נמצא"
+            });
         }
 
-        [HttpPost]
-        public async Task<ActionResult> ManageWaitListAction(int waitListId, string action)
+        var currentRentalsCount = await db.Rentals
+            .CountAsync(r => r.UserID == userId && r.ReturnDate == null);
+
+        if (currentRentalsCount >= 3)
         {
-            if (!await IsUserAdmin())
-            {
-                return Json(new { success = false, message = "אין הרשאת מנהל" });
-            }
-
-            try 
-            {
-                var waitListItem = await db.WaitList.FindAsync(waitListId);
-                if (waitListItem == null)
-                {
-                    return Json(new { success = false, message = "הפריט ברשימת ההמתנה לא נמצא" });
-                }
-
-                switch (action.ToLower())
-                {
-                    case "remove":
-                        // הסרת הפריט מרשימת ההמתנה
-                        db.WaitList.Remove(waitListItem);
-                        await db.SaveChangesAsync();
-
-                        // עדכון מיקומים של שאר הפריטים
-                        var remainingUsers = await db.WaitList
-                            .Where(w => w.BookID == waitListItem.BookID)
-                            .OrderBy(w => w.WaitPosition)
-                            .ToListAsync();
-
-                        for (int i = 0; i < remainingUsers.Count; i++)
-                        {
-                            remainingUsers[i].WaitPosition = i + 1;
-                        }
-                        break;
-
-                    case "sendnotification":
-                        // שליחת התראה למשתמש
-                        if (waitListItem.Users?.Email != null)
-                        {
-                            var book = await db.Books.FindAsync(waitListItem.BookID);
-                            await _emailService.SendBookAvailableNotificationAsync(
-                                waitListItem.Users.Email,
-                                book?.Title ?? "ספר"
-                            );
-                            waitListItem.EmailNotificationSent = true;
-                        }
-                        break;
-
-                    default:
-                        return Json(new { success = false, message = "פעולה לא חוקית" });
-                }
-
-                await db.SaveChangesAsync();
-                return Json(new { success = true, message = $"הפעולה {action} בוצעה בהצלחה" });
-            }
-            catch (Exception ex)
-            {
-                return Json(new { success = false, message = $"אירעה שגיאה: {ex.Message}" });
-            }
+            return Json(new { 
+                success = false, 
+                actionType = "error",
+                message = "לא ניתן להשאיל יותר משלושה ספרים בו-זמנית" 
+            });
         }
-        public async Task RemoveFromWaitListAfterRental(int bookId, int userId)
-        {
-            try
-            {
-                // מוצא את הפריט ברשימת ההמתנה של המשתמש
-                var waitListItem = await db.WaitList
-                    .FirstOrDefaultAsync(w => w.BookID == bookId && w.UserID == userId);
 
-                if (waitListItem != null)
+        if (book.IsForRent == true && book.StockQuantityRent > 0)
+        {
+            var firstWaitingUser = await db.WaitList
+                .Where(w => w.BookID == bookId && !w.IsReserved)  
+                .OrderBy(w => w.WaitPosition)
+                .FirstOrDefaultAsync();
+
+            var userActiveReservation = await db.WaitList
+                .FirstOrDefaultAsync(w => w.BookID == bookId && 
+                                        w.UserID == userId && 
+                                        w.IsReserved && 
+                                        w.ReservationExpiryTime > DateTime.Now);
+
+            if (userActiveReservation != null)
+            {
+                return Json(new { 
+                    success = true, 
+                    actionType = "rent",
+                    message = "הספר שמור עבורך להשכרה"
+                });
+            }
+
+            if (firstWaitingUser != null)
+            {
+                if (firstWaitingUser.UserID == userId)
                 {
-                    // מחיקת הפריט מרשימת ההמתנה
-                    db.WaitList.Remove(waitListItem);
+                    firstWaitingUser.IsReserved = true;
+                    firstWaitingUser.ReservationExpiryTime = DateTime.Now.AddHours(4);
+                    
+                    book.StockQuantityRent -= 1;
+                    
+                    db.WaitList.Remove(firstWaitingUser);
+                    
                     await db.SaveChangesAsync();
 
-                    // מציאת כל המשתמשים שעדיין ממתינים לאותו ספר ומיון לפי המיקום הנוכחי
                     var remainingUsers = await db.WaitList
                         .Where(w => w.BookID == bookId)
                         .OrderBy(w => w.WaitPosition)
                         .ToListAsync();
 
-                    // עדכון המיקומים החדשים - התחלה מ-1
                     for (int i = 0; i < remainingUsers.Count; i++)
                     {
                         remainingUsers[i].WaitPosition = i + 1;
-                        // מאפס את סטטוס ההתראה כי המיקום השתנה
+                    }
+
+                    await db.SaveChangesAsync();
+
+                    return Json(new { 
+                        success = true, 
+                        actionType = "rent",
+                        message = "הספר זמין עבורך להשכרה"
+                    });
+                }
+                else
+                {
+                    var userWaitingEntry = await db.WaitList
+                        .FirstOrDefaultAsync(w => w.BookID == bookId && w.UserID == userId);
+
+                    if (userWaitingEntry != null)
+                    {
+                        return Json(new {
+                            success = true,
+                            actionType = "waitlist_info",
+                            message = $"מיקומך ברשימת ההמתנה: {userWaitingEntry.WaitPosition}"
+                        });
+                    }
+                    else
+                    {
+                        var lastPosition = await db.WaitList
+                            .Where(w => w.BookID == bookId)
+                            .Select(w => (int?)w.WaitPosition)
+                            .DefaultIfEmpty(0)
+                            .MaxAsync();
+
+                        var newWaitListItem = new WaitList
+                        {
+                            BookID = bookId,
+                            UserID = userId,
+                            WaitPosition = lastPosition + 1,
+                            AddedDate = DateTime.Now,
+                            EmailNotificationSent = false,
+                            IsRental = true,
+                            IsReserved = false
+                        };
+
+                        db.WaitList.Add(newWaitListItem);
+                        await db.SaveChangesAsync();
+
+                        return Json(new { 
+                            success = true, 
+                            actionType = "waitlist_signup",
+                            message = $"הוספת לרשימת ההמתנה במקום {newWaitListItem.WaitPosition}"
+                        });
+                    }
+                }
+            }
+
+            return Json(new { 
+                success = true, 
+                actionType = "rent",
+                message = "הספר זמין להשכרה"
+            });
+        }
+
+        return Json(new { 
+            success = true, 
+            actionType = "waitlist_signup",
+            message = "הספר אינו זמין כרגע להשכרה"
+        });
+    }
+    catch (Exception ex)
+    {
+        return Json(new { 
+            success = false, 
+            actionType = "error",
+            message = $"אירעה שגיאה: {ex.Message}"
+        });
+    }
+}        
+public async Task RemoveFromWaitListAfterRental(int bookId, int userId)
+        {
+            try
+            {
+                var waitListItem = await db.WaitList
+                    .FirstOrDefaultAsync(w => w.BookID == bookId && w.UserID == userId);
+
+                if (waitListItem != null)
+                {
+                    db.WaitList.Remove(waitListItem);
+                    await db.SaveChangesAsync();
+
+                    var remainingUsers = await db.WaitList
+                        .Where(w => w.BookID == bookId)
+                        .OrderBy(w => w.WaitPosition)
+                        .ToListAsync();
+
+                    for (int i = 0; i < remainingUsers.Count; i++)
+                    {
+                        remainingUsers[i].WaitPosition = i + 1;
                         remainingUsers[i].EmailNotificationSent = false;
                     }
 
                     await db.SaveChangesAsync();
 
-                    // אם יש ספר זמין במלאי, שולח התראה למשתמש הראשון החדש
                     var book = await db.Books.FindAsync(bookId);
                     if (book != null && book.StockQuantityRent > 0)
                     {
@@ -1248,10 +1309,10 @@ public async Task<ActionResult> DeleteFromLibrary(int bookId, string type)
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Debug.WriteLine($"שגיאה בהסרה מרשימת המתנה לאחר השאלה: {ex.Message}");
+                System.Diagnostics.Debug.WriteLine($"שגיאה בהסרה מרשימת המתנה: {ex.Message}");
             }
         }
-        
+
         [HttpGet]
         [AllowAnonymous]
         public async Task<JsonResult> GetPopularBooks(int page = 1, int pageSize = 12)
@@ -1272,7 +1333,7 @@ public async Task<ActionResult> DeleteFromLibrary(int bookId, string type)
                                 .Select(r => (decimal)r.RatingBook.Value)
                                 .DefaultIfEmpty(0m)
                                 .Average()
-                            , 1), // עיגול לספרה אחת אחרי הנקודה
+                            , 1), 
                         ReviewCount = b.Reviews.Count(r => r.RatingBook.HasValue),
                         Reviews = b.Reviews
                             .Where(r => r.RatingBook.HasValue)

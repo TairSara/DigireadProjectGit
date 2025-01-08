@@ -113,6 +113,8 @@
     <Property Name="AddedDate" Type="datetime" />
     <Property Name="EmailNotificationSent" Type="bit" />
     <Property Name="IsRental" Type="bit" />
+    <Property Name="ReservationExpiryTime" Type="datetime" />
+    <Property Name="IsReserved" Type="bit" Nullable="false" />
   </EntityType>
   <EntityType Name="Wishlist">
     <Key>

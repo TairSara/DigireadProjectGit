@@ -17,7 +17,7 @@ function confirmDelete(bookId, type, title) {
 }
 
 function deleteBook(bookId, type) {
-    console.log('מנסה למחוק ספר:', { bookId, type }); // הוספת לוג
+    console.log('מנסה למחוק ספר:', { bookId, type }); 
 
     $.ajax({
         url: '/BookManagement/DeleteFromLibrary',
@@ -28,7 +28,7 @@ function deleteBook(bookId, type) {
             __RequestVerificationToken: $('input[name="__RequestVerificationToken"]').val()
         },
         success: function(response) {
-            console.log('תגובת השרת:', response); // הוספת לוג
+            console.log('תגובת השרת:', response); 
             if (response.success) {
                 Swal.fire({
                     title: 'נמחק!',
@@ -38,7 +38,7 @@ function deleteBook(bookId, type) {
                     location.reload();
                 });
             } else {
-                console.error('שגיאת שרת:', response.message); // הוספת לוג
+                console.error('שגיאת שרת:', response.message);
                 Swal.fire(
                     'שגיאה!',
                     response.message || 'אירעה שגיאה במחיקת הספר',
@@ -47,7 +47,7 @@ function deleteBook(bookId, type) {
             }
         },
         error: function(xhr, status, error) {
-            console.error('שגיאת AJAX:', { status, error, responseText: xhr.responseText }); // הוספת לוג מפורט
+            console.error('שגיאת AJAX:', { status, error, responseText: xhr.responseText }); 
             Swal.fire(
                 'שגיאה!',
                 'אירעה שגיאה במחיקת הספר',

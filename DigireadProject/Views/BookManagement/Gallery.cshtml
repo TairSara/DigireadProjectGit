@@ -5,14 +5,12 @@
 }
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 <main class="gallery-main">
-    <!-- כותרת ראשית -->
     <section class="hero-section">
         <div class="container text-center">
             <h2 class="gallery-title">גלריית ספרים</h2>
         </div>
     </section>
 
-    <!-- אזור החיפוש והסינון -->
     <section class="search-section">
         <div class="container">
             <div class="search-filter-section">
@@ -46,7 +44,6 @@
         </div>
     </section>
 
-    <!-- ניווט ז'אנרים -->
     <section class="genres-section">
         <div class="container">
             <div class="genres-nav">
@@ -65,7 +62,6 @@
         </div>
     </section>
 
-    <!-- גלריית הספרים -->
     <section class="books-gallery-section">
         <div class="container">
             <div class="books-grid" id="booksContainer">
@@ -174,7 +170,7 @@
             bottom: 0;
             left: 50%;
             transform: translateX(-50%);
-            width: 120%;  /* קו ארוך יותר מהטקסט */
+            width: 120%;  
             height: 4px;
             background: linear-gradient(to right, transparent, #6a11cb, transparent);
             border-radius: 2px;
@@ -203,9 +199,9 @@
 
         .search-wrapper {
             position: relative;
-            margin: 0 auto 25px;  /* מרכוז אוטומטי */
-            max-width: 600px;     /* רוחב מקסימלי */
-            text-align: center;   /* מרכוז הטקסט */
+            margin: 0 auto 25px;  
+            max-width: 600px;     
+            text-align: center;   
         }
 
         .search-input {
@@ -227,7 +223,6 @@
             outline: none;
         }
 
-        /* מרכוז הפילטרים */
         .filters-section {
             display: flex;
             justify-content: center;
@@ -237,7 +232,6 @@
             margin-top: 20px;
         }
 
-        /* מרכוז הכותרת */
         .search-filter-section {
             text-align: center;
             padding: 30px;
@@ -513,11 +507,10 @@
         .search-filter-section {
             padding: 20px;
         }
-        /* תיקון העיצוב של הלב */
         .wishlist-heart {
             position: absolute;
             top: 15px;
-            left: 15px;  /* מיקום בצד שמאל */
+            left: 15px;  
             z-index: 3;
             cursor: pointer;
             background: white;
@@ -527,7 +520,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            box-shadow: 0 4px 15px rgba(106, 17, 203, 0.15);  /* צל משופר */
+            box-shadow: 0 4px 15px rgba(106, 17, 203, 0.15); 
             transition: all 0.3s ease;
         }
 
@@ -539,22 +532,20 @@
 
         .wishlist-heart:hover {
             transform: scale(1.1);
-            box-shadow: 0 6px 20px rgba(106, 17, 203, 0.2);  /* צל משופר במצב hover */
+            box-shadow: 0 6px 20px rgba(106, 17, 203, 0.2);  
         }
 
         .wishlist-heart.active {
-            background: #fff5f5;  /* רקע קל בצבע אדום כשפעיל */
-        }
+            background: #fff5f5; 
 
         .wishlist-heart.active i {
             color: #ff4d4d !important;
         }
 
-        /* מיקום מחדש של תגית הגיל אם יש התנגשות */
         .age-restricted-badge {
             position: absolute;
             top: 15px;
-            left: 60px;  /* הזזה ימינה כדי לא להתנגש עם הלב */
+            left: 60px;  
             background: #2c3e50;
             color: white;
             width: 35px;
@@ -565,6 +556,7 @@
             border-radius: 50%;
             font-weight: bold;
             z-index: 2;
+        }
         }
     </style>
 

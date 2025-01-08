@@ -135,7 +135,7 @@ class PasswordValidator {
         const password = this.passwordInput.value;
         if (!password) {
             this.requirements.style.display = "none";
-            return true; // אם הסיסמה ריקה (לא משנים סיסמה), זה תקין
+            return true;
         }
 
         this.requirements.style.display = "block";

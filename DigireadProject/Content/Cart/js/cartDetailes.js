@@ -1,12 +1,10 @@
 let currentCartId = null;
 
 $(document).ready(function() {
-    // טיפול בכפתורי סגירת המודל
     $('.close-modal').click(function() {
         closeModal();
     });
 
-    // סגירת המודל בלחיצה מחוץ לו
     window.onclick = function(event) {
         const modal = document.getElementById('confirmDeleteModal');
         if (event.target === modal) {
@@ -14,7 +12,6 @@ $(document).ready(function() {
         }
     }
 
-    // טיפול בכפתור אישור מחיקה
     $('#confirmDelete').click(function() {
         if (!currentCartId) return;
 
@@ -196,13 +193,11 @@ function completePurchase() {
         .attr('method', 'POST')
         .attr('action', '/Order/CompletePurchase');
 
-    // טוקן אבטחה
     form.append($('<input>')
         .attr('type', 'hidden')
         .attr('name', '__RequestVerificationToken')
         .val(token));
 
-    // הוספת פריטי העגלה
     $('.cart-item').each(function(index) {
         var cartId = $(this).attr('id').replace('cart-row-', '');
         var quantity = parseInt($(`#quantity-${cartId}`).text());

@@ -83,21 +83,54 @@ namespace DigireadProject.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<ActionResult> DeleteUser(int userId)
         {
-            if (!await IsUserAdmin())
+            try 
             {
-                return Json(new { success = false, message = "אין הרשאת מנהל" });
-            }
+                if (!await IsUserAdmin())
+                {
+                    return Json(new { success = false, message = "אין הרשאת מנהל" });
+                }
 
-            var user = await db.Users.FindAsync(userId);
-            if (user != null)
-            {
+                var user = await db.Users.FindAsync(userId);
+                if (user == null)
+                {
+                    return Json(new { success = false, message = "המשתמש לא נמצא" });
+                }
+                
+                var waitListEntries = db.WaitList.Where(w => w.UserID == userId);
+                db.WaitList.RemoveRange(waitListEntries);
+
+                var wishlistEntries = db.Wishlist.Where(w => w.UserID == userId);
+                db.Wishlist.RemoveRange(wishlistEntries);
+
+                var reviews = db.Reviews.Where(r => r.UserID == userId);
+                db.Reviews.RemoveRange(reviews);
+                
+
+                var rentals = db.Rentals.Where(r => r.UserID == userId);
+                db.Rentals.RemoveRange(rentals);
+
+                var purchases = db.Purchases.Where(p => p.UserID == userId);
+                db.Purchases.RemoveRange(purchases);
+
                 db.Users.Remove(user);
+        
                 await db.SaveChangesAsync();
                 return Json(new { success = true });
             }
-            return Json(new { success = false });
+            catch (Exception ex)
+            {
+                
+                System.Diagnostics.Debug.WriteLine($"שגיאה במחיקת משתמש: {ex.Message}");
+                System.Diagnostics.Debug.WriteLine($"פרטי השגיאה: {ex.StackTrace}");
+        
+                return Json(new { 
+                    success = false, 
+                    message = "אירעה שגיאה במחיקת המשתמש: " + ex.Message
+                });
+            }
         }
 
         [HttpPost]

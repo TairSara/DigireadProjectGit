@@ -248,7 +248,6 @@ C:\Users\tairt\source\DigireadProjectgit\DigireadProject\obj\Debug\DigireadProje
 C:\Users\tairt\source\DigireadProjectgit\DigireadProject\obj\Debug\DigireadProject.csproj.CoreCompileInputs.cache
 C:\Users\tairt\source\DigireadProjectgit\DigireadProject\obj\Debug\DigireadProject.dll
 C:\Users\tairt\source\DigireadProjectgit\DigireadProject\obj\Debug\DigireadProject.pdb
-C:\Users\tairt\source\DigireadProjectgit\DigireadProject\obj\Debug\Digiread.D7DC0D9E.Up2Date
 C:\Users\noamd\RiderProjects\DigireadProjectGit\DigireadProject\bin\Content\DigiRead\1.png
 C:\Users\noamd\RiderProjects\DigireadProjectGit\DigireadProject\bin\Content\DigiRead\main.png
 C:\Users\noamd\RiderProjects\DigireadProjectGit\DigireadProject\bin\DigireadProject.dll
@@ -375,3 +374,4 @@ C:\Users\noamd\RiderProjects\DigireadProjectGit\DigireadProject\obj\Debug\Digire
 C:\Users\noamd\RiderProjects\DigireadProjectGit\DigireadProject\obj\Debug\Digiread.D7DC0D9E.Up2Date
 C:\Users\noamd\RiderProjects\DigireadProjectGit\DigireadProject\obj\Debug\DigireadProject.dll
 C:\Users\noamd\RiderProjects\DigireadProjectGit\DigireadProject\obj\Debug\DigireadProject.pdb
+C:\Users\tairt\source\DigireadProjectgit\DigireadProject\obj\Debug\Digiread.D7DC0D9E.Up2Date

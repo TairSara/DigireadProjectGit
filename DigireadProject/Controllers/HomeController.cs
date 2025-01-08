@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using DigireadProject.Models.ViewModels;
@@ -11,8 +13,10 @@ namespace DigireadProject.Controllers
     {
         private readonly libraryProject_digireadEntities db = new libraryProject_digireadEntities();
         
-        public ActionResult HomePage()
+        public async Task<ActionResult> HomePage()
         {
+            ViewBag.TotalBooks = await db.Books.CountAsync();
+
             var popularBooks = db.Books
                 .Where(b => b.Reviews.Any(r => r.RatingBook.HasValue))
                 .Select(b => new
@@ -53,7 +57,6 @@ namespace DigireadProject.Controllers
                 })
                 .ToList();
 
-            // שאילתה לספרים במבצע
             var onSaleBooks = db.Books
                 .Where(b => b.PurchasePrice.HasValue && 
                             b.OriginalPrice.HasValue && 
@@ -71,7 +74,6 @@ namespace DigireadProject.Controllers
                 })
                 .ToList();
 
-            // שאילתה לספרי רומן בסדרות
             var romanceSeriesIds = new[] { 21,22,301,302 };
             var romanceSeries = db.Books
                 .Where(b => romanceSeriesIds.Contains(b.BookID))
@@ -90,7 +92,6 @@ namespace DigireadProject.Controllers
                 })
                 .ToList();
 
-            // שאילתה לספרי מדע בדיוני בסדרות
             var scifiSeriesIds = new[] { 13,14,15,16,17,18 };
             var scifiSeries = db.Books
                 .Where(b => scifiSeriesIds.Contains(b.BookID))
@@ -122,7 +123,6 @@ namespace DigireadProject.Controllers
                 .Take(6)
                 .ToList();
 
-            // העברת כל הרשימות ל-ViewModel
             return View(new HomeViewModel
             { 
                 PopularBooks = popularBooks,

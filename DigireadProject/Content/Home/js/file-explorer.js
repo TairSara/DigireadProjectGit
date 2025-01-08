@@ -1,7 +1,6 @@
 ﻿document.addEventListener("DOMContentLoaded", () => {
     console.log("DigiRead page loaded!");
 
-    // יצירת מודל לפרטי ספר
     const createBookModal = () => {
         const modal = document.createElement('div');
         modal.className = 'book-preview-modal';
@@ -26,7 +25,6 @@
         </div>
         `;
 
-        // הוספת סגנון CSS למודל
         const style = document.createElement('style');
         style.textContent = `
         .book-preview-modal {
@@ -139,10 +137,8 @@
         return modal;
     };
 
-    // יצירת המודל
     const modal = createBookModal();
 
-    // פונקציית סגירת המודל
     const closeModal = () => {
         modal.style.opacity = '0';
         modal.querySelector('.preview-content').style.transform = 'translateY(30px)';
@@ -151,7 +147,6 @@
         }, 300);
     };
 
-    // הוספת מאזיני אירועים למודל
     modal.querySelector('.close-preview').addEventListener('click', closeModal);
     modal.addEventListener('click', (e) => {
         if (e.target === modal) closeModal();
@@ -163,7 +158,6 @@
         }
     });
 
-    // פונקציה להצגת פרטי ספר
     function showBookDetails(card) {
         const bookData = {
             image: card.querySelector('.book-image img').src,
@@ -198,7 +192,6 @@
         }, 10);
     }
 
-    // הוספת מאזיני אירועים לכרטיסי ספרים
     document.querySelectorAll('.book-card').forEach(card => {
         card.addEventListener('click', (e) => {
             e.preventDefault();
@@ -215,7 +208,6 @@
             this.isAnimating = false;
             this.autoplayInterval = null;
 
-            // הפיכת סדר הספרים כך שהחדשים יהיו מימין
             this.books.reverse();
             this.books.forEach(book => {
                 this.container.appendChild(book);
@@ -380,14 +372,12 @@
         }
     }
 
-    // אתחול הקרוסלות
     const popularBooksGrid = document.querySelector('.popular-books-section .books-grid');
     const saleBooksGrid = document.querySelector('.sale-books-section .books-grid');
 
     if (popularBooksGrid) {
         const popularCarousel = new EnhancedBookCarousel(popularBooksGrid);
 
-        // הוספת מאזיני אירועים לכרטיסי הספרים בקרוסלה
         popularBooksGrid.querySelectorAll('.book-card').forEach(card => {
             card.addEventListener('click', (e) => {
                 e.preventDefault();
@@ -399,7 +389,6 @@
     if (saleBooksGrid) {
         const saleCarousel = new EnhancedBookCarousel(saleBooksGrid);
 
-        // הוספת מאזיני אירועים לכרטיסי הספרים בקרוסלה
         saleBooksGrid.querySelectorAll('.book-card').forEach(card => {
             card.addEventListener('click', (e) => {
                 e.preventDefault();

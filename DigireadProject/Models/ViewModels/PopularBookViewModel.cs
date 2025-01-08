@@ -13,7 +13,7 @@ namespace DigireadProject.Models.ViewModels
         public decimal OriginalPrice { get; set; }
         public Nullable<decimal> PurchasePrice { get; set; }
 
-        public decimal AverageRating { get; set; }  // שינוי מ-decimal? ל-decimal
+        public decimal AverageRating { get; set; }  
         public int ReviewCount { get; set; }
         public List<ReviewDetails> Reviews { get; set; }
 

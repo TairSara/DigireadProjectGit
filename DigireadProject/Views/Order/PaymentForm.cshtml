@@ -11,42 +11,13 @@
         </div>
 
         <div class="book-summary">
-            @for (int i = 0; i < Model.CartItems.Count; i++)
+            @foreach (var item in Model.CartItems)
             {
-                var item = Model.CartItems[i];
-                <div class="cart-item" data-item-index="@i">
+                <div class="cart-item">
                     <img src="@item.BookImageSrc" alt="@item.BookTitle" class="book-thumbnail" />
                     <div class="book-details">
                         <h3>@item.BookTitle</h3>
-                        <div class="transaction-type-selector">
-                            <div class="form-check">
-                                @Html.RadioButtonFor(m => m.CartItems[i].IsRental, false, new {
-                                    @class = "form-check-input transaction-type-radio",
-                                    data_book_id = item.BookId,
-                                    data_purchase_price = item.PurchasePrice,
-                                    data_rental_price = item.RentalPrice,
-                                    id = $"purchase-{item.BookId}"
-                                })
-                                <label class="form-check-label" for="purchase-@item.BookId">
-                                    רכישה (₪@item.PurchasePrice)
-                                </label>
-                            </div>
-                            @if (item.CanBeRented)
-                            {
-                                <div class="form-check">
-                                    @Html.RadioButtonFor(m => m.CartItems[i].IsRental, true, new {
-                                        @class = "form-check-input transaction-type-radio",
-                                        data_book_id = item.BookId,
-                                        data_purchase_price = item.PurchasePrice,
-                                        data_rental_price = item.RentalPrice,
-                                        id = $"rental-{item.BookId}"
-                                    })
-                                    <label class="form-check-label" for="rental-@item.BookId">
-                                        השכרה (₪@item.RentalPrice)
-                                    </label>
-                                </div>
-                            }
-                        </div>
+                        <p class="transaction-type">@(item.IsRental ? "השכרה" : "רכישה")</p>
                         <p>כמות: @item.Quantity</p>
                         <p class="price">₪@item.Price</p>
                     </div>
@@ -68,11 +39,8 @@
                 @Html.HiddenFor(m => m.CartItems[i].BookTitle)
                 @Html.HiddenFor(m => m.CartItems[i].BookImageSrc)
                 @Html.HiddenFor(m => m.CartItems[i].Price)
-                @Html.HiddenFor(m => m.CartItems[i].PurchasePrice)
-                @Html.HiddenFor(m => m.CartItems[i].RentalPrice)
                 @Html.HiddenFor(m => m.CartItems[i].Quantity)
                 @Html.HiddenFor(m => m.CartItems[i].IsRental)
-                @Html.HiddenFor(m => m.CartItems[i].CanBeRented)
             }
 
             <div class="form-group">
@@ -131,7 +99,6 @@
         }
     </div>
 </div>
-
 <style>
     .payment-container {
         background-color: #f4ecf7;
@@ -222,27 +189,9 @@
         box-shadow: 0 0 0 0.2rem rgba(142, 68, 173, 0.25);
     }
 
-    .transaction-type-selector {
-        margin: 10px 0;
-        display: flex;
-        gap: 15px;
-    }
-
-    .form-check {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        margin: 0;
-    }
-
-    .form-check-input {
-        margin: 0;
-    }
-
-    .form-check-label {
-        margin: 0;
+    .transaction-type {
         color: #666;
-        cursor: pointer;
+        font-size: 0.9rem;
     }
 
     .btn-primary {
@@ -283,6 +232,8 @@
         margin-bottom: 1rem;
     }
 
+
+
     .shake {
         animation: shake 0.5s ease-in-out;
     }
@@ -294,37 +245,67 @@
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
-    <script>
-        $(document).ready(function() {
-            $('.transaction-type-radio').change(function() {
-                var $cartItem = $(this).closest('.cart-item');
-                var isRental = $(this).val() === 'True';
-                var itemIndex = $cartItem.data('item-index');
-                var purchasePrice = parseFloat($(this).data('purchase-price'));
-                var rentalPrice = parseFloat($(this).data('rental-price'));
-                var price = isRental ? rentalPrice : purchasePrice;
+    <script src="~/Content/Order/js/payment.js"></script>
 
-                // עדכון המחיר המוצג לפריט
-                $cartItem.find('.price').text('₪' + price.toFixed(2));
-
-                // עדכון שדה המחיר המוסתר
-                $(`input[name="CartItems[${itemIndex}].Price"]`).val(price);
-                $(`input[name="CartItems[${itemIndex}].IsRental"]`).val(isRental);
-
-                // חישוב מחדש של הסכום הכולל
-                updateTotalAmount();
-            });
-
-            function updateTotalAmount() {
-                var totalAmount = 0;
-                $('.cart-item').each(function() {
-                    var price = parseFloat($(this).find('.price').text().replace('₪', ''));
-                    var quantity = parseInt($(this).find('input[name$=".Quantity"]').val());
-                    totalAmount += price * quantity;
+<script>
+    // בדיקה האם יש מידע על רשימת המתנה
+    @if (TempData["WaitListInfo"] != null)
+    {
+        <text>
+            $(document).ready(function() {
+                var waitListInfo = @Html.Raw(Json.Encode(TempData["WaitListInfo"]));
+                Swal.fire({
+                    title: 'הספר אינו זמין',
+                    html: `
+                        <div dir="rtl" class="text-right">
+                            <p>הספר ${waitListInfo.BookTitle} אינו זמין כרגע ${waitListInfo.IsRental ? 'להשכרה' : 'לרכישה'}.</p>
+                            <p>ישנם ${waitListInfo.WaitingCount} אנשים ברשימת ההמתנה.</p>
+                            <p>המיקום שלך יהיה: ${waitListInfo.WaitingCount + 1}</p>
+                            <p>האם ברצונך להצטרף לרשימת ההמתנה?</p>
+                        </div>
+                    `,
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonText: 'הצטרף לרשימת המתנה',
+                    cancelButtonText: 'לא תודה',
+                    reverseButtons: true
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $.ajax({
+                            url: '@Url.Action("JoinWaitList", "Order")',
+                            type: 'POST',
+                            data: {
+                                bookId: waitListInfo.BookId,
+                                isRental: waitListInfo.IsRental,
+                                __RequestVerificationToken: $('input[name="__RequestVerificationToken"]').val()
+                            },
+                            success: function(response) {
+                                if (response.success) {
+                                    Swal.fire({
+                                        icon: 'success',
+                                        title: 'נוספת בהצלחה!',
+                                        text: response.message,
+                                        confirmButtonText: 'אישור'
+                                    }).then(() => {
+                                        window.location.href = response.redirectUrl;
+                                    });
+                                } else {
+                                    Swal.fire({
+                                        icon: 'error',
+                                        title: 'שגיאה',
+                                        text: response.message,
+                                        confirmButtonText: 'אישור'
+                                    });
+                                }
+                            }
+                        });
+                    } else {
+                        window.location.href = '@Url.Action("BookDetails", "BookManagement", new { id = "BOOK_ID" })'.replace('BOOK_ID', waitListInfo.BookId);
+                    }
                 });
-
-                $('.total-amount').text('סה"כ לתשלום: ₪' + totalAmount.toFixed(2));
-            }
-        });
-    </script>
+            });
+        </text>
+    }
+</script>
+}
 }

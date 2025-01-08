@@ -118,6 +118,8 @@
           <Property Name="AddedDate" Type="datetime" />
           <Property Name="EmailNotificationSent" Type="bit" />
           <Property Name="IsRental" Type="bit" />
+          <Property Name="ReservationExpiryTime" Type="datetime" />
+          <Property Name="IsReserved" Type="bit" Nullable="false" />
         </EntityType>
         <EntityType Name="Wishlist">
           <Key>
@@ -464,6 +466,8 @@ warning 6002: The table/view 'libraryProject_digiread.sys.database_firewall_rule
           <NavigationProperty Name="Users" Relationship="Self.FK__WaitList__UserID__07C12930" FromRole="WaitList" ToRole="Users" />
           <NavigationProperty Name="Books" Relationship="libraryProject_digireadModel.FK__WaitList__BookID__06CD04F7" FromRole="WaitList" ToRole="Books" />
           <Property Name="IsRental" Type="Boolean" />
+          <Property Name="ReservationExpiryTime" Type="DateTime" Precision="3" />
+          <Property Name="IsReserved" Type="Boolean" Nullable="false" />
         </EntityType>
         <Association Name="FK__Purchases__UserI__00200768">
           <End Role="Users" Type="Self.Users" Multiplicity="0..1" />
@@ -819,6 +823,8 @@ warning 6002: The table/view 'libraryProject_digiread.sys.database_firewall_rule
           <EntitySetMapping Name="WaitList">
             <EntityTypeMapping TypeName="libraryProject_digireadModel.WaitList">
               <MappingFragment StoreEntitySet="WaitList">
+                <ScalarProperty Name="IsReserved" ColumnName="IsReserved" />
+                <ScalarProperty Name="ReservationExpiryTime" ColumnName="ReservationExpiryTime" />
                 <ScalarProperty Name="IsRental" ColumnName="IsRental" />
                 <ScalarProperty Name="WaitListID" ColumnName="WaitListID" />
                 <ScalarProperty Name="BookID" ColumnName="BookID" />

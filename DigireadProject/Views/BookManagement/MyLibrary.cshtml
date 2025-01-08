@@ -321,7 +321,6 @@
     
     <script>
         $(document).ready(function() {
-            // בדיקת כל הספרים שבספרייה
             $('.rate-btn').each(function() {
                 const $button = $(this);
                 const bookId = $button.data('book-id');
@@ -335,7 +334,6 @@
                 });
             });
 
-            // הוספת טיפול באירוע לחיצה על כפתור הדירוג
             $('.rate-btn').on('click', function() {
                 if (!$(this).hasClass('already-rated')) {
                     const bookId = $(this).data('book-id');
@@ -363,7 +361,7 @@
         }
 
         function deleteBook(bookId, type) {
-            console.log('מנסה למחוק ספר:', { bookId, type }); // הוספת לוג
+            console.log('מנסה למחוק ספר:', { bookId, type }); 
 
             $.ajax({
                 url: '/BookManagement/DeleteFromLibrary',
@@ -374,7 +372,7 @@
                     __RequestVerificationToken: $('input[name="__RequestVerificationToken"]').val()
                 },
                 success: function(response) {
-                    console.log('תגובת השרת:', response); // הוספת לוג
+                    console.log('תגובת השרת:', response); 
                     if (response.success) {
                         Swal.fire({
                             title: 'נמחק!',
@@ -384,7 +382,7 @@
                             location.reload();
                         });
                     } else {
-                        console.error('שגיאת שרת:', response.message); // הוספת לוג
+                        console.error('שגיאת שרת:', response.message); 
                         Swal.fire(
                             'שגיאה!',
                             response.message || 'אירעה שגיאה במחיקת הספר',
@@ -393,7 +391,7 @@
                     }
                 },
                 error: function(xhr, status, error) {
-                    console.error('שגיאת AJAX:', { status, error, responseText: xhr.responseText }); // הוספת לוג מפורט
+                    console.error('שגיאת AJAX:', { status, error, responseText: xhr.responseText }); 
                     Swal.fire(
                         'שגיאה!',
                         'אירעה שגיאה במחיקת הספר',
@@ -465,7 +463,6 @@
 
         function showRatingDialog(bookId, title) {
             console.log('Opening rating dialog for:', {bookId, title});
-            // בדיקה האם המשתמש כבר דירג את הספר
             $.get('/Reviews/HasUserReviewedBook', {bookId: bookId}, function (response) {
                 if (response.hasReviewed) {
                     Swal.fire({
@@ -520,7 +517,6 @@
                                 ratingText.textContent = ratingDescriptions[rating - 1];
                             });
 
-                            // טיפול בלחיצה
                             star.addEventListener('click', () => {
                                 currentRating = parseInt(star.dataset.rating);
                                 stars.forEach((s, index) => {
@@ -633,7 +629,6 @@
             }
 
             $(document).ready(function () {
-                // הוספת טיפול באירוע לחיצה על כפתור הדירוג
                 $('.rate-btn').on('click', function () {
                     const bookId = $(this).data('book-id');
                     const bookTitle = $(this).data('book-title');

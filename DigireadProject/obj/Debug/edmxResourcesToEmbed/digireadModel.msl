@@ -84,6 +84,8 @@
     <EntitySetMapping Name="WaitList">
       <EntityTypeMapping TypeName="libraryProject_digireadModel.WaitList">
         <MappingFragment StoreEntitySet="WaitList">
+          <ScalarProperty Name="IsReserved" ColumnName="IsReserved" />
+          <ScalarProperty Name="ReservationExpiryTime" ColumnName="ReservationExpiryTime" />
           <ScalarProperty Name="IsRental" ColumnName="IsRental" />
           <ScalarProperty Name="WaitListID" ColumnName="WaitListID" />
           <ScalarProperty Name="BookID" ColumnName="BookID" />

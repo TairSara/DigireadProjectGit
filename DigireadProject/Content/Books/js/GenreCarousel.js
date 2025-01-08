@@ -1,8 +1,8 @@
 ﻿function scrollCarousel(direction) {
     const carousel = document.getElementById('genresCarousel');
     const containerWidth = carousel.clientWidth;
-    const itemWidth = carousel.querySelector('.genre-container').offsetWidth + 10; // רוחב הפריט + מרווח
-    const scrollAmount = containerWidth; // גלילה בגודל הקונטיינר
+    const itemWidth = carousel.querySelector('.genre-container').offsetWidth + 10; 
+    const scrollAmount = containerWidth;
 
     if (direction === 'right') {
         carousel.scrollLeft -= scrollAmount;

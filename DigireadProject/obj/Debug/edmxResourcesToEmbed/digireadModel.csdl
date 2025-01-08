@@ -101,6 +101,8 @@
     <NavigationProperty Name="Users" Relationship="Self.FK__WaitList__UserID__07C12930" FromRole="WaitList" ToRole="Users" />
     <NavigationProperty Name="Books" Relationship="libraryProject_digireadModel.FK__WaitList__BookID__06CD04F7" FromRole="WaitList" ToRole="Books" />
     <Property Name="IsRental" Type="Boolean" />
+    <Property Name="ReservationExpiryTime" Type="DateTime" Precision="3" />
+    <Property Name="IsReserved" Type="Boolean" Nullable="false" />
   </EntityType>
   <Association Name="FK__Purchases__UserI__00200768">
     <End Role="Users" Type="Self.Users" Multiplicity="0..1" />

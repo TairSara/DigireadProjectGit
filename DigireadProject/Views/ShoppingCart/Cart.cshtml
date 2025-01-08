@@ -1,12 +1,250 @@
 ﻿@model IEnumerable<DigireadProject.ShoppingCart>
 
-@section Styles {
-    <link href="~/Content/Cart/css/cartStyle.css" rel="stylesheet" />
-}
+<style>
+    .cart-container {
+        max-width: 1200px;
+        margin: 2rem auto;
+        padding: 0 1rem;
+        direction: rtl;
+        background-color: #f8f5ff;
+    }
 
-@{
-    ViewBag.Title = "עגלת קניות";
-}
+    .cart-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 2rem;
+        padding-bottom: 1rem;
+        border-bottom: 1px solid #9580ff;
+    }
+
+    .cart-header h2 {
+        margin: 0;
+        font-size: 1.8rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        color: #6c50e8;
+    }
+
+    .items-count {
+        color: #7b6d9e;
+        font-size: 1.1rem;
+    }
+
+    .cart-content {
+        display: grid;
+        grid-template-columns: 1fr 350px;
+        gap: 2rem;
+    }
+
+    .cart-items {
+        background: #fff;
+        border-radius: 8px;
+        box-shadow: 0 4px 15px rgba(149, 128, 255, 0.1);
+    }
+
+    .cart-item {
+        display: grid;
+        grid-template-columns: auto 1fr auto auto;
+        gap: 1.5rem;
+        padding: 1.5rem;
+        border-bottom: 1px solid #e6e0ff;
+        align-items: center;
+    }
+
+    .item-image {
+        width: 100px;
+    }
+
+    .book-thumbnail {
+        width: 100px;
+        height: 140px;
+        object-fit: cover;
+        border-radius: 8px;
+        box-shadow: 0 4px 15px rgba(149, 128, 255, 0.2);
+        transition: transform 0.3s ease;
+    }
+
+    .book-thumbnail:hover {
+        transform: scale(1.05);
+    }
+
+    .item-details {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .item-title {
+        margin: 0;
+        font-size: 1.2rem;
+        color: #6c50e8;
+        font-weight: 600;
+    }
+
+    .item-type {
+        color: #7b6d9e;
+        font-size: 0.9rem;
+    }
+
+    .transaction-type {
+        margin: 8px 0;
+    }
+
+    .transaction-select {
+        padding: 6px 12px;
+        border: 1px solid #9580ff;
+        border-radius: 4px;
+        background-color: #f4ecff;
+        color: #6c50e8;
+        font-size: 0.9rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        width: 120px;
+    }
+
+    .transaction-select:hover {
+        border-color: #6c50e8;
+        background-color: #e6e0ff;
+    }
+
+    .transaction-select:focus {
+        outline: none;
+        box-shadow: 0 0 0 2px rgba(149, 128, 255, 0.2);
+    }
+
+    .item-quantity {
+        color: #7b6d9e;
+        font-size: 0.9rem;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
+
+    .quantity-controls {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .quantity-btn {
+        background-color: #f4ecff;
+        border: 1px solid #9580ff;
+        color: #6c50e8;
+        width: 24px;
+        height: 24px;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .quantity-btn:hover {
+        background-color: #9580ff;
+        color: white;
+    }
+
+    .item-price {
+        text-align: left;
+    }
+
+    .price {
+        font-size: 1.2rem;
+        color: #6c50e8;
+        font-weight: bold;
+    }
+
+    .total {
+        color: #7b6d9e;
+        font-size: 0.9rem;
+        margin-top: 0.5rem;
+    }
+
+    .cart-summary {
+        background: #fff;
+        border-radius: 8px;
+        box-shadow: 0 4px 15px rgba(149, 128, 255, 0.15);
+        align-self: start;
+        position: sticky;
+        top: 2rem;
+    }
+
+    .summary-header {
+        padding: 1.5rem;
+        border-bottom: 1px solid #e6e0ff;
+    }
+
+    .summary-content {
+        padding: 1.5rem;
+    }
+
+    .summary-row {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 1rem;
+        color: #7b6d9e;
+    }
+
+    .summary-row.total {
+        color: #6c50e8;
+        font-size: 1.2rem;
+        font-weight: bold;
+        border-top: 1px solid #e6e0ff;
+        padding-top: 1rem;
+        margin-top: 1rem;
+    }
+
+    .checkout-btn {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 0.5rem;
+        width: 100%;
+        padding: 1rem;
+        background-color: #9580ff;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .checkout-btn:hover {
+        background-color: #6c50e8;
+        transform: translateY(-2px);
+    }
+
+    .message {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        padding: 1rem 1.5rem;
+        border-radius: 8px;
+        display: none;
+        z-index: 1000;
+        direction: rtl;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .success-message {
+        background-color: #f4ecff;
+        color: #6c50e8;
+        border: 1px solid #9580ff;
+    }
+
+    .error-message {
+        background-color: #ffe6f0;
+        color: #d63384;
+        border: 1px solid #ffb3d1;
+    }
+
+</style>
+
 <div id="cartContainer">
     @Html.AntiForgeryToken()
 
@@ -37,7 +275,20 @@
                         </div>
                         <div class="item-details">
                             <h3 class="item-title">@item.Books.Title</h3>
-                            <div class="item-type">@(item.IsRental.GetValueOrDefault() ? "השכרה" : "קנייה")</div>
+                            @if (item.Books.IsForRent.GetValueOrDefault() && item.Books.IsAvailable.GetValueOrDefault())
+                            {
+                                <div class="transaction-type">
+                                    <select class="transaction-select"
+                                            onchange="updateTransactionType(@item.CartID, this.value === 'rental')">
+                                        <option value="purchase" @(item.IsRental.GetValueOrDefault() ? "" : "selected")>רכישה</option>
+                                        <option value="rental" @(item.IsRental.GetValueOrDefault() ? "selected" : "")>השכרה</option>
+                                    </select>
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="item-type">@(item.IsRental.GetValueOrDefault() ? "השכרה" : "קנייה")</div>
+                            }
                             <div class="item-quantity">
                                 <span>כמות:</span>
                                 <div class="quantity-controls">
@@ -45,13 +296,13 @@
                                             onclick="decreaseQuantity(@item.CartID, @item.Quantity)">-</button>
                                     <span id="quantity-@item.CartID">@item.Quantity</span>
                                     <button type="button" class="quantity-btn"
-                                            onclick="increaseQuantity(@item.CartID, @item.Quantity, @item.Books.StockQuantity)">+</button>
+                                            onclick="increaseQuantity(@item.CartID, @item.Quantity)">+</button>
                                 </div>
                             </div>
                         </div>
                         <div class="item-price">
-                            <div class="price">@item.Price.Value.ToString("C")</div>
-                            <div class="total">סה"כ: @((item.Price * item.Quantity).Value.ToString("C"))</div>
+                            <div class="price">₪@item.Price.Value.ToString("F2")</div>
+                            <div class="total">סה"כ: ₪@((item.Price * item.Quantity).Value.ToString("F2"))</div>
                         </div>
                         <button type="button" onclick="removeFromCart(@item.CartID)" class="remove-btn">
                             <i class="fas fa-trash"></i>
@@ -71,7 +322,7 @@
                     </div>
                     <div class="summary-row total">
                         <span>סה"כ לתשלום</span>
-                        <span>@Model.Sum(x => x.Price * x.Quantity).Value.ToString("C")</span>
+                        <span>₪@Model.Sum(x => x.Price * x.Quantity).Value.ToString("F2")</span>
                     </div>
                     @if (Model.Any())
                     {
@@ -87,22 +338,6 @@
     </div>
 </div>
 
-<!-- Modal for delete confirmation -->
-<div class="modal" id="confirmDeleteModal" tabindex="-1">
-    <div class="modal-dialog">
-        <div class="modal-content">
-           
-            <div class="modal-body">
-                האם אתה בטוח שברצונך להסיר ספר זה מהסל?
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary close-modal">ביטול</button>
-                <button type="button" class="btn btn-danger" id="confirmDelete">מחק</button>
-            </div>
-        </div>
-    </div>
-</div>
-
 <div id="successMessage" class="message success-message">
     <i class="fas fa-check-circle"></i>
     <span class="message-text">הפעולה בוצעה בהצלחה!</span>
@@ -112,6 +347,7 @@
     <i class="fas fa-exclamation-circle"></i>
     <span class="message-text">אירעה שגיאה בביצוע הפעולה</span>
 </div>
+
 
 @section Scripts {
     <script src="https://www.paypal.com/sdk/js?client-id=@ViewBag.PaypalClientId&currency=ILS"></script>
@@ -145,6 +381,67 @@
                     });
             }
         }).render('#paypal-button-container');
+        function updateTransactionType(cartId, isRental) {
+            const token = $('input[name="__RequestVerificationToken"]').val();
+
+            $.ajax({
+                url: '/ShoppingCart/UpdateTransactionType',
+                type: 'POST',
+                data: {
+                    cartId: cartId,
+                    isRental: isRental,
+                    __RequestVerificationToken: token
+                },
+                success: function(response) {
+                    if (response.success) {
+                        const cartItem = $(`#cart-row-${cartId}`);
+                        // עדכון המחיר
+                        cartItem.find('.price').text('₪' + response.newPrice.toFixed(2));
+                        // עדכון הסה"כ
+                        cartItem.find('.total').text('סה"כ: ₪' + response.totalPrice.toFixed(2));
+
+                        // עדכון סיכום העגלה
+                        $('.summary-row.total span:last').text('₪' + response.cartTotal.toFixed(2));
+                        $('.items-count').text(response.itemsCount + ' פריטים');
+
+                        showSuccessMessage('סוג העסקה עודכן בהצלחה');
+                    } else {
+                        showErrorMessage(response.message);
+                        // החזרת הselect למצב הקודם במקרה של שגיאה
+                        const select = $(`#cart-row-${cartId}`).find('.transaction-select');
+                        select.val(isRental ? 'rental' : 'purchase');
+                    }
+                },
+                error: function() {
+                    showErrorMessage('אירעה שגיאה בעדכון סוג העסקה');
+                    // החזרת הselect למצב הקודם במקרה של שגיאה
+                    const select = $(`#cart-row-${cartId}`).find('.transaction-select');
+                    select.val(isRental ? 'rental' : 'purchase');
+                }
+            });
+        }
+
+        function showSuccessMessage(message) {
+            const messageElement = $('#successMessage');
+            messageElement.find('.message-text').text(message);
+            messageElement.css('display', 'flex').fadeIn();
+            setTimeout(() => {
+                messageElement.fadeOut();
+            }, 3000);
+        }
+
+        function showErrorMessage(message) {
+            const messageElement = $('#errorMessage');
+            messageElement.find('.message-text').text(message);
+            messageElement.css('display', 'flex').fadeIn();
+            setTimeout(() => {
+                messageElement.fadeOut();
+            }, 3000);
+        }
+
+        function completePurchase() {
+            window.location.href = '/Order/PaymentForm';
+        }
     </script>
 
 }

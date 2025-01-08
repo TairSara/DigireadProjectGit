@@ -6,16 +6,18 @@
 <main>
     <section class="welcome-section">
         <img src="~/Content/DigiRead/1.png" alt="תמונת ספרייה" class="library-poster" />
+   
     </section>
 
     <section class="popular-books-section">
+      
         <h2>ספרים פופולריים</h2>
         <div class="books-grid">
             @foreach (var book in Model.PopularBooks)
             {
                 <div class="book-card">
                     <div class="book-image">
-                        <img src="@book.ImageSrc" alt="@book.Title" />
+                        <img src="@book.ImageSrc" alt="@book.Title"/>
                     </div>
                     <div class="book-info">
                         <h3 class="book-title">@book.Title</h3>

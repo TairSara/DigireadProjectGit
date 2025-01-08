@@ -2,11 +2,11 @@ using System;
 using System.Data.Entity;
 using System.Threading.Tasks;
 using System.Web.Mvc;
-using System.Linq; // חשוב להוסיף
+using System.Linq; 
 
 namespace DigireadProject.Controllers
 {
-    [Authorize] // נוסיף את זה ברמת ה-Controller
+    [Authorize] 
     public class WishlistController : Controller
     {
         private readonly libraryProject_digireadEntities db;
@@ -16,7 +16,6 @@ namespace DigireadProject.Controllers
             db = new libraryProject_digireadEntities();
         }
 
-        // הפונקציה שמציגה את רשימת המשאלות
         public async Task<ActionResult> Index()
         {
             int userId = GetCurrentUserId();
@@ -33,7 +32,6 @@ namespace DigireadProject.Controllers
         {
             try
             {
-                // בדיקה ראשונית
                 var username = User.Identity.Name;
                 if (string.IsNullOrEmpty(username))
                 {
@@ -69,7 +67,6 @@ namespace DigireadProject.Controllers
             }
             catch (Exception ex)
             {
-                // הדפסת השגיאה המלאה
                 return Json(new { success = false, message = ex.Message, stackTrace = ex.StackTrace });
             }
         }

@@ -19,7 +19,6 @@ namespace DigireadProject.Controllers
 
             int userId = (int)Session["UserID"];
 
-            // בדיקה האם המשתמש כבר דירג את הספר הזה
             var existingReview = db.Reviews.FirstOrDefault(r => 
                 r.UserID == userId && r.BookID == bookId && r.RatingBook.HasValue);
 
@@ -28,7 +27,6 @@ namespace DigireadProject.Controllers
                 return Json(new { success = false, message = "כבר דירגת את הספר הזה בעבר" });
             }
 
-            // יצירת דירוג חדש
             var review = new Reviews
             {
                 UserID = userId,
@@ -51,7 +49,6 @@ namespace DigireadProject.Controllers
             }
         }
         
-        // מתודה לבדיקה האם משתמש כבר דירג ספר מסוים
         [HttpGet]
         public ActionResult HasUserReviewedBook(int bookId)
         {
@@ -93,7 +90,6 @@ namespace DigireadProject.Controllers
 
             int userId = (int)Session["UserID"];
 
-            // בדיקה האם המשתמש כבר דירג את האתר
             var existingReview = db.Reviews.FirstOrDefault(r => 
                 r.UserID == userId && r.RatingWeb.HasValue);
 
@@ -102,7 +98,6 @@ namespace DigireadProject.Controllers
                 return Json(new { success = false, message = "כבר דירגת את האתר בעבר" });
             }
 
-            // יצירת דירוג חדש
             var review = new Reviews
             {
                 UserID = userId,
