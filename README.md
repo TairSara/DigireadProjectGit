@@ -1,5 +1,4 @@
 # DigireadProjectGit
-# DigireadProjectGit
 
 ## Introduction
 DigiRead is an innovative project providing digital access to books, enabling readers to purchase or borrow books online. The site was developed as a student project at SCE - Shamoon College of Engineering in Beer Sheva, aimed at making literature digitally accessible.
