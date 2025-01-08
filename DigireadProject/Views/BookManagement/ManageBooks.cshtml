@@ -328,10 +328,19 @@
                         },
                         success: function(response) {
                             if (response.success) {
-                                $row.fadeOut(400, function() {
-                                    $(this).remove();
-                                });
-                                toastr.success(response.message || 'הספר נמחק בהצלחה');
+                                if (response.statusChanged) {
+                                    $row.find('button.btn-success')
+                                        .removeClass('btn-success')
+                                        .addClass('btn-danger')
+                                        .text('לא זמין');
+
+                                    toastr.warning(response.message);
+                                } else {
+                                    $row.fadeOut(400, function() {
+                                        $(this).remove();
+                                    });
+                                    toastr.success(response.message);
+                                }
                             } else {
                                 toastr.error(response.message || 'אירעה שגיאה במחיקת הספר');
                             }
@@ -341,8 +350,7 @@
                         }
                     });
                 }
-            });
-
+});
             // Sorting functionality
             $('#booksTable thead th[data-sort]').click(function () {
                 var table = $('#booksTable');

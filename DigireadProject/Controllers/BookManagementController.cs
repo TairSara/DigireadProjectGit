@@ -252,50 +252,65 @@ public async Task<ActionResult> EditBook(BookViewModel viewModel)
     return Json(new { success = false, message = "נתונים לא תקינים" });
 }
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<ActionResult> DeleteBook(int id)
+[HttpPost]
+[ValidateAntiForgeryToken]
+public async Task<ActionResult> DeleteBook(int id)
+{
+    if (!await IsUserAdmin())
+    {
+        return Json(new { success = false, message = "אין הרשאת מנהל" });
+    }
+
+    try
+    {
+        var book = await db.Books.FindAsync(id);
+        if (book == null)
         {
-            if (!await IsUserAdmin())
-            {
-                return Json(new { success = false, message = "אין הרשאת מנהל" });
-            }
-
-            try
-            {
-                var book = await db.Books.FindAsync(id);
-                if (book == null)
-                {
-                    return Json(new { success = false, message = "הספר לא נמצא" });
-                }
-
-                if (await db.Rentals.AnyAsync(r => r.BookID == id && r.ReturnDate == null))
-                {
-                    return Json(new { success = false, message = "לא ניתן למחוק ספר שיש לו השאלות פעילות" });
-                }
-
-                var hasHistory = await db.Purchases.AnyAsync(p => p.BookID == id) ||
-                                 await db.Rentals.AnyAsync(r => r.BookID == id);
-
-                if (hasHistory)
-                {
-                    book.IsAvailable = false;
-                    book.IsForRent = false;
-                    await db.SaveChangesAsync();
-                    return Json(new { success = true, message = "הספר סומן כלא זמין מכיוון שיש לו היסטוריית רכישות או השאלות" });
-                }
-                else
-                {
-                    db.Books.Remove(book);
-                    await db.SaveChangesAsync();
-                    return Json(new { success = true, message = "הספר נמחק בהצלחה" });
-                }
-            }
-            catch (Exception ex)
-            {
-                return Json(new { success = false, message = "אירעה שגיאה במחיקת הספר: " + ex.Message });
-            }
+            return Json(new { success = false, message = "הספר לא נמצא" });
         }
+
+        var activeRentals = await db.Rentals
+            .AnyAsync(r => r.BookID == id && r.ReturnDate == null);
+
+        if (activeRentals)
+        {
+            book.IsAvailable = false;
+            book.IsForRent = false;
+            await db.SaveChangesAsync();
+
+            return Json(new { 
+                success = true, 
+                message = "לספר יש השאלות פעילות. הספר סומן כלא זמין",
+                statusChanged = true 
+            });
+        }
+
+        var hasHistory = await db.Purchases.AnyAsync(p => p.BookID == id) ||
+                         await db.Rentals.AnyAsync(r => r.BookID == id);
+
+        if (hasHistory)
+        {
+            book.IsAvailable = false;
+            book.IsForRent = false;
+            await db.SaveChangesAsync();
+            return Json(new { 
+                success = true, 
+                message = "הספר סומן כלא זמין מכיוון שיש לו היסטוריית רכישות או השאלות",
+                statusChanged = true
+            });
+        }
+        else
+        {
+            db.Books.Remove(book);
+            await db.SaveChangesAsync();
+            return Json(new { success = true, message = "הספר נמחק בהצלחה" });
+        }
+    }
+    catch (Exception ex)
+    {
+        return Json(new { success = false, message = "אירעה שגיאה במחיקת הספר: " + ex.Message });
+    }
+}
 
         private BookViewModel MapToViewModel(Books book)
         {
