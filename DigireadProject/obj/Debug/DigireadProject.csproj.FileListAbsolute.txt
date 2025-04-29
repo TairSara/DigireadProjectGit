@@ -374,4 +374,5 @@ C:\Users\noamd\RiderProjects\DigireadProjectGit\DigireadProject\obj\Debug\Digire
 C:\Users\noamd\RiderProjects\DigireadProjectGit\DigireadProject\obj\Debug\Digiread.D7DC0D9E.Up2Date
 C:\Users\noamd\RiderProjects\DigireadProjectGit\DigireadProject\obj\Debug\DigireadProject.dll
 C:\Users\noamd\RiderProjects\DigireadProjectGit\DigireadProject\obj\Debug\DigireadProject.pdb
-C:\Users\tairt\source\DigireadProjectgit\DigireadProject\obj\Debug\Digiread.D7DC0D9E.Up2Date
+C:\Users\tairt\Source\DigireadProjectgit\DigireadProject\bin\DigireadProject.dll.config
+C:\Users\tairt\Source\DigireadProjectgit\DigireadProject\obj\Debug\DigireadProject.csproj.CopyComplete

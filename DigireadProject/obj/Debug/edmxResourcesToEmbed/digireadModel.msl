@@ -70,6 +70,12 @@
     <EntitySetMapping Name="Users">
       <EntityTypeMapping TypeName="libraryProject_digireadModel.Users">
         <MappingFragment StoreEntitySet="Users">
+          <ScalarProperty Name="CVC" ColumnName="CVC" />
+          <ScalarProperty Name="ValidDate" ColumnName="ValidDate" />
+          <ScalarProperty Name="CreditCardNumber" ColumnName="CreditCardNumber" />
+          <ScalarProperty Name="IDNumber" ColumnName="IDNumber" />
+          <ScalarProperty Name="LastName" ColumnName="LastName" />
+          <ScalarProperty Name="FirstName" ColumnName="FirstName" />
           <ScalarProperty Name="UserID" ColumnName="UserID" />
           <ScalarProperty Name="Username" ColumnName="Username" />
           <ScalarProperty Name="Password" ColumnName="Password" />

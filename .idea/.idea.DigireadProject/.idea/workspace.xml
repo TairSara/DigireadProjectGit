@@ -8,6 +8,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="20f33115-b11b-49e2-bb24-d6ba9c0d48a8" name="Changes" comment="">
+<<<<<<< HEAD
       <change beforePath="$PROJECT_DIR$/.idea/.idea.DigireadProject/.idea/dataSources.local.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.DigireadProject/.idea/dataSources.local.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.DigireadProject/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.DigireadProject/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/config/applicationhost.config" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/config/applicationhost.config" afterDir="false" />
@@ -19,6 +20,39 @@
       <change beforePath="$PROJECT_DIR$/DigireadProject/obj/Debug/DigireadProject.csproj.CoreCompileInputs.cache" beforeDir="false" afterPath="$PROJECT_DIR$/DigireadProject/obj/Debug/DigireadProject.csproj.CoreCompileInputs.cache" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/DigireadProject/obj/Debug/DigireadProject.dll" beforeDir="false" afterPath="$PROJECT_DIR$/DigireadProject/obj/Debug/DigireadProject.dll" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/DigireadProject/obj/Debug/DigireadProject.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/DigireadProject/obj/Debug/DigireadProject.pdb" afterDir="false" />
+=======
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.DigireadProject/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.DigireadProject/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.vs/DigireadProject/v16/.suo" beforeDir="false" afterPath="$PROJECT_DIR$/.vs/DigireadProject/v16/.suo" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.vs/DigireadProjectgit/v16/.suo" beforeDir="false" afterPath="$PROJECT_DIR$/.vs/DigireadProjectgit/v16/.suo" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.vs/VSWorkspaceState.json" beforeDir="false" afterPath="$PROJECT_DIR$/.vs/VSWorkspaceState.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.vs/slnx.sqlite" beforeDir="false" afterPath="$PROJECT_DIR$/.vs/slnx.sqlite" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DigireadProject.zip" beforeDir="false" afterPath="$PROJECT_DIR$/DigireadProject.zip" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DigireadProject/Controllers/AccountController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DigireadProject/Controllers/AccountController.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DigireadProject/Controllers/UserManagementController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DigireadProject/Controllers/UserManagementController.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DigireadProject/Models/ViewModels/RegisterViewModel.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DigireadProject/Models/ViewModels/RegisterViewModel.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DigireadProject/Models/ViewModels/UserManagementViewModel.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DigireadProject/Models/ViewModels/UserManagementViewModel.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DigireadProject/Users.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DigireadProject/Users.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DigireadProject/Views/Account/Login.cshtml" beforeDir="false" afterPath="$PROJECT_DIR$/DigireadProject/Views/Account/Login.cshtml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DigireadProject/Views/Account/Register.cshtml" beforeDir="false" afterPath="$PROJECT_DIR$/DigireadProject/Views/Account/Register.cshtml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DigireadProject/Views/Shared/_Layout.cshtml" beforeDir="false" afterPath="$PROJECT_DIR$/DigireadProject/Views/Shared/_Layout.cshtml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DigireadProject/Views/ShoppingCart/Cart.cshtml" beforeDir="false" afterPath="$PROJECT_DIR$/DigireadProject/Views/ShoppingCart/Cart.cshtml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DigireadProject/Views/UserManagement/Index.cshtml" beforeDir="false" afterPath="$PROJECT_DIR$/DigireadProject/Views/UserManagement/Index.cshtml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DigireadProject/bin/DigireadProject.dll" beforeDir="false" afterPath="$PROJECT_DIR$/DigireadProject/bin/DigireadProject.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DigireadProject/bin/DigireadProject.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/DigireadProject/bin/DigireadProject.pdb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DigireadProject/digireadModel.Designer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DigireadProject/digireadModel.Designer.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DigireadProject/digireadModel.edmx" beforeDir="false" afterPath="$PROJECT_DIR$/DigireadProject/digireadModel.edmx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DigireadProject/digireadModel.edmx.diagram" beforeDir="false" afterPath="$PROJECT_DIR$/DigireadProject/digireadModel.edmx.diagram" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DigireadProject/obj/Debug/DigireadProject.csproj.AssemblyReference.cache" beforeDir="false" afterPath="$PROJECT_DIR$/DigireadProject/obj/Debug/DigireadProject.csproj.AssemblyReference.cache" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DigireadProject/obj/Debug/DigireadProject.csproj.CoreCompileInputs.cache" beforeDir="false" afterPath="$PROJECT_DIR$/DigireadProject/obj/Debug/DigireadProject.csproj.CoreCompileInputs.cache" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DigireadProject/obj/Debug/DigireadProject.csproj.FileListAbsolute.txt" beforeDir="false" afterPath="$PROJECT_DIR$/DigireadProject/obj/Debug/DigireadProject.csproj.FileListAbsolute.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DigireadProject/obj/Debug/DigireadProject.dll" beforeDir="false" afterPath="$PROJECT_DIR$/DigireadProject/obj/Debug/DigireadProject.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DigireadProject/obj/Debug/DigireadProject.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/DigireadProject/obj/Debug/DigireadProject.pdb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DigireadProject/obj/Debug/TempPE/digireadModel.Designer.cs.dll" beforeDir="false" afterPath="$PROJECT_DIR$/DigireadProject/obj/Debug/TempPE/digireadModel.Designer.cs.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DigireadProject/obj/Debug/TempPE/digireadModel.cs.dll" beforeDir="false" afterPath="$PROJECT_DIR$/DigireadProject/obj/Debug/TempPE/digireadModel.cs.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DigireadProject/obj/Debug/edmxResourcesToEmbed/digireadModel.csdl" beforeDir="false" afterPath="$PROJECT_DIR$/DigireadProject/obj/Debug/edmxResourcesToEmbed/digireadModel.csdl" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DigireadProject/obj/Debug/edmxResourcesToEmbed/digireadModel.msl" beforeDir="false" afterPath="$PROJECT_DIR$/DigireadProject/obj/Debug/edmxResourcesToEmbed/digireadModel.msl" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DigireadProject/obj/Debug/edmxResourcesToEmbed/digireadModel.ssdl" beforeDir="false" afterPath="$PROJECT_DIR$/DigireadProject/obj/Debug/edmxResourcesToEmbed/digireadModel.ssdl" afterDir="false" />
+>>>>>>> 393959f (Add SQL Injection demo and secure login with hash)
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -90,6 +124,7 @@
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
     &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;T4 Template Run Configuration.digireadModel.tt.executor&quot;: &quot;Run&quot;,
     &quot;git-widget-placeholder&quot;: &quot;final&quot;,
     &quot;list.type.of.created.stylesheet&quot;: &quot;CSS&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
@@ -149,6 +184,13 @@
       <workItem from="1736080183478" duration="1817000" />
       <workItem from="1736149728429" duration="439000" />
       <workItem from="1736153041358" duration="8062000" />
+      <workItem from="1736432786536" duration="2469000" />
+      <workItem from="1743076747113" duration="24000" />
+      <workItem from="1744102243237" duration="3293000" />
+      <workItem from="1745841785504" duration="1570000" />
+      <workItem from="1745843603382" duration="77000" />
+      <workItem from="1745843736424" duration="1867000" />
+      <workItem from="1745943451969" duration="6853000" />
     </task>
     <servers />
   </component>

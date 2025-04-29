@@ -106,6 +106,12 @@
           <Property Name="IsActive" Type="bit" />
           <Property Name="IsAdmin" Type="bit" />
           <Property Name="PasswordReset" Type="varchar" MaxLength="50" />
+          <Property Name="FirstName" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="LastName" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="IDNumber" Type="nvarchar" MaxLength="20" Nullable="false" />
+          <Property Name="CreditCardNumber" Type="nvarchar" MaxLength="20" Nullable="false" />
+          <Property Name="ValidDate" Type="nvarchar" MaxLength="5" Nullable="false" />
+          <Property Name="CVC" Type="nvarchar" MaxLength="4" Nullable="false" />
         </EntityType>
         <EntityType Name="WaitList">
           <Key>
@@ -452,6 +458,12 @@ warning 6002: The table/view 'libraryProject_digiread.sys.database_firewall_rule
           <NavigationProperty Name="ShoppingCart" Relationship="Self.FK__ShoppingC__UserI__04E4BC85" FromRole="Users" ToRole="ShoppingCart" />
           <NavigationProperty Name="WaitList" Relationship="Self.FK__WaitList__UserID__07C12930" FromRole="Users" ToRole="WaitList" />
           <NavigationProperty Name="Wishlist" Relationship="libraryProject_digireadModel.FK__Wishlist__UserID__2739D489" FromRole="Users" ToRole="Wishlist" />
+          <Property Name="FirstName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="LastName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="IDNumber" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="CreditCardNumber" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="ValidDate" Type="String" Nullable="false" MaxLength="5" FixedLength="false" Unicode="true" />
+          <Property Name="CVC" Type="String" Nullable="false" MaxLength="4" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="WaitList">
           <Key>
@@ -809,6 +821,12 @@ warning 6002: The table/view 'libraryProject_digiread.sys.database_firewall_rule
           <EntitySetMapping Name="Users">
             <EntityTypeMapping TypeName="libraryProject_digireadModel.Users">
               <MappingFragment StoreEntitySet="Users">
+                <ScalarProperty Name="CVC" ColumnName="CVC" />
+                <ScalarProperty Name="ValidDate" ColumnName="ValidDate" />
+                <ScalarProperty Name="CreditCardNumber" ColumnName="CreditCardNumber" />
+                <ScalarProperty Name="IDNumber" ColumnName="IDNumber" />
+                <ScalarProperty Name="LastName" ColumnName="LastName" />
+                <ScalarProperty Name="FirstName" ColumnName="FirstName" />
                 <ScalarProperty Name="UserID" ColumnName="UserID" />
                 <ScalarProperty Name="Username" ColumnName="Username" />
                 <ScalarProperty Name="Password" ColumnName="Password" />

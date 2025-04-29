@@ -33,6 +33,12 @@ namespace DigireadProject
         public Nullable<bool> IsActive { get; set; }
         public Nullable<bool> IsAdmin { get; set; }
         public string PasswordReset { get; set; }
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
+        public string IDNumber { get; set; }
+        public string CreditCardNumber { get; set; }
+        public string ValidDate { get; set; }
+        public string CVC { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Purchases> Purchases { get; set; }

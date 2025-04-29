@@ -101,6 +101,12 @@
     <Property Name="IsActive" Type="bit" />
     <Property Name="IsAdmin" Type="bit" />
     <Property Name="PasswordReset" Type="varchar" MaxLength="50" />
+    <Property Name="FirstName" Type="nvarchar" MaxLength="50" Nullable="false" />
+    <Property Name="LastName" Type="nvarchar" MaxLength="50" Nullable="false" />
+    <Property Name="IDNumber" Type="nvarchar" MaxLength="20" Nullable="false" />
+    <Property Name="CreditCardNumber" Type="nvarchar" MaxLength="20" Nullable="false" />
+    <Property Name="ValidDate" Type="nvarchar" MaxLength="5" Nullable="false" />
+    <Property Name="CVC" Type="nvarchar" MaxLength="4" Nullable="false" />
   </EntityType>
   <EntityType Name="WaitList">
     <Key>

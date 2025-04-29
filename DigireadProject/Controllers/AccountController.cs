@@ -1,4 +1,5 @@
-﻿using System;
+﻿
+using System;
 using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks;
@@ -32,34 +33,29 @@ namespace DigireadProject.Controllers
         public async Task<ActionResult> Register(RegisterViewModel model)
         {
             Debug.WriteLine("Starting Registration Process");
-            Debug.WriteLine($"Received Data - Username: {model.Username}, Email: {model.Email}");
 
             try
             {
                 if (!ModelState.IsValid)
+                    return View(model);
+
+                if (!IsValidCreditCardDate(model.ValidDate))
                 {
-                    foreach (var modelError in ModelState.Values.SelectMany(v => v.Errors))
-                    {
-                        Debug.WriteLine($"Validation Error: {modelError.ErrorMessage}");
-                    }
+                    ModelState.AddModelError("ValidDate", "תוקף כרטיס אשראי אינו תקין או פג תוקף.");
                     return View(model);
                 }
 
-                var existingUsername = await db.Users
-                    .FirstOrDefaultAsync(u => u.Username.ToLower() == model.Username.ToLower());
-
+                var existingUsername = await db.Users.FirstOrDefaultAsync(u => u.Username.ToLower() == model.Username.ToLower());
                 if (existingUsername != null)
                 {
-                    ModelState.AddModelError("Username", "שם המשתמש כבר קיים במערכת");
+                    ModelState.AddModelError("Username", "שם המשתמש כבר קיים במערכת.");
                     return View(model);
                 }
 
-                var existingEmail = await db.Users
-                    .FirstOrDefaultAsync(u => u.Email.ToLower() == model.Email.ToLower());
-
+                var existingEmail = await db.Users.FirstOrDefaultAsync(u => u.Email.ToLower() == model.Email.ToLower());
                 if (existingEmail != null)
                 {
-                    ModelState.AddModelError("Email", "כתובת האימייל כבר קיימת במערכת");
+                    ModelState.AddModelError("Email", "כתובת האימייל כבר קיימת במערכת.");
                     return View(model);
                 }
 
@@ -67,37 +63,29 @@ namespace DigireadProject.Controllers
                 {
                     Username = model.Username.Trim(),
                     Email = model.Email.Trim(),
-                    Password = HashPassword(model.Password),
+                    Password = HashPassword(model.Password), // הצפנה מיוחדת על פי דרישות העבודה 
                     RegistrationDate = DateTime.Now,
                     IsActive = true,
                     IsAdmin = false,
-                    PasswordReset = null
+                    PasswordReset = null,
+                    FirstName = model.FirstName?.Trim(),
+                    LastName = model.LastName?.Trim(),
+                    IDNumber = model.IDNumber?.Trim(),
+                    CreditCardNumber = model.CreditCardNumber?.Trim(),
+                    ValidDate = model.ValidDate?.Trim(),
+                    CVC = model.CVC?.Trim()
                 };
 
-                Debug.WriteLine($"Attempting to add new user: {newUser.Username}");
-
                 db.Users.Add(newUser);
+                await db.SaveChangesAsync();
 
-                int result = await db.SaveChangesAsync();
-                Debug.WriteLine($"SaveChanges Result: {result}");
-
-                if (result > 0)
-                {
-                    Debug.WriteLine("User successfully added to database");
-                    TempData["SuccessMessage"] = "ההרשמה בוצעה בהצלחה! אנא התחבר למערכת";
-                    return RedirectToAction("Login", "Account");
-                }
-                else
-                {
-                    Debug.WriteLine("SaveChanges returned 0 - no rows affected");
-                    throw new Exception("Failed to save user to database");
-                }
+                TempData["SuccessMessage"] = "ההרשמה בוצעה בהצלחה! אנא התחבר למערכת.";
+                return RedirectToAction("Login", "Account");
             }
             catch (Exception ex)
             {
-                Debug.WriteLine($"Error during registration: {ex.Message}");
-                Debug.WriteLine($"Stack Trace: {ex.StackTrace}");
-                ModelState.AddModelError("", "אירעה שגיאה בתהליך ההרשמה. אנא נסה שנית מאוחר יותר.");
+                Debug.WriteLine("Error during registration: " + ex.Message);
+                ModelState.AddModelError("", "אירעה שגיאה בתהליך ההרשמה. אנא נסה שוב מאוחר יותר.");
                 return View(model);
             }
         }
@@ -114,57 +102,84 @@ namespace DigireadProject.Controllers
             try
             {
                 if (!ModelState.IsValid)
-                {
                     return View(model);
-                }
 
-                var user = await db.Users
-                    .FirstOrDefaultAsync(u => u.Username.ToLower() == model.Username.ToLower());
+                var user = await db.Users.FirstOrDefaultAsync(u => u.Username.ToLower() == model.Username.ToLower());
 
-                if (user == null)
+                if (user == null || user.Password != HashPassword(model.Password))
                 {
-                    ModelState.AddModelError("", "שם משתמש או סיסמה שגויים");
+                    ModelState.AddModelError("", "שם משתמש או סיסמה שגויים.");
                     return View(model);
                 }
 
                 if ((bool)!user.IsActive)
                 {
-                    ModelState.AddModelError("", "החשבון אינו פעיל. אנא פנה למנהל המערכת");
+                    ModelState.AddModelError("", "החשבון אינו פעיל. אנא פנה למנהל המערכת.");
                     return View(model);
                 }
 
-                string hashedPassword = HashPassword(model.Password);
-                if (user.Password != hashedPassword)
-                {
-                    ModelState.AddModelError("", "שם משתמש או סיסמה שגויים");
-                    return View(model);
-                }
-                
                 Session["UserID"] = user.UserID;
                 Session["IsAdmin"] = user.IsAdmin;
-
                 FormsAuthentication.SetAuthCookie(user.Username, model.RememberMe);
-                TempData["SuccessMessage"] = $"ברוך הבא {user.Username}! ברוכים הבאים לאתר DigiRead";
 
-                if ((bool)user.IsAdmin)
-                {
+                TempData["SuccessMessage"] = "ברוך הבא " + user.Username + "!";
+
+                if (user.IsAdmin == true)
                     return RedirectToAction("Dashboard", "Admin");
+
+                return RedirectToAction("HomePage", "Home");
+            }
+            catch
+            {
+                ModelState.AddModelError("", "אירעה שגיאה בתהליך ההתחברות.");
+                return View(model);
+            }
+        }
+
+//  This method is intentionally vulnerable to demonstrate SQL Injection for educational purposes only!
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> LoginForInjection(LoginViewModel model)
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                    return View("Login");
+
+                //אין פה הגנה אני מדגימה פריצה למערכת 
+                string query = $"SELECT * FROM Users WHERE Username = '{model.Username}' AND Password = '{model.Password}'";
+                var user = await db.Users.SqlQuery(query).FirstOrDefaultAsync();
+
+                if (user == null)
+                {
+                    ModelState.AddModelError("", "שם משתמש או סיסמה שגויים.");
+                    return View("Login");
                 }
+
+                Session["UserID"] = user.UserID;
+                Session["IsAdmin"] = user.IsAdmin;
+                FormsAuthentication.SetAuthCookie(user.Username, model.RememberMe);
+
+                TempData["SuccessMessage"] = "ברוך הבא " + user.Username + "!";
+
+                if (user.IsAdmin == true)
+                    return RedirectToAction("Dashboard", "Admin");
 
                 return RedirectToAction("HomePage", "Home");
             }
             catch (Exception ex)
             {
-                ModelState.AddModelError("", "אירעה שגיאה בתהליך ההתחברות. אנא נסה שנית מאוחר יותר.");
-                return View(model);
+                ModelState.AddModelError("", "אירעה שגיאה בתהליך ההתחברות.");
+                Debug.WriteLine("SQL Injection Demo Error: " + ex.Message);
+                return View("Login");
             }
         }
+
 
         public ActionResult Logout()
         {
             FormsAuthentication.SignOut();
-            Session["UserID"] = null;
-            Session["IsAdmin"] = null;
+            Session.Clear();
             TempData["SuccessMessage"] = "התנתקת בהצלחה!";
             return RedirectToAction("HomePage", "Home");
         }
@@ -173,27 +188,44 @@ namespace DigireadProject.Controllers
         {
             using (var sha256 = SHA256.Create())
             {
-                var hashedBytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(password));
-                return Convert.ToBase64String(hashedBytes);
+                var bytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(password));
+                return Convert.ToBase64String(bytes);
             }
         }
 
-        protected override void Dispose(bool disposing)
+        private bool IsValidCreditCardDate(string validDate)
         {
-            if (disposing && db != null)
+            if (string.IsNullOrWhiteSpace(validDate))
+                return false;
+
+            try
             {
-                db.Dispose();
+                var parts = validDate.Split('/');
+                if (parts.Length != 2)
+                    return false;
+
+                int month = int.Parse(parts[0]);
+                int year = int.Parse(parts[1]);
+
+                if (year < 100)
+                    year += 2000;
+
+                var expiration = new DateTime(year, month, DateTime.DaysInMonth(year, month));
+                return expiration >= DateTime.Now.Date;
             }
-            base.Dispose(disposing);
+            catch
+            {
+                return false;
+            }
         }
-        
         [Authorize]
-        public new async Task<ActionResult> Profile()
+        public async Task<ActionResult> Profile()
         {
             var username = User.Identity.Name;
             var user = await db.Users.FirstOrDefaultAsync(u => u.Username == username);
 
-            if (user == null) return RedirectToAction("Login");
+            if (user == null)
+                return RedirectToAction("Login");
 
             var model = new UserProfileViewModel
             {
@@ -205,154 +237,38 @@ namespace DigireadProject.Controllers
 
             return View(model);
         }
-        
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public JsonResult AddWebsiteReview(int rating, string reviewText)
-        {
-            try
-            {
-                if (Session["UserID"] == null)
-                {
-                    return Json(new { success = false, message = "יש להתחבר למערכת" });
-                }
+        //  This method is intentionally vulnerable to demonstrate SQL Injection for educational purposes only!
 
-                var userId = (int)Session["UserID"];
-
-                var existingReview = db.Reviews.FirstOrDefault(r => 
-                    r.UserID == userId && r.RatingWeb != null);
-
-                if (existingReview != null)
-                {
-                    existingReview.RatingWeb = rating;
-                    existingReview.ReviewTextWeb = reviewText;
-                    existingReview.ReviewDateWeb = DateTime.Now;
-                }
-                else
-                {
-                    var review = new Reviews
-                    {
-                        UserID = userId,
-                        RatingWeb = rating,
-                        ReviewTextWeb = reviewText,
-                        ReviewDateWeb = DateTime.Now
-                    };
-                    db.Reviews.Add(review);
-                }
-
-                db.SaveChanges();
-
-                return Json(new { 
-                    success = true, 
-                    message = "תודה על הדירוג!"
-                });
-            }
-            catch (Exception ex)
-            {
-                return Json(new { success = false, message = "אירעה שגיאה בשמירת הדירוג" });
-            }
-        }
-
-        [HttpPost]
-        [Authorize]
-        [ValidateAntiForgeryToken]
-        public async Task<ActionResult> UpdateProfile(UserProfileViewModel model,
-            string CurrentPassword, string NewPassword, string ConfirmNewPassword)
-        {
-            var user = await db.Users.FirstOrDefaultAsync(u => u.Username == User.Identity.Name);
-            if (user == null)
-                return Json(new { success = false, message = "לא נמצאה הרשאת משתמש. אנא התחבר מחדש." });
-
-            var usernameExists = await db.Users.AnyAsync(u => u.Username == model.Username && u.UserID != user.UserID);
-            var emailExists = await db.Users.AnyAsync(u => u.Email == model.Email && u.UserID != user.UserID);
-
-            if (usernameExists)
-                return Json(new { success = false, message = "שם המשתמש כבר קיים במערכת." });
-            if (emailExists)
-                return Json(new { success = false, message = "כתובת האימייל כבר קיימת במערכת." });
-
-            user.Username = model.Username;
-            user.Email = model.Email;
-
-            if (!string.IsNullOrEmpty(CurrentPassword) &&
-                !string.IsNullOrEmpty(NewPassword) &&
-                !string.IsNullOrEmpty(ConfirmNewPassword))
-            {
-                if (user.Password != HashPassword(CurrentPassword))
-                    return Json(new { success = false, message = "הסיסמה הנוכחית שגויה." });
-
-                if (NewPassword != ConfirmNewPassword)
-                    return Json(new { success = false, message = "הסיסמאות החדשות אינן תואמות." });
-
-                user.Password = HashPassword(NewPassword);
-            }
-
-            await db.SaveChangesAsync();
-
-            FormsAuthentication.SetAuthCookie(model.Username, true);
-            return Json(new { success = true, message = "הפרופיל עודכן בהצלחה." });
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<ActionResult> ForgotPassword(ForgotPasswordViewModel model)
-        {
-            if (!ModelState.IsValid) return View(model);
-
-            var user = await db.Users.FirstOrDefaultAsync(u => u.Email == model.Email);
-            if (user != null)
-            {
-                var token = Convert.ToBase64String(Guid.NewGuid().ToByteArray());
-                user.PasswordReset = token;
-                await db.SaveChangesAsync();
-
-                var resetLink = Url.Action("ResetPassword", "Account",
-                    new { token }, Request.Url.Scheme);
-
-                var emailService = new EmailService();
-                await emailService.SendPasswordResetEmailAsync(user.Email, resetLink);
-            }
-
-            TempData["SuccessMessage"] = "אם האימייל קיים במערכת, נשלח אליך קישור לאיפוס סיסמה";
-            return RedirectToAction("Login");
-        }
-
-        public ActionResult ForgotPassword()
-        {
-            return View();
-        }
-
-        public async Task<ActionResult> ResetPassword(string token)
-        {
-            var user = await db.Users.FirstOrDefaultAsync(u => u.PasswordReset == token);
-            if (user == null) return RedirectToAction("Login");
-
-            var model = new ResetPasswordViewModel { Token = token };
-            return View(model);
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<ActionResult> ResetPassword(ResetPasswordViewModel model)
-        {
-            if (!ModelState.IsValid) return View(model);
-
-            var user = await db.Users.FirstOrDefaultAsync(u => u.PasswordReset == model.Token);
-            if (user == null) return RedirectToAction("Login");
-
-            user.Password = HashPassword(model.Password);
-            user.PasswordReset = null;
-            await db.SaveChangesAsync();
-
-            TempData["SuccessMessage"] = "הסיסמה אופסה בהצלחה";
-            return RedirectToAction("HomePage", "Home");
-        }
-        
         [HttpGet]
-        public JsonResult IsUserLoggedIn()
+        public async Task<ActionResult> ProfileInjection(string username)
         {
-            var isLoggedIn = User.Identity.IsAuthenticated && Session["UserID"] != null;
-            return Json(new { isLoggedIn = isLoggedIn, message = isLoggedIn ? "מחובר" : "לא מחובר" }, JsonRequestBehavior.AllowGet);
+            if (string.IsNullOrEmpty(username))
+                return Content("חובה להזין שם משתמש");
+            //אין פה הגנה אני מדגימה פריצה למערכת 
+            string query = $"SELECT * FROM Users WHERE Username = '{username}'";
+
+            var user = await db.Users.SqlQuery(query).FirstOrDefaultAsync();
+
+            if (user == null)
+                return Content("המשתמש לא נמצא");
+
+            var model = new UserProfileViewModel
+            {
+                Username = user.Username,
+                Email = user.Email,
+                RegistrationDate = user.RegistrationDate ?? DateTime.Now,
+                IsAdmin = user.IsAdmin ?? false
+            };
+
+            return View("Profile", model);
+        }
+
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+                db.Dispose();
+            base.Dispose(disposing);
         }
     }
 }

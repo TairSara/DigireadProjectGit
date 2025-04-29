@@ -11,6 +11,6 @@
     "\\DigireadProject\\Views\\Home",
     "\\DigireadProject\\Views\\UserManagement"
   ],
-  "SelectedNode": "\\DigireadProject.sln",
+  "SelectedNode": "\\DigireadProject\\Views\\Account\\Login.cshtml",
   "PreviewInSolutionExplorer": false
 }

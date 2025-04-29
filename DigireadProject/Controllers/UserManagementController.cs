@@ -32,7 +32,13 @@ namespace DigireadProject.Controllers
                     Email = u.Email,
                     IsActive = u.IsActive ?? false,
                     IsAdmin = u.IsAdmin ?? false,
-                    RegistrationDate = u.RegistrationDate ?? DateTime.Now
+                    RegistrationDate = u.RegistrationDate ?? DateTime.Now,
+                    FirstName = u.FirstName,
+                    LastName = u.LastName,
+                    IDNumber = u.IDNumber,
+                    CreditCardNumber = u.CreditCardNumber,
+                    ValidDate = u.ValidDate,
+                    CVC = u.CVC
                 })
                 .ToListAsync();
 

@@ -11,8 +11,9 @@
     * {
         font-family: 'Rubik', 'Assistant', 'Heebo', Calibri, sans-serif;
     }
-
 </style>
+
+<!-- טופס הרגיל להתחברות עיותית -->
 @using (Html.BeginForm("Login", "Account", FormMethod.Post))
 {
     @Html.AntiForgeryToken()
@@ -45,7 +46,7 @@
 
         <div class="form-group text-center">
             @Html.LabelFor(m => m.Password, new { @class = "control-label text-right" })
-            @Html.PasswordFor(m => m.Password, new { @class = "form-control", placeholder = "••••••••••" })
+            @Html.PasswordFor(m => m.Password, new { @class = "form-control", placeholder = "••••••••" })
             @Html.ValidationMessageFor(m => m.Password, "", new { @class = "text-danger" })
         </div>
 
@@ -61,6 +62,31 @@
             <a href="@Url.Action("Register", "Account")" class="btn btn-link account-link">
                 ? פעם ראשונה באתר <br> ברוך הבא! <span style="font-weight: bold;">להרשמה</span>
             </a>
+        </div>
+    </div>
+}
+
+<!--  SQL Injection -->
+@using (Html.BeginForm("LoginForInjection", "Account", FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+    <div class="form-horizontal" style="margin-top:50px">
+        <h2 class="text-center text-danger">התחברות להדגמת SQL Injection</h2>
+
+        <div class="form-group text-center">
+            @Html.LabelFor(m => m.Username, new { @class = "control-label text-right" })
+            @Html.TextBoxFor(m => m.Username, new { @class = "form-control" })
+            @Html.ValidationMessageFor(m => m.Username, "", new { @class = "text-danger" })
+        </div>
+
+        <div class="form-group text-center">
+            @Html.LabelFor(m => m.Password, new { @class = "control-label text-right" })
+            @Html.PasswordFor(m => m.Password, new { @class = "form-control", placeholder = "••••••••" })
+            @Html.ValidationMessageFor(m => m.Password, "", new { @class = "text-danger" })
+        </div>
+
+        <div class="form-group text-center">
+            <button type="submit" class="btn btn-danger">התחבר עבור SQL Injection</button>
         </div>
     </div>
 }

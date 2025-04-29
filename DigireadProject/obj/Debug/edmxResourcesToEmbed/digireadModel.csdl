@@ -87,6 +87,12 @@
     <NavigationProperty Name="ShoppingCart" Relationship="Self.FK__ShoppingC__UserI__04E4BC85" FromRole="Users" ToRole="ShoppingCart" />
     <NavigationProperty Name="WaitList" Relationship="Self.FK__WaitList__UserID__07C12930" FromRole="Users" ToRole="WaitList" />
     <NavigationProperty Name="Wishlist" Relationship="libraryProject_digireadModel.FK__Wishlist__UserID__2739D489" FromRole="Users" ToRole="Wishlist" />
+    <Property Name="FirstName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="LastName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="IDNumber" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="true" />
+    <Property Name="CreditCardNumber" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="true" />
+    <Property Name="ValidDate" Type="String" Nullable="false" MaxLength="5" FixedLength="false" Unicode="true" />
+    <Property Name="CVC" Type="String" Nullable="false" MaxLength="4" FixedLength="false" Unicode="true" />
   </EntityType>
   <EntityType Name="WaitList">
     <Key>

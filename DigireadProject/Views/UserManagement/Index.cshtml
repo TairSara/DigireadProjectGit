@@ -156,42 +156,49 @@
     <div class="table-responsive">
         <table class="table table-striped">
             <thead>
-                <tr>
-                    <th>שם משתמש</th>
-                    <th>אימייל</th>
-                    <th>תאריך הרשמה</th>
-                    <th>סטטוס</th>
-                    <th>הרשאות</th>
-                    <th>פעולות</th>
-                </tr>
+            <tr>
+                <th>שם משתמש</th>
+                <th>אימייל</th>
+                <th>תאריך הרשמה</th>
+                <th>סטטוס</th>
+                <th>הרשאות</th>
+                <th>שם פרטי</th>
+                <th>שם משפחה</th>
+                <th>ת"ז</th>
+                <th>מספר כרטיס</th>
+                <th>תוקף</th>
+                <th>CVC</th>
+                <th>פעולות</th>
+            </tr>
             </thead>
             <tbody>
-                @foreach (var user in Model)
-                {
-                    <tr id="user-@user.UserId">
-                        <td class="username-display">@user.Username</td>
-                        <td class="email-display">@user.Email</td>
-                        <td>@user.RegistrationDate.ToString("dd/MM/yyyy")</td>
-                        <td>
-                            <button class="btn @(user.IsActive ? "btn-success" : "btn-danger") btn-sm"
-                                    onclick="toggleStatus(@user.UserId)">
-                                @(user.IsActive ? "פעיל" : "לא פעיל")
-                            </button>
-                        </td>
-                        <td>
-                            @(user.IsAdmin ? "מנהל" : "משתמש רגיל")
-                        </td>
-                        <td>
-                            <button class="btn btn-warning btn-sm" onclick="editUser(@user.UserId)">
-                                עריכה
-                            </button>
-                            <button class="btn btn-danger btn-sm" onclick="deleteUser(@user.UserId)">
-                                מחיקה
-                            </button>
-                        </td>
-                    </tr>
-                }
+            @foreach (var user in Model)
+            {
+                <tr id="user-@user.UserId">
+                    <td class="username-display">@user.Username</td>
+                    <td class="email-display">@user.Email</td>
+                    <td>@user.RegistrationDate.ToString("dd/MM/yyyy")</td>
+                    <td>
+                        <button class="btn @(user.IsActive ? "btn-success" : "btn-danger") btn-sm"
+                                onclick="toggleStatus(@user.UserId)">
+                            @(user.IsActive ? "פעיל" : "לא פעיל")
+                        </button>
+                    </td>
+                    <td>@(user.IsAdmin ? "מנהל" : "משתמש רגיל")</td>
+                    <td>@user.FirstName</td>
+                    <td>@user.LastName</td>
+                    <td>@user.IDNumber</td>
+                    <td>@user.CreditCardNumber</td>
+                    <td>@user.ValidDate</td>
+                    <td>@user.CVC</td>
+                    <td>
+                        <button class="btn btn-warning btn-sm" onclick="editUser(@user.UserId)">עריכה</button>
+                        <button class="btn btn-danger btn-sm" onclick="deleteUser(@user.UserId)">מחיקה</button>
+                    </td>
+                </tr>
+            }
             </tbody>
+
         </table>
     </div>
 </div>
