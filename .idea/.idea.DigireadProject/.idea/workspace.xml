@@ -8,19 +8,6 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="20f33115-b11b-49e2-bb24-d6ba9c0d48a8" name="Changes" comment="">
-<<<<<<< HEAD
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.DigireadProject/.idea/dataSources.local.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.DigireadProject/.idea/dataSources.local.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.DigireadProject/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.DigireadProject/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/config/applicationhost.config" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/config/applicationhost.config" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DigireadProject/Controllers/BookManagementController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/DigireadProject/Controllers/BookManagementController.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DigireadProject/Views/ShoppingCart/Cart.cshtml" beforeDir="false" afterPath="$PROJECT_DIR$/DigireadProject/Views/ShoppingCart/Cart.cshtml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DigireadProject/bin/DigireadProject.dll" beforeDir="false" afterPath="$PROJECT_DIR$/DigireadProject/bin/DigireadProject.dll" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DigireadProject/bin/DigireadProject.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/DigireadProject/bin/DigireadProject.pdb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DigireadProject/obj/Debug/DigireadProject.csproj.AssemblyReference.cache" beforeDir="false" afterPath="$PROJECT_DIR$/DigireadProject/obj/Debug/DigireadProject.csproj.AssemblyReference.cache" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DigireadProject/obj/Debug/DigireadProject.csproj.CoreCompileInputs.cache" beforeDir="false" afterPath="$PROJECT_DIR$/DigireadProject/obj/Debug/DigireadProject.csproj.CoreCompileInputs.cache" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DigireadProject/obj/Debug/DigireadProject.dll" beforeDir="false" afterPath="$PROJECT_DIR$/DigireadProject/obj/Debug/DigireadProject.dll" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/DigireadProject/obj/Debug/DigireadProject.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/DigireadProject/obj/Debug/DigireadProject.pdb" afterDir="false" />
-=======
       <change beforePath="$PROJECT_DIR$/.idea/.idea.DigireadProject/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.DigireadProject/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.vs/DigireadProject/v16/.suo" beforeDir="false" afterPath="$PROJECT_DIR$/.vs/DigireadProject/v16/.suo" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.vs/DigireadProjectgit/v16/.suo" beforeDir="false" afterPath="$PROJECT_DIR$/.vs/DigireadProjectgit/v16/.suo" afterDir="false" />
@@ -52,7 +39,6 @@
       <change beforePath="$PROJECT_DIR$/DigireadProject/obj/Debug/edmxResourcesToEmbed/digireadModel.csdl" beforeDir="false" afterPath="$PROJECT_DIR$/DigireadProject/obj/Debug/edmxResourcesToEmbed/digireadModel.csdl" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/DigireadProject/obj/Debug/edmxResourcesToEmbed/digireadModel.msl" beforeDir="false" afterPath="$PROJECT_DIR$/DigireadProject/obj/Debug/edmxResourcesToEmbed/digireadModel.msl" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/DigireadProject/obj/Debug/edmxResourcesToEmbed/digireadModel.ssdl" beforeDir="false" afterPath="$PROJECT_DIR$/DigireadProject/obj/Debug/edmxResourcesToEmbed/digireadModel.ssdl" afterDir="false" />
->>>>>>> 393959f (Add SQL Injection demo and secure login with hash)
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
